@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+<title>  </title>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+<style>
+  .post-date {
+    text-align: right;
+    width: 5em;
+  }
+  .post-title {
+    text-align: left;
+    margin-left: 5px;
+    width: 700px;
+    word-wrap: break-word;
+  }
+  .main-row {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    margin-bottom: 1px;
+    font-family: 'Source Sans Pro';
+  }
+  .nav-button {
+    display: inline-block;
+    font-family: 'Source Sans Pro';
+  }
+  p, ul, .footnotes {
+    max-width: 35em;
+    font-family: 'Source Sans Pro';
+    line-height: 140%;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Source Sans Pro';
+  }
+ .content-title {
+   font-family: 'Source Sans Pro';
+   font-size: 20px;
+   text-decoration: underline;
+ }
+code {
+  max-width: 35em;
+}
+</style>
+
+</head>
+<body>
+
+
+<div class="content-title"> Fixed-Point Theorems in Asset Pricing </div>
+
+<p>Last year, I took a class on macro models that tell stories about information. These models have a lot of bite.</p>
+
+<p>For example, most people know that recessions generally take longer to fix than to happen. One story we can come up with is investor certainty; when times are good, people are investing (say, in a lot of startups), which generates signal. So when times switch to bad, people know very quickly (imagine a bunch of startups going belly-up). But when times are bad, by definition people stop investing. Which means we have less signal. Which keeps people uncertain, and therefore keeps times bad.</p>
+
+<pre><code>a sample of code
+func(code)
+  ocde
+</code></pre>
+<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span></span><span style="color: #f8f8f2">a</span> <span style="color: #f8f8f2">sample</span> <span style="color: #f8f8f2">of</span> <span style="color: #f8f8f2">code</span>
+<span style="color: #f8f8f2">func(code)</span>
+  <span style="color: #f8f8f2">ocde</span>
+</pre></div>
+
+<p>Such models have an interesting implication for asset pricing. Say we have one unit of an asset A on the market, bid on by one unit of investors. We know the price is going to be determined by averaging demands across all people. And we know that individual asset demands are functions of expected future performance. So far, so good.</p>
+
+<p>But savvy investors will form their demands conditionally; that is, they&rsquo;ll express them as functions of prices. This makes sense, since prices carry signal about what other investors think.<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup> So now we live in a world where the price is an average of demands, which are functions of the price.</p>
+
+<p>I don&rsquo;t think there&rsquo;s a generally good way to handle this problem. Most of the models we studied were set up nicely (things were normally distributed, etc.), which means that prices came out to be linear combinations of the relevant objects. That way, we can use guess-and-verify to get the coefficients.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">This doesn&rsquo;t matter in a world where all investors have the same information. But economists frequently introduce &ldquo;idiosyncratic signals,&rdquo; or private information, into these models. That way we have meaningful distinctimons between people.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+
+<hr>
+<footer>
+<div class = "nav-button">
+  <a href="/about">About</a>
+</div>
+<div class = "nav-button">
+    <a href="/">Home</a>
+</div>
+<div class = "nav-button">
+    <a href="https://github.com/arnavsood">GitHub</a>
+</div>
+</footer>
+</body>
+</html>
+

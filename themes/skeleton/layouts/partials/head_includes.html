@@ -1,0 +1,53 @@
+<!-- HTTPS -->
+
+<script type="text/javascript">
+    var baseURL = '{{ .Site.BaseURL }}';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+<!-- CSS -->
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,700,700italic,400italic,500,500italic' rel='stylesheet' type='text/css'>
+{{ if eq true .Site.Params.CacheBuster }}
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    {{if .Site.Params.PrismTheme }}
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-{{ .Site.Params.PrismTheme }}.min.css">
+    {{end}}
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    {{range .Site.Params.ExtraCssFiles}}
+        <link rel="stylesheet" href="{{.}}">
+    {{end}}
+
+    {{range .Params.languages}}
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-{{.}}.min.js">
+    {{end}}
+
+{{ else }}
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/prism.min.css">
+    {{if .Site.Params.PrismTheme }}
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-{{ .Site.Params.PrismTheme }}.min.css">
+    {{end}}
+    <link rel="stylesheet" type="text/css" href="/css/styles.css?{{ .Now.Unix }}">
+    {{range .Site.Params.ExtraCssFiles}}
+        <link rel="stylesheet" href="{{.}}?{{ .Now.Unix }}">
+    {{end}}
+
+{{ end }}
+
+<!-- Icon -->
+<link rel="shortcut icon"
+{{ if .Site.Params.FaviconFile }}
+    href="/{{ .Site.Params.FaviconFile }}"
+{{ else }}
+    href="/img/favicon.ico"
+{{ end }}>
+
+<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->

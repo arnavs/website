@@ -1,0 +1,5 @@
+baseURL = "http://arnavsood.com/"
+languageCode = "en-us"
+title = "Arnav Sood"
+PygmentsCodeFences = true
+publishDir = "docs"
