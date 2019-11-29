@@ -6,48 +6,64 @@
     <description>Recent content on Arnav Sood</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 20 Jun 2017 08:16:47 -0400</lastBuildDate>
+    <lastBuildDate>Sun, 31 Mar 2019 23:05:30 -0700</lastBuildDate>
     
 	<atom:link href="http://arnavsood.com/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>second</title>
-      <link>http://arnavsood.com/second/</link>
-      <pubDate>Tue, 20 Jun 2017 08:16:47 -0400</pubDate>
+      <title>consulting</title>
+      <link>http://arnavsood.com/consulting/</link>
+      <pubDate>Sun, 31 Mar 2019 23:05:30 -0700</pubDate>
       
-      <guid>http://arnavsood.com/second/</guid>
-      <description>Lorem ipsum dolor amet y&amp;rsquo;know y&amp;rsquo;all y&amp;rsquo;know.</description>
+      <guid>http://arnavsood.com/consulting/</guid>
+      <description>I consult on projects that require skill with computation or math.
+For rates and availability, please write to consulting@arnavsood.com.</description>
     </item>
     
     <item>
-      <title>Fixed-Point Theorems in Asset Pricing</title>
-      <link>http://arnavsood.com/first/</link>
-      <pubDate>Mon, 19 Jun 2017 23:39:16 -0400</pubDate>
+      <title>quotes</title>
+      <link>http://arnavsood.com/quotes/</link>
+      <pubDate>Fri, 22 Mar 2019 16:39:34 -0700</pubDate>
       
-      <guid>http://arnavsood.com/first/</guid>
-      <description>Last year, I took a class on macro models that tell stories about information. These models have a lot of bite.
-For example, most people know that recessions generally take longer to fix than to happen. One story we can come up with is investor certainty; when times are good, people are investing (say, in a lot of startups), which generates signal. So when times switch to bad, people know very quickly (imagine a bunch of startups going belly-up).</description>
+      <guid>http://arnavsood.com/quotes/</guid>
+      <description>&amp;ldquo;We have not found any authority for the proposition that the world is a community&amp;hellip;&amp;rdquo;
+ Internal Revenue Service, denying a nonprofit application from an open-source software group.
+ &amp;ldquo;I watch the government and report the facts, that is all I do.&amp;rdquo;
+ Will Rogers, one of America&amp;rsquo;s greatest comedians.
+ &amp;ldquo;Ships that pass in the night, and speak each other in passing, Only a signal shown and a distant voice in the darkness; So on the ocean of life, we pass and speak one another, Only a look and a voice, then darkness again and a silence.</description>
     </item>
     
     <item>
-      <title>Blogs and Mental Health</title>
-      <link>http://arnavsood.com/ocd-intro/</link>
-      <pubDate>Sun, 18 Jun 2017 18:43:40 -0400</pubDate>
+      <title>writing</title>
+      <link>http://arnavsood.com/writing/</link>
+      <pubDate>Wed, 02 May 2018 21:25:42 -0400</pubDate>
       
-      <guid>http://arnavsood.com/ocd-intro/</guid>
-      <description>How blogs can help you train skills is pretty clear; you get the benefits of explanation, and writing down what you&amp;rsquo;ve done makes it hard to bullshit yourself about it. But how can they help with mental diseases? (From here on, for clarity I&amp;rsquo;m going to use &amp;ldquo;MI&amp;rdquo; to refer to mental illness).
-The problem with MIs is that they untether you from reality. The more time you spend living in your head, the less you live in the actual world.</description>
+      <guid>http://arnavsood.com/writing/</guid>
+      <description> Here are some things I&amp;rsquo;ve written.
+Non-Fiction  &amp;ldquo;Bounded Rationality&amp;rdquo; &amp;mdash; Blanket Sea. Pushcart Prize nominee.  </description>
     </item>
     
     <item>
-      <title></title>
+      <title>links</title>
+      <link>http://arnavsood.com/links/</link>
+      <pubDate>Wed, 06 Dec 2017 18:28:16 -0500</pubDate>
+      
+      <guid>http://arnavsood.com/links/</guid>
+      <description>Some things I think are worth sharing.
+ WIPP: How to warn people 10000 years from now about radioactive waste. Sylvia Jacobson: Was confined to a skyjacked plane for a week, and wrote a paper about it. Ken Liu: State Change (short story). 129 Cars: This American Life (WBEZ Chicago) spends a month at a car dealership.   The Glass Room: A digital art exhibit by Mozilla, focused on examining issues of data and privacy.</description>
+    </item>
+    
+    <item>
+      <title>about</title>
       <link>http://arnavsood.com/about/</link>
       <pubDate>Sun, 18 Jun 2017 13:29:51 -0400</pubDate>
       
       <guid>http://arnavsood.com/about/</guid>
-      <description>About This blog is mostly about programming, but also math and mathy economics. I&amp;rsquo;m starting it for two reasons &amp;mdash; to help myself get better at those things, and to help myself recover from OCD. If you want to learn more about that project, you can go here.
-Theme This blog was made by modifying Dan Luu&amp;rsquo;s Hugo Theme.</description>
+      <description>I&amp;rsquo;m a Predoctoral Fellow in Economics at UBC, working primarily with Jesse Perla on computational macro.
+I&amp;rsquo;m also part of the team at QuantEcon, where I work on Julia and infrastructure projects.
+My email&amp;rsquo;s arnav.sood@ubc.ca. If you&amp;rsquo;re on campus, my office is in the Iona building.
+If you prefer to communicate securely, here&amp;rsquo;s my PGP public key.</description>
     </item>
     
   </channel>
