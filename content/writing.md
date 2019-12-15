@@ -3,7 +3,7 @@ date = 2018-05-02T21:25:42-04:00
 title = "writing"
 +++
 
-Here are some things I've written. 
+For anything writing-related, please email [``writing@arnavsood.com``](mailto:writing@arnavsood.com)
 
 <!-- ### Fiction 
 
