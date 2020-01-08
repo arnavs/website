@@ -5,9 +5,9 @@ title = "writing"
 
 For anything writing-related, please email [``writing@arnavsood.com``](mailto:writing@arnavsood.com)
 
-<!-- ### Fiction 
+### Fiction 
 
-+ "Local Perturbations" --- Daily Science Fiction. (forthcoming) -->
++ "Local Perturbations" --- (Daily Science Fiction)[https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation].
 
 ### Non-Fiction 
 
