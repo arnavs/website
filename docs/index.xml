@@ -6,10 +6,20 @@
     <description>Recent content on Arnav Sood</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 02 May 2018 21:25:42 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 10 Aug 2020 14:52:09 +0200</lastBuildDate>
     
 	<atom:link href="http://arnavsood.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Wedding</title>
+      <link>http://arnavsood.com/wedding/</link>
+      <pubDate>Mon, 10 Aug 2020 14:52:09 +0200</pubDate>
+      
+      <guid>http://arnavsood.com/wedding/</guid>
+      <description>Arnav and Fanny are getting married.
+Stay tuned for updates on the location, time, and whether or not you&amp;rsquo;re invited.</description>
+    </item>
     
     <item>
       <title>writing</title>
