@@ -7,6 +7,7 @@ Some things I think are worth sharing.
 
 + [Scientific American](https://www.scientificamerican.com/article/silent-skies-billions-of-north-american-birds-have-vanished/): North American bird populations have declined 29% since 1970.
 + [NPR](https://www.npr.org/sections/krulwich/2014/02/05/257046530/big-fish-stories-getting-littler): As recently as 1960, fish used to be huge. 
++ [Green Your Lab](https://greenyourlab.org): Good people working on sustaniable science.
 
 ----
 
