@@ -7,3 +7,4 @@ Arnav and Fanny are getting married.
 
 Stay tuned for updates on the location, time, and whether or not you're invited. 
 
+No bear cute as you.
