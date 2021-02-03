@@ -6,6 +6,7 @@
     <description>Recent content on Arnav Sood</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Sun, 18 Jun 2017 13:29:51 -0400</lastBuildDate>
     
 	<atom:link href="http://arnavsood.com/index.xml" rel="self" type="application/rss+xml" />
     
@@ -41,19 +42,6 @@ Fiction   &amp;ldquo;Customer Feedback (Secondhand Alchemical Goods)&amp;rdquo; 
       <guid>http://arnavsood.com/links/</guid>
       <description>Some things I think are worth sharing.
  Scientific American: North American bird populations have declined 29% since 1970. NPR: As recently as 1960, fish used to be huge. Green Your Lab: Good people working on sustaniable science.    WIPP: How to warn people 10000 years from now about radioactive waste. Sylvia Jacobson: Was confined to a skyjacked plane for a week, and wrote a paper about it. Ken Liu: State Change (short story).</description>
-    </item>
-    
-    <item>
-      <title>about</title>
-      <link>http://arnavsood.com/about/</link>
-      <pubDate>Sun, 18 Jun 2017 13:29:51 -0400</pubDate>
-      
-      <guid>http://arnavsood.com/about/</guid>
-      <description>I&amp;rsquo;m a researcher, programmer, and writer.
-My most recent appointment was as a Predoctoral Fellow in Economics at UBC, working primarily with Jesse Perla on computational macro.
-I&amp;rsquo;m also part of the team at QuantEcon, where I work on Julia and infrastructure projects.
-My email&amp;rsquo;s arnav@arnavsood.com.
-If you prefer to communicate securely, here&amp;rsquo;s my PGP public key.</description>
     </item>
     
   </channel>
