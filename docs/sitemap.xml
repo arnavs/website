@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>http://arnavsood.com/wedding/</loc>
     <lastmod>2020-08-10T14:52:09+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://arnavsood.com/writing/</loc>
     <lastmod>2018-05-02T21:25:42-04:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://arnavsood.com/links/</loc>
     <lastmod>2017-12-06T18:28:16-05:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://arnavsood.com/</loc>
     <lastmod>2017-06-18T13:29:51-04:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://arnavsood.com/categories/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://arnavsood.com/tags/</loc>
   </url>
-  
 </urlset>
