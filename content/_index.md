@@ -2,11 +2,16 @@
 date = "2017-06-18T13:29:51-04:00"
 +++
 
-I'm a first-year PhD student in economics at Carnegie Mellon. My general interests are in computational macroeconomics, and especially high-dimensional models with heterogeneity in information.
+I'm a first-year PhD student in economics at Carnegie Mellon. 
 
-Previously, I was a predoc at UBC, where I worked extensively with [Jesse Perla](https://www.jesseperla.com/) on topics like [high-dimensional dynamic programming](https://www.jesseperla.com/publication/symmetry-dynamic-programming/) and [HACT](https://github.com/jlperla/PerlaTonettiWaugh.jl) models.
+I'm into computational macroeconomics, and especially high-dimensional models with heterogeneity in information.
 
-I also volunteer for the [QuantEcon](https://quantecon.org/) organization, where I help with teaching, open-source development, and internal infrastructure.
+Previously, I was a predoc at UBC, where I worked with [Jesse Perla](https://www.jesseperla.com/) on topics like [high-dimensional dynamic programming](https://www.nber.org/papers/w28981) and [HACT](https://github.com/jlperla/PerlaTonettiWaugh.jl) models. 
 
-My email's [arnav@arnavsood.com](mailto:arnav@arnavsood.com). If you prefer to communicate securely, here's my PGP [public key](https://gist.github.com/arnavs/53414fd9d4f9c27f6a9bdfdeb906a751).
+I've worked as a volunteer developer for [QuantEcon](https://quantecon.org), and maintain software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl).
+
+* Email: `arnavs@andrew.cmu.edu`. 
+
+* Office: TBD
+
 
