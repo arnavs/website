@@ -11,3 +11,6 @@ For anything writing-related, please email [``writing@arnavsood.com``](mailto:wr
 
 + "Local Perturbation" --- [Daily Science Fiction](https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation).
 
+### Research
+
++ "Exploiting Symmetry in High-Dimensional Dynamic Programming." --- [NBER](https://www.nber.org/papers/w28981). With Mahdi Ebrahimi Kahou, Jesús Fernández-Villaverde, Jesse Perla.
