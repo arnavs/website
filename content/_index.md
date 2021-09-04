@@ -12,6 +12,6 @@ I've worked as a volunteer developer for [QuantEcon](https://quantecon.org), and
 
 * Email: `arnavs@andrew.cmu.edu`. 
 
-* Office: Tepper 4128B
+* Office: Tepper 4218B
 
 
