@@ -11,11 +11,11 @@ For anything writing-related, please email [``writing@arnavsood.com``](mailto:wr
 
 + "Local Perturbation" --- [Daily Science Fiction](https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation).
 
-aea5c59b10853da684740d73f4de33d381fcd20b~
+<!-- aea5c59b10853da684740d73f4de33d381fcd20b~ -->
 
-<!-- ### Non-Fiction
+### Non-Fiction
 
-"Bounded Rationality" --- [Blanket Sea](http://blanketsea.com/2019/09/18/bounded-rationality-by-arnav-sood/). Pushcart Prize nominee. -->
+"Bounded Rationality" --- [Blanket Sea](http://blanketsea.com/2019/09/18/bounded-rationality-by-arnav-sood/). Pushcart Prize nominee.
 
 ### Research
 
