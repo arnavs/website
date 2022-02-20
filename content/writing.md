@@ -9,7 +9,7 @@ For anything writing-related, please email [``writing@arnavsood.com``](mailto:wr
 
 "Customer Feedback (Secondhand Alchemical Goods)" --- [Daily Science Fiction](https://dailysciencefiction.com/fantasy/fantasy/arnav-sood/customer-feedback-secondhand-alchemical-goods).
 
-"Local Perturbation" --- [Daily Science Fiction](https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation).
+<!-- "Local Perturbation" --- [Daily Science Fiction](https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation). -->
 
 <!-- aea5c59b10853da684740d73f4de33d381fcd20b~ -->
 <!-- 
