@@ -4,7 +4,7 @@ date = "2017-06-18T13:29:51-04:00"
 
 I'm a first-year PhD student in economics at Carnegie Mellon. 
 
-I'm into computational macroeconomics, and especially those involving sufficient statistics and endogenous learning.
+I'm into computational macroeconomics, and especially questions involving sufficient statistics and endogenous learning in high-dimensional economies.
 
 Previously, I was a predoc at UBC, where I worked with [Jesse Perla](https://www.jesseperla.com/) on topics like [high-dimensional dynamic programming](https://www.nber.org/papers/w28981) and [HACT](https://github.com/jlperla/PerlaTonettiWaugh.jl) models. 
 
