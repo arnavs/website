@@ -2,13 +2,13 @@
 date = "2017-06-18T13:29:51-04:00"
 +++
 
-I'm a second-year PhD student in economics at Carnegie Mellon. 
+I'm a third-year PhD student in economics at Carnegie Mellon. 
 
-My interests are in statistical learning and computational economics, especially macro. 
-
-Previously I was a predoc at UBC, working with [Jesse Perla](https://www.jesseperla.com/) on topics like [high-dimensional dynamic programming](https://www.nber.org/papers/w28981).
+My research is on how learning and experimentation changes traditional economic stories (e.g. persuasion, monopoly pricing, macro dynamics.)
 
 I've worked as a volunteer developer for [QuantEcon](https://quantecon.org), and currently maintain software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl) 
+
+I'm an OCD survivor --- if you or someone you know wants someone to talk to, send me an email.
 
 * Email: `arnavs@andrew.cmu.edu`. 
 
