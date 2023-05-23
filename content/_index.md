@@ -8,7 +8,7 @@ My research is on how learning and experimentation changes traditional economic 
 
 I've worked as a volunteer developer for [QuantEcon](https://quantecon.org), and currently maintain software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl) 
 
-I'm an OCD survivor (2013-2023) --- if you or someone you know wants someone to talk to, send me an email.
+I'm an OCD survivor --- if you or someone you know wants someone to talk to, send me an email.
 
 * Email: `arnavs@andrew.cmu.edu`. 
 
