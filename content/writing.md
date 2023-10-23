@@ -13,7 +13,7 @@ For anything writing-related, please email [``writing@arnavsood.com``](mailto:wr
 
 ### Non-Fiction
 
-"Anatomy Lessons" --- Open Minds Quarterly.
+"Anatomy Lessons" --- [Open Minds Quarterly](https://www.openmindsquarterly.com/product/fall-2023-pdf/).
 
 "Bounded Rationality" --- [Blanket Sea](http://blanketsea.com/2019/09/18/bounded-rationality-by-arnav-sood/). Pushcart Prize nominee.
 
