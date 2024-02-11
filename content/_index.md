@@ -4,9 +4,7 @@ date = "2017-06-18T13:29:51-04:00"
 
 I'm a third-year PhD student in economics at Carnegie Mellon. 
 
-My research is on the intersection of communication, learning, and games. 
-
-I'm also interested in how learning and experimentation interacts with traditional economic stories (e.g. monopoly pricing, macro dynamics.)
+My interests are in micro theory with a focus on learning in (communication) games. I try to integrate statistical learning and decision-making with traditional economic settings. 
 
 Previously, I was a volunteer developer for [QuantEcon](https://quantecon.org), and currently maintain software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl) 
 
