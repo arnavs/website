@@ -2,7 +2,7 @@
 date = "2017-06-18T13:29:51-04:00"
 +++
 
-I'm a third-year PhD student in economics at Carnegie Mellon. 
+I'm a fourth-year PhD student in economics at Carnegie Mellon. 
 
 My interests are in micro theory, and especially information design for behavioral agents and non-Bayesian learning in games. I try to integrate statistical learning and decision-making with traditional economic settings. 
 
