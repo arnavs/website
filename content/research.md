@@ -7,7 +7,7 @@ title = "research"
 
 ### Working Papers 
 
-["Exploiting Symmetry in High-Dimensional Dynamic Programming."](https://www.nber.org/papers/w28981) (NBER) --- Joint with [Mahdi Ebrahimi Kahou](https://sites.google.com/site/mahdiebrahimikahou/), [Jesus Fernandez-Villaverde](https://www.sas.upenn.edu/~jesusfv/), and [Jesse Perla](https://www.jesseperla.com/). 
+"[Exploiting Symmetry in High-Dimensional Dynamic Programming](https://www.nber.org/papers/w28981)." (NBER) --- Joint with [Mahdi Ebrahimi Kahou](https://sites.google.com/site/mahdiebrahimikahou/), [Jesus Fernandez-Villaverde](https://www.sas.upenn.edu/~jesusfv/), and [Jesse Perla](https://www.jesseperla.com/). 
 
 ### Works in Progress
 
