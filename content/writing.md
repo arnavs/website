@@ -9,6 +9,8 @@ For anything writing-related, please email [``writing@arnavsood.com``](mailto:wr
 
 "Customer Feedback (Secondhand Alchemical Goods)" --- [Daily Science Fiction](https://web.archive.org/web/20230109144725/https://dailysciencefiction.com/fantasy/fantasy/arnav-sood/customer-feedback-secondhand-alchemical-goods).
 
+* _Some reviews: [Microverses](https://reactormag.com/eight-engaging-sff-short-stories-told-through-letters/) and [Reactor Mag](https://reactormag.com/eight-engaging-sff-short-stories-told-through-letters/)_
+
 "Local Perturbation" --- [Daily Science Fiction](https://web.archive.org/web/20230109144725/https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation).
 
 ### Non-Fiction
