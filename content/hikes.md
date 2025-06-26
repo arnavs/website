@@ -11,4 +11,8 @@ Some notes on hikes and backcountry situations.
 
 * Mt. Olomana (06/2025, HI): Parking is a mile from trailhead. About 7 hours door to door (with a lot of vibing at Peak 3 and 2 return) --- was pretty scrambly after Peak 1, but not too bad uphill. Ran out of water at peak 3. People die not infrequently on this trail, so definitely keep your wits about you. 
 
+* Pu'u O Hulu (06/2025, HI): We went right instead of left at trailhead. Turns out that is not the actual trail, so definitely a scrambly uphill situation. The actual trail can be rejoined at the pillboxes, and is a pretty nontechnical descent. Doing this in midday heat is not recommended, but there is a shaved ice spot nearby. 
+
+* Rila Mountain (09/2020, Bulgaria): Wear high-altitude sunscreen and have shoes with enough traction for a descent over small cascades of slippery rocks. Ride to the trailhead is on a lift which looks like it hasn't been maintained since the Brezhnev era. But it's probably safe. 
+
 * Garibaldi Lakes (06/2018, BC): If I recall, about 4 hours total. The colors at the top are the most vivid greens/blues/turquoises I've seen in my life. 
