@@ -13,6 +13,8 @@ Some notes on hikes and backcountry situations.
 
 * Pu'u O Hulu (06/2025, HI): We went right instead of left at trailhead. Turns out that is not the actual trail, so definitely a scrambly uphill situation. The actual trail can be rejoined at the pillboxes, and is a pretty nontechnical descent. Doing this in midday heat is not recommended --- definitely had mild heatstroke on the return --- but there is a shaved ice spot nearby. 
 
+* Homebrewed Great Saunter (03/2025, NYC): Not technically a hike, but perimeter of Manhattan is 32 miles (or infinite) in about 13 hours. Requires discipline to stay on schedule --- extra 5 minutes at each of 13 hourly checkpoints adds an extra hour to the hike. Felt genuinely unable to walk at the end of this. Left knee was quite worn.
+
 * Rila Mountain (09/2020, Bulgaria): Wear high-altitude sunscreen and have shoes with enough traction for a descent over small cascades of slippery rocks. Ride to the trailhead is on a lift which looks like it hasn't been maintained since the Brezhnev era. But it's probably safe. 
 
 * Garibaldi Lakes (06/2018, BC): If I recall, about 4 hours total. The colors at the top are the most vivid greens/blues/turquoises I've seen in my life. 
