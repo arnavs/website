@@ -7,7 +7,7 @@ title = "hikes"
 
 Some notes on hikes and backcountry situations. 
 
-* Kalalau Trail (06/2025, HI): Parked at a random patch of grass near entry to Ha'ena State Park. Stopped at a stream about 0.5 miles from Hanakoa, refilled water, and turned back for a day hike. Main obstacle here was the heat. Hanakapiai Beach is a paradisical return checkpoint. There's a nice rock before the descent into Hanakoa where I proposed to my wife. 
+* Kalalau Trail (06/2025, HI): Got our permit through Dan at [GoKalalau](https://gokalalau.com). Parked at a random patch of grass near entry to Ha'ena State Park. Stopped at a stream about 0.5 miles from Hanakoa, refilled water, and turned back for a day hike. Main obstacle here was the heat. Hanakapiai Beach is a paradisical return checkpoint. There's a nice rock before the descent into Hanakoa where I proposed to my wife. 
 
 * Mt. Olomana (06/2025, HI): Parking is a mile from trailhead. About 7 hours door to door (with a lot of vibing at Peak 3 and 2 return) --- was pretty scrambly after Peak 1, but not too bad uphill. Ran out of water at peak 3, was at least mildly delirious on return. Used plants for traction but had some allergies/irritation afterwards. People die not infrequently on this trail, so definitely keep your wits about you. 
 
