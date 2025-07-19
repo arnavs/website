@@ -7,7 +7,7 @@ title = "hikes"
 
 Some notes on hikes and backcountry situations. 
 
-* Root Glacier (07/2025, AK): Ideal hike --- chilly and flat, with primordially cold and pure alpine meltwater running underfoot. Glacier is about two miles from the trailhead in Kennicott. We stayed in McCarthy Cabins and rode in from the footbridge with Kennicott Wilderness Guides (who also showed us the ice caves), but the [Copper Town Shuttle](https://www.mccarthylodge.com/coppertown-shuttle/) also runs. Small microspikes were enough for the glacier. There were some potentially fatal crevasses and deep pools. We drank from the water (using a Katadyn), but it could be full of unfilterable heavy metals from mine tailings.
+* Root Glacier (07/2025, AK): Ideal hike --- chilly and flat, with primordially cold and pure alpine meltwater running underfoot. Glacier is about two miles from the trailhead in Kennicott. We stayed in McCarthy Cabins and rode in from the footbridge with St. Elias Alpine Guides (who also showed us the ice caves), but the [Copper Town Shuttle](https://www.mccarthylodge.com/coppertown-shuttle/) also runs. Small microspikes were enough for the glacier. There were some potentially fatal crevasses and deep pools. We drank from the water (using a Katadyn), but it could be full of unfilterable heavy metals from mine tailings.
 
 * Kalalau Trail (06/2025, HI): Got our permit through Dan at [GoKalalau](https://gokalalau.com). Parked at a random patch of grass near entry to Ha'ena State Park. Stopped at a stream about 0.5 miles from Hanakoa, refilled water, and turned back for a day hike. Main obstacle here was the heat. Hanakapiai Beach is a paradisical return checkpoint. There's a nice rock before the descent into Hanakoa where I proposed to my wife. 
 
