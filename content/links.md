@@ -28,3 +28,9 @@ Some things I think are worth sharing.
 + [Kalle Lasn](https://www.inquiringmind.com/article/1901_7_lasn_1-cleaning-up-the-mental-environment-culture-jamming-with-kalle-lasn/): "Cleaning Up the Mental Environment." Lasn is the founder/publisher of Vancouver-based _Adbusters._
 + [Wipr](https://giorgiocalderolla.com/wipr.html): Highly effective macOS adblocker. I use this.
 + [Gather.Town](https://gather.town): 8bit online spaces. I invested in this.
+
+----
+
++ [Concentration of Measure](https://web.math.princeton.edu/~naor/homepage%20files/Concentration%20of%20Measure.pdf)
++ [Surviving First Year](http://arnavsood.com/cabinet/1styear.pdf)
++ [Multivariate Delta Method + Glivenko-Cantelli Classes](http://arnavsood.com/cabinet/lec8.pdf)
