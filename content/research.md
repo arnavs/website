@@ -11,6 +11,6 @@ title = "research"
 
 ### Works in Progress
 
-"Frequentist Persuasion" --- Joint with [James A. Best](https://sites.google.com/site/jamesalaricbest/)
+"Frequentist Persuasion" --- Joint with [James A. Best](https://sites.google.com/site/jamesalaricbest/). Draft available upon request.
 
 "Socialized Learning"
