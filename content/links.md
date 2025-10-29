@@ -31,6 +31,6 @@ Some things I think are worth sharing.
 
 ----
 
-+ [Concentration of Measure](https://web.math.princeton.edu/~naor/homepage%20files/Concentration%20of%20Measure.pdf)
-+ [Surviving First Year](http://arnavsood.com/cabinet/1styear.pdf)
-+ [Multivariate Delta Method + Glivenko-Cantelli Classes](http://arnavsood.com/cabinet/lec8.pdf)
++ [Concentration of Measure](https://web.math.princeton.edu/~naor/homepage%20files/Concentration%20of%20Measure.pdf). People use this word and we should know what it means. It's more than Hoeffding or DKW or something. Bobkov's inequality looks profound but above my level. 
++ [Surviving First Year](http://arnavsood.com/cabinet/1styear.pdf). Good advice. 
++ [Multivariate Delta Method + Glivenko-Cantelli Classes](http://arnavsood.com/cabinet/lec8.pdf). I worked with GC classes for a year but it never sunk in until I saw section 8.4.
