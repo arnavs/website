@@ -4,45 +4,44 @@
     <title>Arnav Sood</title>
     <link>http://arnavsood.com/</link>
     <description>Recent content on Arnav Sood</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 18 Jun 2017 13:29:51 -0400</lastBuildDate>
+    <lastBuildDate>Sun, 21 Dec 2025 20:23:47 -0500</lastBuildDate>
     <atom:link href="http://arnavsood.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Computational &#43; Behavioral Economics</title>
+      <link>http://arnavsood.com/fractal/</link>
+      <pubDate>Sun, 21 Dec 2025 20:23:47 -0500</pubDate>
+      <guid>http://arnavsood.com/fractal/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;m teaching a class on &lt;em&gt;computational, behavioral economics&lt;/em&gt;. Details are below; signup link is &lt;a href=&#34;&#34;&gt;here&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;tl/dr&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Class&lt;/strong&gt;: Learn behavioral economics using math and code. Model and implement an economic/social situation you&amp;rsquo;re interested in.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Time&lt;/strong&gt;: Tuesdays 7-9PM.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Duration&lt;/strong&gt;: 7 weeks, from 1.20.26 to 3.3.26 (skipping 2.17.26)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Location&lt;/strong&gt;: Lower Manhattan (in-person only)&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Cost&lt;/strong&gt;: $120 (scholarship), $210 (standard), $300 (supporter). Send me an email if none of these work.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;summary&#34;&gt;Summary&lt;/h3&gt;&#xA;&lt;p&gt;Over 7 weeks, we&amp;rsquo;re going to use modern machinery (math and code) to explore behavioral economics. By the end, you&amp;rsquo;ll have written a small interactive paper&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; where you apply these tools to a problem you&amp;rsquo;re interested in.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>hikes</title>
       <link>http://arnavsood.com/hikes/</link>
       <pubDate>Thu, 26 Jun 2025 17:17:25 -0400</pubDate>
       <guid>http://arnavsood.com/hikes/</guid>
-      <description>Some notes on hikes and backcountry situations.
-Chinatown to Chinatown to Chinatown Walk (11/25, NY): Not technically a hike, but a 20 mile Friendsgiving walk from Manhattan Chinatown to 8th Ave. Brooklyn to Flushing. Took breaks about every 3 miles on the second leg, near parks and coffeeshops. Nonlinear difference between this and the 32 mile perimeter one; this was quite manageable, but 32 mile one was disabling by the end.</description>
+      <description>&lt;p&gt;Some notes on hikes and backcountry situations.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Chinatown to Chinatown to Chinatown Walk (11/25, NY): Not technically a hike, but a 20 mile Friendsgiving walk from Manhattan Chinatown to 8th Ave. Brooklyn to Flushing. Took breaks about every 3 miles on the second leg, near parks and coffeeshops. Nonlinear difference between this and the 32 mile perimeter one; this was quite manageable, but 32 mile one was disabling by the end. Got hotpot at the end.&lt;/p&gt;</description>
     </item>
     <item>
       <title>research</title>
       <link>http://arnavsood.com/research/</link>
       <pubDate>Fri, 11 Oct 2024 19:13:07 -0400</pubDate>
       <guid>http://arnavsood.com/research/</guid>
-      <description>Working Papers &amp;ldquo;Exploiting Symmetry in High-Dimensional Dynamic Programming.&amp;rdquo; (NBER) &amp;mdash; Joint with Mahdi Ebrahimi Kahou, Jesus Fernandez-Villaverde, and Jesse Perla.
-&amp;ldquo;Frequentist Persuasion&amp;rdquo; &amp;mdash; Joint with James A. Best
-Works in Progress &amp;ldquo;Socialized Learning&amp;rdquo;</description>
+      <description>&lt;h3 id=&#34;working-papers&#34;&gt;Working Papers&lt;/h3&gt;&#xA;&lt;p&gt;&amp;ldquo;&lt;a href=&#34;https://www.nber.org/papers/w28981&#34;&gt;Exploiting Symmetry in High-Dimensional Dynamic Programming&lt;/a&gt;.&amp;rdquo; (NBER) &amp;mdash; Joint with &lt;a href=&#34;https://sites.google.com/site/mahdiebrahimikahou/&#34;&gt;Mahdi Ebrahimi Kahou&lt;/a&gt;, &lt;a href=&#34;https://www.sas.upenn.edu/~jesusfv/&#34;&gt;Jesus Fernandez-Villaverde&lt;/a&gt;, and &lt;a href=&#34;https://www.jesseperla.com/&#34;&gt;Jesse Perla&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://arxiv.org/abs/2510.25066&#34;&gt;&amp;ldquo;Frequentist Persuasion&amp;rdquo;&lt;/a&gt; &amp;mdash; Joint with &lt;a href=&#34;https://sites.google.com/site/jamesalaricbest/&#34;&gt;James A. Best&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;works-in-progress&#34;&gt;Works in Progress&lt;/h3&gt;&#xA;&lt;p&gt;&amp;ldquo;Socialized Learning&amp;rdquo;&lt;/p&gt;</description>
     </item>
     <item>
       <title>writing</title>
       <link>http://arnavsood.com/writing/</link>
       <pubDate>Wed, 02 May 2018 21:25:42 -0400</pubDate>
       <guid>http://arnavsood.com/writing/</guid>
-      <description>For anything writing-related, please email writing@arnavsood.com
-Fiction &amp;ldquo;Customer Feedback (Secondhand Alchemical Goods)&amp;rdquo; &amp;mdash; Daily Science Fiction.
-Some reviews: Microverses and Reactor Mag &amp;ldquo;Local Perturbation&amp;rdquo; &amp;mdash; Daily Science Fiction.
-Non-Fiction &amp;ldquo;Anatomy Lessons&amp;rdquo; &amp;mdash; Open Minds Quarterly.
-&amp;ldquo;Bounded Rationality&amp;rdquo; &amp;mdash; Blanket Sea. Pushcart Prize nominee.</description>
+      <description>&lt;p&gt;For anything writing-related, please email &lt;a href=&#34;mailto:writing@arnavsood.com&#34;&gt;&lt;code&gt;writing@arnavsood.com&lt;/code&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;fiction&#34;&gt;Fiction&lt;/h3&gt;&#xA;&lt;p&gt;&amp;ldquo;Customer Feedback (Secondhand Alchemical Goods)&amp;rdquo; &amp;mdash; &lt;a href=&#34;https://web.archive.org/web/20230109144725/https://dailysciencefiction.com/fantasy/fantasy/arnav-sood/customer-feedback-secondhand-alchemical-goods&#34;&gt;Daily Science Fiction&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;em&gt;Some reviews: &lt;a href=&#34;https://microverses.net/archives/250/&#34;&gt;Microverses&lt;/a&gt; and &lt;a href=&#34;https://reactormag.com/eight-engaging-sff-short-stories-told-through-letters/&#34;&gt;Reactor Mag&lt;/a&gt;&lt;/em&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&amp;ldquo;Local Perturbation&amp;rdquo; &amp;mdash; &lt;a href=&#34;https://web.archive.org/web/20230109144725/https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation&#34;&gt;Daily Science Fiction&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h3 id=&#34;non-fiction&#34;&gt;Non-Fiction&lt;/h3&gt;&#xA;&lt;p&gt;&amp;ldquo;Anatomy Lessons&amp;rdquo; &amp;mdash; &lt;a href=&#34;http://arnavsood.com/cabinet/anatomy-lessons.jpeg&#34;&gt;Open Minds Quarterly&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;&amp;ldquo;Bounded Rationality&amp;rdquo; &amp;mdash; &lt;a href=&#34;http://blanketsea.com/2019/09/18/bounded-rationality-by-arnav-sood/&#34;&gt;Blanket Sea&lt;/a&gt;. Pushcart Prize nominee.&lt;/p&gt;</description>
     </item>
     <item>
       <title>links</title>
       <link>http://arnavsood.com/links/</link>
       <pubDate>Wed, 06 Dec 2017 18:28:16 -0500</pubDate>
       <guid>http://arnavsood.com/links/</guid>
-      <description>Some things I think are worth sharing.
-Scientific American: North American bird populations have declined 29% since 1970. NPR: As recently as 1960, fish used to be huge. Green Your Lab: Good people working on sustainable science. WIPP: How to warn people 10000 years from now about radioactive waste. Sylvia Jacobson: Was confined to a skyjacked plane for a week, and wrote a paper about it. Ken Liu: State Change (short story).</description>
+      <description>&lt;p&gt;Some things I think are worth sharing.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.scientificamerican.com/article/silent-skies-billions-of-north-american-birds-have-vanished/&#34;&gt;Scientific American&lt;/a&gt;: North American bird populations have declined 29% since 1970.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.npr.org/sections/krulwich/2014/02/05/257046530/big-fish-stories-getting-littler&#34;&gt;NPR&lt;/a&gt;: As recently as 1960, fish used to be huge.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://greenyourlab.org&#34;&gt;Green Your Lab&lt;/a&gt;: Good people working on sustainable science.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://prod.sandia.gov/techlib/access-control.cgi/1992/921382.pdf&#34;&gt;WIPP&lt;/a&gt;: How to warn people 10000 years from now about radioactive waste.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://arnavsood.com/cabinet/Jacobson-1972.pdf&#34;&gt;Sylvia Jacobson&lt;/a&gt;: Was confined to a skyjacked plane for a week, and wrote a paper about it.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://kenliu.name/stories/state-change/&#34;&gt;Ken Liu&lt;/a&gt;: State Change (short story).&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.thisamericanlife.org/513/129-cars&#34;&gt;129 Cars&lt;/a&gt;: This American Life (WBEZ Chicago) spends a month at a car dealership.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://theglassroom.org&#34;&gt;The Glass Room&lt;/a&gt;: A digital art exhibit by Mozilla, focused on examining issues of data and privacy.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://panopticlick.eff.org&#34;&gt;Panopticlick&lt;/a&gt;: An EFF tool that lets you see how &amp;ldquo;unique&amp;rdquo; your browser&amp;rsquo;s fingerprint is.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.torproject.org&#34;&gt;Tor&lt;/a&gt;: An easy-to-use version of Firefox that effectively anonymizes your internet traffic.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://writing.kemitchell.com/2016/09/21/MIT-License-Line-by-Line.html&#34;&gt;The MIT License, Line by Line&lt;/a&gt;: &lt;a href=&#34;https://writing.kemitchell.com&#34;&gt;&lt;code&gt;/dev/lawyer&lt;/code&gt;&lt;/a&gt; does a close-reading of the common MIT License.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.inquiringmind.com/article/1901_7_lasn_1-cleaning-up-the-mental-environment-culture-jamming-with-kalle-lasn/&#34;&gt;Kalle Lasn&lt;/a&gt;: &amp;ldquo;Cleaning Up the Mental Environment.&amp;rdquo; Lasn is the founder/publisher of Vancouver-based &lt;em&gt;Adbusters.&lt;/em&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://giorgiocalderolla.com/wipr.html&#34;&gt;Wipr&lt;/a&gt;: Highly effective macOS adblocker. I use this.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://gather.town&#34;&gt;Gather.Town&lt;/a&gt;: 8bit online spaces. I invested in this.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://web.math.princeton.edu/~naor/homepage%20files/Concentration%20of%20Measure.pdf&#34;&gt;Concentration of Measure&lt;/a&gt;. People use this word and we should know what it means. It&amp;rsquo;s more than Hoeffding or DKW or something. Bobkov&amp;rsquo;s inequality looks profound but above my level.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://arnavsood.com/cabinet/1styear.pdf&#34;&gt;Surviving First Year&lt;/a&gt;. Good advice.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://arnavsood.com/cabinet/lec8.pdf&#34;&gt;Multivariate Delta Method + Glivenko-Cantelli Classes&lt;/a&gt;. I worked with GC classes for a year but it never sunk in until I saw section 8.4.&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
   </channel>
 </rss>
