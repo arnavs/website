@@ -13,9 +13,9 @@ For anything writing-related, please email [``writing@arnavsood.com``](mailto:wr
 
 "Local Perturbation" --- [Daily Science Fiction](https://web.archive.org/web/20230109144725/https://dailysciencefiction.com/science-fiction/other-worlds-sf/arnav-sood/local-perturbation).
 
-### Non-Fiction
+<!-- ### Non-Fiction
 
 "Anatomy Lessons" --- [Open Minds Quarterly](http://arnavsood.com/cabinet/anatomy-lessons.jpeg).
 
 "Bounded Rationality" --- [Blanket Sea](http://blanketsea.com/2019/09/18/bounded-rationality-by-arnav-sood/). Pushcart Prize nominee. 
-
+ -->
