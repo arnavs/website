@@ -1,0 +1,1135 @@
+
+
+
+
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+<title>  </title>
+<link href="https://fonts.googleapis.com/css?family=Neuton|Merriweather:300|Roboto+Mono" rel="stylesheet">
+<style>
+  .nav-button {
+    display: inline;
+    overflow-x: auto;
+    font-size: 95%;
+    font-family: 'Merriweather', serif;
+  }
+  p, .ul, .ol, .footnotes, li {
+    max-width: 35em;
+    font-size: 92%;
+    line-height: 145%;
+    font-family: 'Merriweather', serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    font-family: 'Neuton', serif;
+  }
+  code {
+    font-family: 'Roboto Mono';
+  }
+
+</style>
+
+</head>
+<body>
+
+
+<h2>  </h2>
+
+<hr>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frequentist Persuasion — Game Simulator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #08080f;
+  --surface: #10101c;
+  --panel:   #141422;
+  --border:  #252540;
+  --border2: #353558;
+  --text:    #e4e4f0;
+  --dim:     #8080a8;
+  --faint:   #404068;
+  --amber:   #f2a600;
+  --amber-l: #ffc84a;
+  --amber-d: rgba(242,166,0,0.10);
+  --blue:    #4da6ff;
+  --blue-l:  #82c4ff;
+  --blue-d:  rgba(77,166,255,0.10);
+  --green:   #4ecb8a;
+  --green-d: rgba(78,203,138,0.10);
+  --red:     #ff6060;
+  --red-d:   rgba(255,96,96,0.10);
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+header {
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-shrink: 0;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: 1.35rem;
+  letter-spacing: 0.01em;
+}
+.subtitle {
+  font-style: italic;
+  color: var(--dim);
+  font-size: 1rem;
+}
+.authors {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ── LAYOUT ── */
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  min-height: 0;
+}
+
+/* ── SIDEBAR SHARED ── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  overflow-y: auto;
+  background: var(--surface);
+}
+.sidebar.right {
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+
+/* ── SLIDERS ── */
+.param { display: flex; flex-direction: column; gap: 6px; }
+.param-header { display: flex; justify-content: space-between; align-items: baseline; }
+.param-name {
+  font-size: 1rem;
+  color: var(--dim);
+}
+.param-name em { font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--amber); }
+.param-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--text);
+  min-width: 36px;
+  text-align: right;
+}
+.param-desc {
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--faint);
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--border2);
+  border-radius: 1px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--amber);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(242,166,0,0.35);
+  transition: transform 0.12s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+/* ── BUTTONS ── */
+.btn-row { display: flex; gap: 8px; }
+button {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+button:hover { border-color: var(--amber); color: var(--amber); }
+button.active { border-color: var(--amber); color: var(--amber); background: var(--amber-d); }
+button.go {
+  flex: 1;
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-d);
+}
+button.go:hover { background: rgba(242,166,0,0.2); }
+
+/* ── STAT CARDS ── */
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 9px 11px;
+}
+.stat.wide { grid-column: 1/-1; }
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 3px;
+}
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
+  color: var(--amber);
+}
+.stat-value.blue  { color: var(--blue); }
+.stat-value.green { color: var(--green); }
+.stat-value.dim   { color: var(--dim); }
+.stat-note {
+  font-style: italic;
+  font-size: 0.72rem;
+  color: var(--faint);
+  margin-top: 1px;
+}
+
+/* ── DIVIDER ── */
+hr { border: none; border-top: 1px solid var(--border); }
+
+/* ── MAIN CONTENT ── */
+.main {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── ROLE LABELS & DIVIDER ── */
+.role-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.role-sender { color: var(--dim); }
+.role-judge  { color: var(--dim); }
+
+.role-divider {
+  flex-shrink: 0;
+  padding: 6px 28px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.role-divider-line {
+  height: 2px;
+  background: var(--border2);
+  border-radius: 2px;
+}
+.role-divider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+.role-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+.sender-tag { text-align: left; }
+.judge-tag  { text-align: left; }
+
+/* ── SIGNAL DIAGRAM ── */
+.signal-section {
+  padding: 20px 28px 0;
+  flex-shrink: 0;
+}
+.signal-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 12px;
+}
+canvas#signalDiagram {
+  display: block;
+  width: 100%;
+  height: 96px;
+}
+
+/* ── SAMPLE SECTION ── */
+.sample-section {
+  flex: 1;
+  padding: 16px 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+.sample-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  flex-shrink: 0;
+}
+
+/* Count chips */
+.sample-counts {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.count-chip {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.count-chip-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--faint);
+  transition: color 0.2s;
+}
+.count-chip-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+#chipX .count-chip-label { color: var(--amber); opacity: 0.7; }
+#chipY .count-chip-label { color: var(--blue);  opacity: 0.7; }
+#chipZ .count-chip-label { color: var(--dim);   opacity: 0.7; }
+#chipX.has-data .count-chip-val { color: var(--amber); }
+#chipY.has-data .count-chip-val { color: var(--blue);  }
+#chipZ.has-data .count-chip-val { color: var(--dim);   }
+
+/* Draw table */
+.sample-table-wrap {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  min-height: 0;
+}
+.sample-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+.sample-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--border);
+  color: var(--text);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  padding: 9px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border2);
+}
+.sample-table tbody tr { border-bottom: 1px solid var(--border); }
+.sample-table tbody tr:last-child { border-bottom: none; }
+.sample-table tbody tr.new-row { animation: rowfade 0.4s ease; }
+@keyframes rowfade {
+  from { background: var(--border2); }
+  to   { background: transparent; }
+}
+.sample-table td {
+  padding: 5px 14px;
+  color: var(--dim);
+}
+.sample-table td.col-n   { color: var(--faint); font-size: 0.68rem; }
+.sample-table td.col-theta-g { color: var(--amber); }
+.sample-table td.col-theta-i { color: var(--blue); }
+.sample-table td.col-m1  { color: var(--amber); }
+.sample-table td.col-m0  { color: var(--blue); }
+
+/* ── STATUS BAR ── */
+.statusbar {
+  padding: 9px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.status-item { display: flex; gap: 8px; align-items: baseline; }
+.status-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.status-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+.status-val.amber { color: var(--amber); }
+.status-val.blue  { color: var(--blue); }
+.status-val.green { color: var(--green); }
+.status-val.red   { color: var(--red); }
+
+/* ── JUDGE PANEL (right sidebar) ── */
+.judge-msg-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+.judge-msg {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.6rem;
+  padding: 16px 28px;
+  border: 1.5px solid var(--border2);
+  border-radius: 5px;
+  background: var(--panel);
+  color: var(--dim);
+  text-align: center;
+  width: 100%;
+  transition: all 0.25s;
+  letter-spacing: 0.04em;
+}
+.judge-msg.show1 { border-color: var(--amber); color: var(--amber); background: var(--amber-d); }
+.judge-msg.show0 { border-color: var(--blue);  color: var(--blue);  background: var(--blue-d);  }
+
+/* Belief bar */
+.belief-wrap { width: 100%; }
+.belief-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--faint);
+  margin-bottom: 5px;
+}
+.belief-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  position: relative;
+  overflow: visible;
+}
+.belief-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--blue), var(--amber));
+  transition: width 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+.belief-threshold {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 2px;
+  background: var(--red);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+.belief-threshold-label {
+  position: absolute;
+  top: -18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--red);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Verdict buttons */
+.verdict-row { display: flex; gap: 8px; width: 100%; }
+.vbtn {
+  flex: 1;
+  padding: 11px 8px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border2);
+  background: transparent;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: all 0.15s;
+}
+.vbtn:disabled { opacity: 0.3; cursor: default; }
+.vbtn.convict:not(:disabled) { border-color: var(--amber); color: var(--amber); }
+.vbtn.convict:not(:disabled):hover { background: var(--amber-d); }
+.vbtn.acquit:not(:disabled)  { border-color: var(--blue);  color: var(--blue);  }
+.vbtn.acquit:not(:disabled):hover  { background: var(--blue-d);  }
+
+.verdict-feedback {
+  text-align: center;
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: none;
+}
+.verdict-feedback.correct { display: block; background: var(--green-d); color: var(--green); }
+.verdict-feedback.wrong   { display: block; background: var(--red-d);   color: var(--red);   }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Frequentist Persuasion</h1>
+  <span class="subtitle">Game Simulator</span>
+  <span class="authors">Sood &amp; Best · 2026</span>
+</header>
+
+<div class="layout">
+
+  <!-- ═══ LEFT SIDEBAR: Parameters ═══ -->
+  <div class="sidebar">
+
+    <div>
+      <div class="section-label">Signal structure</div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:10px;">
+
+        <div class="param">
+          <div class="param-header">
+            <span class="param-name">Prior <em>μ₀</em></span>
+            <span class="param-val" id="mu0Val">0.40</span>
+          </div>
+          <input type="range" id="mu0" min="0.05" max="0.95" step="0.01" value="0.40" oninput="onParam()">
+          <span class="param-desc">Pr[θ = guilty]</span>
+        </div>
+
+        <div class="param">
+          <div class="param-header">
+            <span class="param-name">Lying prob <em>z</em></span>
+            <span class="param-val" id="zVal">0.40</span>
+          </div>
+          <input type="range" id="zSlider" min="0.00" max="1.00" step="0.01" value="0.40" oninput="onParam()">
+          <span class="param-desc">Pr[guilty | θ = innocent]</span>
+        </div>
+
+      </div>
+    </div>
+
+    <hr>
+
+    <div>
+      <div class="section-label">Sampling</div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:10px;">
+
+        <div class="param">
+          <div class="param-header">
+            <span class="param-name">Sample size <em>K</em></span>
+          </div>
+          <input type="number" id="kSlider" min="1" max="200" step="1" value="10" oninput="onParam()"
+            style="-webkit-appearance:none;appearance:none;width:100%;padding:6px 10px;background:var(--panel);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1rem;outline:none;">
+          <span class="param-desc">iid draws before the judge decides</span>
+        </div>
+
+      </div>
+    </div>
+
+    <hr>
+
+    <div>
+      <div class="section-label">Controls</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+        <div class="btn-row">
+          <button class="go" id="btnSample" onclick="startSample()">▶ Draw sample</button>
+        </div>
+        <div class="btn-row">
+          <button onclick="resetAll()" style="flex:1">↺ Reset</button>
+          <button onclick="autoRun()" id="btnAuto" style="flex:1">⟳ Auto</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left sidebar -->
+
+  <!-- ═══ MAIN: Signal diagram + Sample canvas ═══ -->
+  <div class="main">
+
+    <div class="signal-section">
+      <div class="role-label role-sender">Prosecutor</div>
+      <div class="signal-title">Signal structure σ</div>
+      <canvas id="signalDiagram" height="110"></canvas>
+    </div>
+
+    <div class="role-divider">
+      <div class="role-tag sender-tag">↑ prosecutor's private information</div>
+      <div class="role-divider-line"></div>
+      <div class="role-tag judge-tag">↓ judge observes</div>
+    </div>
+
+    <div class="sample-section">
+      <div class="role-label role-judge">Judge</div>
+      <div class="sample-title">Sample — iid draws from G<sub>σ,μ₀</sub></div>
+
+      <!-- Count chips -->
+      <div class="sample-counts">
+        <div class="count-chip" id="chipX">
+          <span class="count-chip-val" id="countX">0</span>
+          <span class="count-chip-label">X &nbsp;(guilty, guilty)</span>
+        </div>
+        <div class="count-chip" id="chipY">
+          <span class="count-chip-val" id="countY">0</span>
+          <span class="count-chip-label">Y &nbsp;(innocent, guilty)</span>
+        </div>
+        <div class="count-chip" id="chipZ">
+          <span class="count-chip-val" id="countZ">0</span>
+          <span class="count-chip-label">Z &nbsp;(innocent, innocent)</span>
+        </div>
+      </div>
+
+      <!-- Draw table -->
+      <div class="sample-table-wrap">
+        <table class="sample-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>θ &nbsp;<span style="font-weight:300;opacity:0.6">(true state)</span></th>
+              <th>m &nbsp;<span style="font-weight:300;opacity:0.6">(reported)</span></th>
+            </tr>
+          </thead>
+          <tbody id="sampleTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- ═══ RIGHT SIDEBAR: Judge ═══ -->
+  <div class="sidebar right">
+
+    <div>
+      <div class="section-label">You are the judge</div>
+      <div style="font-style:italic;font-size:0.88rem;color:var(--dim);margin-top:8px;line-height:1.5;">
+        After the sample is drawn, a fresh (θ, m) pair arrives. You see only m. Decide; then see the payoffs.
+      </div>
+    </div>
+
+    <div class="judge-msg-wrap">
+      <div class="judge-msg" id="judgeMsg">waiting…</div>
+
+      <div class="verdict-row">
+        <button class="vbtn convict" id="btnConvict" onclick="verdict(1)" disabled>⚖ Convict</button>
+        <button class="vbtn acquit"  id="btnAcquit"  onclick="verdict(0)" disabled>✓ Acquit</button>
+      </div>
+
+      <div class="verdict-feedback" id="verdictFeedback"></div>
+    </div>
+
+    <hr>
+
+    <div>
+      <div class="section-label">Payoffs</div>
+      <div class="stats" style="margin-top:8px;">
+        <div class="stat wide">
+          <div class="stat-label">Prosecutor</div>
+          <div class="stat-value" id="scoreProsc">—</div>
+          <div class="stat-note">1 if judge convicts, else 0</div>
+        </div>
+        <div class="stat wide">
+          <div class="stat-label">Judge</div>
+          <div class="stat-value" id="scoreJudge">—</div>
+          <div class="stat-note">1 if verdict matches true state, else 0</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /right sidebar -->
+
+</div><!-- /layout -->
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   MATH — all probability calculations in one block.
+   ════════════════════════════════════════════════════════════════
+
+   Model (Section 2, Sood & Best 2026):
+   ─────────────────────────────────────
+   States:   Θ = {0=innocent, 1=guilty}
+   Messages: M = {0, 1}
+   Prior:    μ₀ = Pr[θ=1]
+
+   Sender's signal σ (the "prosecutor"):
+     Pr[m=1 | θ=1] = 1          (always recommend convict if guilty)
+     Pr[m=1 | θ=0] = z          (lie with prob z if innocent)
+     Pr[m=0 | θ=1] = 0
+     Pr[m=0 | θ=0] = 1 - z
+
+   Joint distribution Gσ,μ₀ over {θ} × {m}:
+     Pr[θ=1, m=1] = μ₀            =: pX   (true "convict" signal)
+     Pr[θ=0, m=1] = (1−μ₀)·z      =: pY   (false "convict" signal)
+     Pr[θ=0, m=0] = (1−μ₀)·(1−z)  =: pZ   (true "acquit" signal)
+     Pr[θ=1, m=0] = 0              (impossible under this signal)
+
+   Sample HK = K iid draws from Gσ,μ₀.
+   Counts: X = #{θ=1, m=1},  Y = #{θ=0, m=1},  Z = #{θ=0, m=0}
+   [HK is multinomial(K, [pX, pY, pZ])]
+
+   Fictitious play learning rule (Definition 3):
+     ℓ(θ=1 | m=1, HK) = X / (X+Y)    if X+Y > 0
+                       = μ₀            if X+Y = 0  (defective sample → prior)
+
+   Receiver's decision (threshold μ = 0.5):
+     a = 1 (convict)  iff  ℓ(θ=1 | m=1, HK) ≥ 0.5
+     a = 0 (acquit)   otherwise
+
+   Bayesian posterior (true DGP known):
+     Pr[θ=1 | m=1, σ] = μ₀ / (μ₀ + (1−μ₀)·z)
+
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── core quantities ── */
+
+function piZ(mu0, z) {
+  // Pr[m=1] = μ₀ + (1−μ₀)·z
+  return mu0 + (1 - mu0) * z;
+}
+
+function bayesPosterior(mu0, z) {
+  // Pr[θ=1 | m=1] = μ₀ / π(z)
+  const pi = piZ(mu0, z);
+  return pi < 1e-12 ? 0 : mu0 / pi;
+}
+
+function empiricalBelief(X, Y, mu0) {
+  // X/(X+Y) when X+Y>0, else fall back to prior
+  return (X + Y) > 0 ? X / (X + Y) : mu0;
+}
+
+/* ── random draw from the joint distribution ── */
+
+function drawPair(mu0, z) {
+  // Returns {theta, m} one iid draw from Gσ,μ₀
+  const pX = mu0;               // (guilty, m=1)
+  const pY = (1 - mu0) * z;    // (innocent, m=1)
+  // pZ = (1-mu0)*(1-z)          // (innocent, m=0) — remainder
+  const r = Math.random();
+  if (r < pX)       return { theta: 1, m: 1 };
+  if (r < pX + pY)  return { theta: 0, m: 1 };
+  return                        { theta: 0, m: 0 };
+}
+
+/* ════════════════════════════════════════════════════════════════
+   END MATH BLOCK
+   ════════════════════════════════════════════════════════════════ */
+
+
+/* ── state ── */
+let params = { mu0: 0.40, z: 0.40, K: 10 };
+let sampleData   = [];
+let sampleRunning = false;
+let autoMode     = false;
+let autoTimer    = null;
+let drawTimer    = null;
+let judgeState   = 'waiting';  // 'waiting' | 'ready' | 'done'
+let judgeTheta   = null;
+let judgeM       = null;
+  
+
+/* ── param change ── */
+function onParam() {
+  params.mu0 = parseFloat(document.getElementById('mu0').value);
+  params.z   = parseFloat(document.getElementById('zSlider').value);
+  params.K   = Math.max(1, parseInt(document.getElementById('kSlider').value) || 1);
+  document.getElementById('mu0Val').textContent = params.mu0.toFixed(2);
+  document.getElementById('zVal').textContent   = params.z.toFixed(2);
+  updateDerived();
+  drawSignal();
+}
+
+function updateDerived() {
+}
+
+/* ── canvas colours ── */
+const COL = {
+  amber: '#f2a600', amberL: '#ffc84a', amberD: 'rgba(242,166,0,0.12)',
+  blue:  '#4da6ff', blueL:  '#82c4ff', blueD:  'rgba(77,166,255,0.12)',
+  green: '#4ecb8a', greenD: 'rgba(78,203,138,0.12)',
+  red:   '#ff6060',
+  text:  '#e4e4f0', dim:    '#8080a8', faint:  '#404068',
+  bg:    '#08080f', surface:'#10101c', panel:  '#141422',
+  border:'#252540', border2:'#353558',
+};
+
+/* ════════════════════════════════════════════════════════════════
+   SIGNAL DIAGRAM
+   ════════════════════════════════════════════════════════════════ */
+function drawSignal() {
+  const canvas = document.getElementById('signalDiagram');
+  const W = canvas.clientWidth || canvas.offsetWidth;
+  if (W === 0) return;
+  canvas.width = W; canvas.height = 96;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, 96);
+
+  const { mu0, z } = params;
+  const baye = bayesPosterior(mu0, z);
+
+  // Layout: state nodes left, message nodes right, arrows between
+  const lx = 130, rx = W - 140;
+  const nodes = {
+    g:  { x: lx, y: 30,  label: 'θ = guilty',   col: COL.amber },
+    i:  { x: lx, y: 80,  label: 'θ = innocent', col: COL.blue  },
+    m1: { x: rx, y: 30,  label: 'guilty',  col: COL.amber },
+    m0: { x: rx, y: 80,  label: 'innocent',   col: COL.blue  },
+  };
+
+  // Draw arrows first (behind nodes)
+  const arrows = [
+    { from: nodes.g,  to: nodes.m1, prob: 1.0,  label: '1',               col: COL.amber },
+    { from: nodes.i,  to: nodes.m1, prob: z,     label: `z = ${z.toFixed(2)}`, col: COL.blue  },
+    { from: nodes.i,  to: nodes.m0, prob: 1-z,   label: `1−z`,             col: COL.blue  },
+  ];
+
+  arrows.forEach(a => {
+    if (a.prob < 0.001) return;
+    const alpha = 0.18 + 0.82 * a.prob;
+    const lw    = 1 + 2.5 * a.prob;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = a.col;
+    ctx.lineWidth   = lw;
+    ctx.lineJoin    = 'round';
+
+    // Bezier curve
+    const cpx = (a.from.x + a.to.x) / 2;
+    ctx.beginPath();
+    ctx.moveTo(a.from.x + 52, a.from.y);
+    ctx.bezierCurveTo(cpx, a.from.y, cpx, a.to.y, a.to.x - 52, a.to.y);
+    ctx.stroke();
+
+    // Probability label mid-arc
+    const tx = cpx;
+    const ty = (a.from.y + a.to.y) / 2 - 8;
+    ctx.globalAlpha = alpha * 1.4;
+    ctx.fillStyle   = a.col;
+    ctx.font        = '10px JetBrains Mono, monospace';
+    ctx.textAlign   = 'center';
+    ctx.fillText(a.label, tx, ty);
+    ctx.restore();
+  });
+
+  // Draw nodes — label only inside, no sub-text
+  Object.values(nodes).forEach(n => {
+    const hw = 50, hh = 16;
+    ctx.save();
+    ctx.fillStyle   = n.col + '18';
+    ctx.strokeStyle = n.col + 'aa';
+    ctx.lineWidth   = 1.5;
+    roundRect(ctx, n.x - hw, n.y - hh, hw*2, hh*2, 4);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = n.col;
+    ctx.font      = '11px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(n.label, n.x, n.y + 4);
+    ctx.restore();
+  });
+
+  // Prior probabilities — left of state nodes
+  ctx.font      = '11px JetBrains Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = COL.amber;
+  ctx.fillText(`Pr = ${mu0.toFixed(2)}`, nodes.g.x - 58, nodes.g.y + 4);
+  ctx.fillStyle = COL.blue;
+  ctx.fillText(`Pr = ${(1-mu0).toFixed(2)}`, nodes.i.x - 58, nodes.i.y + 4);
+
+  // Message probabilities — right of message nodes
+  ctx.textAlign = 'left';
+  ctx.fillStyle = COL.amber;
+  ctx.fillText(`Pr = ${piZ(mu0,z).toFixed(3)}`, nodes.m1.x + 58, nodes.m1.y + 4);
+  ctx.fillStyle = COL.blue;
+  ctx.fillText(`Pr = ${(1-piZ(mu0,z)).toFixed(3)}`, nodes.m0.x + 58, nodes.m0.y + 4);
+
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w, y, x+w, y+r, r);
+  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
+  ctx.lineTo(x+r, y+h); ctx.arcTo(x, y+h, x, y+h-r, r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x, y, x+r, y, r);
+  ctx.closePath();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SAMPLE CANVAS
+   Columns: X (guilty, m=1) | Y (innocent, m=1) | Z (innocent, m=0)
+   Each dot is one draw. New draws fly in as particles.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════════
+   SAMPLE TABLE
+   ════════════════════════════════════════════════════════════════ */
+
+function updateSampleDisplay() {
+  const X = sampleData.filter(d => d.theta===1 && d.m===1).length;
+  const Y = sampleData.filter(d => d.theta===0 && d.m===1).length;
+  const Z = sampleData.filter(d => d.theta===0 && d.m===0).length;
+
+  // Update count chips
+  document.getElementById('countX').textContent = X;
+  document.getElementById('countY').textContent = Y;
+  document.getElementById('countZ').textContent = Z;
+  document.getElementById('chipX').className = 'count-chip' + (X > 0 ? ' has-data' : '');
+  document.getElementById('chipY').className = 'count-chip' + (Y > 0 ? ' has-data' : '');
+  document.getElementById('chipZ').className = 'count-chip' + (Z > 0 ? ' has-data' : '');
+
+  // Append the latest row (most recent draw)
+  if (sampleData.length === 0) {
+    document.getElementById('sampleTbody').innerHTML = '';
+    return;
+  }
+  const d   = sampleData[sampleData.length - 1];
+  const n   = sampleData.length;
+  const tbody = document.getElementById('sampleTbody');
+  const tr  = document.createElement('tr');
+  tr.className = 'new-row';
+  const thetaLabel = d.theta === 1 ? 'guilty'   : 'innocent';
+  const thetaCls   = d.theta === 1 ? 'col-theta-g' : 'col-theta-i';
+  const mLabel = d.m === 1 ? 'guilty' : 'innocent';
+  const mCls   = d.m === 1 ? 'col-m1'  : 'col-m0';
+  tr.innerHTML = `<td class="col-n">${n}</td>
+    <td class="${thetaCls}">${thetaLabel}</td>
+    <td class="${mCls}">${mLabel}</td>`;
+  // Prepend so newest is at top
+  tbody.insertBefore(tr, tbody.firstChild);
+}
+
+function resetSampleDisplay() {
+  document.getElementById('sampleTbody').innerHTML = '';
+  document.getElementById('countX').textContent = '0';
+  document.getElementById('countY').textContent = '0';
+  document.getElementById('countZ').textContent = '0';
+  ['chipX','chipY','chipZ'].forEach(id =>
+    document.getElementById(id).className = 'count-chip');
+}
+
+/* ── draw one sample step ── */
+function startSample() {
+  if (sampleRunning) return;
+  resetSampleOnly();
+  sampleRunning = true;
+  document.getElementById('btnSample').textContent = '⏸ Drawing…';
+  document.getElementById('btnSample').disabled = true;
+
+  const { mu0, z, K } = params;
+  const delay = 180; // fixed medium speed
+
+  let drawn = 0;
+  function step() {
+    if (drawn >= K) {
+      sampleRunning = false;
+      document.getElementById('btnSample').textContent = '▶ Draw sample';
+      document.getElementById('btnSample').disabled = false;
+      afterSample();
+      return;
+    }
+    const d = drawPair(mu0, z);
+    sampleData.push(d);
+    updateSampleDisplay();
+    drawn++;
+    updateDerived();
+    drawTimer = setTimeout(step, delay);
+  }
+  step();
+}
+
+function afterSample() {
+  // Prepare judge round
+  judgeState = 'ready';
+  const d = drawPair(params.mu0, params.z);
+  judgeTheta = d.theta;
+  judgeM     = d.m;
+
+  const X = sampleData.filter(s => s.theta===1 && s.m===1).length;
+  const Y = sampleData.filter(s => s.theta===0 && s.m===1).length;
+  const emp = empiricalBelief(X, Y, params.mu0);
+
+  const msgEl = document.getElementById('judgeMsg');
+  if (judgeM === 1) {
+    msgEl.textContent = 'guilty';
+    msgEl.className   = 'judge-msg show1';
+  } else {
+    msgEl.textContent = 'innocent';
+    msgEl.className   = 'judge-msg show0';
+  }
+  document.getElementById('btnConvict').disabled = false;
+  document.getElementById('btnAcquit').disabled  = false;
+  document.getElementById('verdictFeedback').className = 'verdict-feedback';
+}
+
+function verdict(action) {
+  if (judgeState !== 'ready') return;
+  judgeState = 'done';
+
+  document.getElementById('btnConvict').disabled = true;
+  document.getElementById('btnAcquit').disabled  = true;
+
+  // Payoffs (one-shot):
+  //   Prosecutor: 1 if judge convicts (action=1), else 0
+  //   Judge:      1 if verdict matches true state, else 0
+  const proscPayoff = action === 1 ? 1 : 0;
+  const judgePayoff = action === judgeTheta ? 1 : 0;
+
+  const fb = document.getElementById('verdictFeedback');
+  fb.textContent = `True state: ${judgeTheta===1?'guilty':'innocent'}.`;
+  fb.className   = 'verdict-feedback ' + (judgePayoff === 1 ? 'correct' : 'wrong');
+
+  document.getElementById('scoreProsc').textContent  = proscPayoff;
+  document.getElementById('scoreProsc').style.color  = proscPayoff === 1 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('scoreJudge').textContent  = judgePayoff;
+  document.getElementById('scoreJudge').style.color  = judgePayoff === 1 ? 'var(--green)' : 'var(--red)';
+
+  if (autoMode) setTimeout(startSample, 600);
+}
+
+/* ── reset ── */
+function resetSampleOnly() {
+  sampleData = [];
+  if (drawTimer) clearTimeout(drawTimer);
+  judgeState = 'waiting';
+  document.getElementById('judgeMsg').textContent = 'waiting…';
+  document.getElementById('judgeMsg').className   = 'judge-msg';
+  document.getElementById('btnConvict').disabled = true;
+  document.getElementById('btnAcquit').disabled  = true;
+  document.getElementById('verdictFeedback').className = 'verdict-feedback';
+  resetSampleDisplay();
+  updateDerived();
+}
+
+function resetAll() {
+  autoMode = false;
+  clearTimeout(autoTimer);
+  document.getElementById('btnAuto').classList.remove('active');
+  sampleRunning = false;
+  document.getElementById('btnSample').disabled = false;
+  document.getElementById('btnSample').textContent = '▶ Draw sample';
+  resetSampleOnly();
+  document.getElementById('scoreProsc').textContent = '—';
+  document.getElementById('scoreProsc').style.color = '';
+  document.getElementById('scoreJudge').textContent = '—';
+  document.getElementById('scoreJudge').style.color = '';
+}
+
+function autoRun() {
+  autoMode = !autoMode;
+  document.getElementById('btnAuto').classList.toggle('active', autoMode);
+  if (autoMode) startSample();
+}
+
+/* ── resize handler ── */
+function onResize() {
+  drawSignal();
+}
+
+window.addEventListener('resize', onResize);
+window.addEventListener('load', () => {
+  onParam();
+  setTimeout(onResize, 50);
+});
+</script>
+</body>
+</html>
+
+
+
+
+<hr>
+<footer>
+  <div class="nav-button">
+    <a href="/">Home</a>
+  </div>
+  
+  <div class="nav-button">
+    <a href="https://github.com/arnavs">GitHub</a>
+  </div>
+  <div class="nav-button">
+    <a href="/research">Research</a>
+  </div>
+  <div class="nav-button">
+    <a href="https://arnavs.github.io/resume/sood-cv_full.pdf" target="_blank">CV</a>
+  </div>
+  <div class="nav-button">
+    <a href="/writing">Writing</a>
+  </div>
+  <div class="nav-button">
+    <a href="/links">Links</a>
+  </div>
+  <div class="nav-button">
+    <a href="/hikes">Hikes</a>
+  </div>
+  <div class="nav-button">
+    <a href="https://jianingzhao.com">Wife</a>
+  </div>
+</footer>
+</body>
+
+</html>
