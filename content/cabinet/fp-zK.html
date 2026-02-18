@@ -87,7 +87,7 @@ canvas#chart{display:block;width:100%;height:100%;}
     </div>
   </div>
   <div class="main">
-    <div class="chart-title">z*(K) — prosecutor's optimal lying probability as a function of sample size</div>
+    <div class="chart-title">z*(N) — prosecutor's optimal lying probability as a function of sample size</div>
     <div class="canvas-wrap">
       <canvas id="chart"></canvas>
       <div id="loadingMsg">computing…</div>
@@ -285,7 +285,7 @@ function draw() {
 
   /* Axis labels */
   ctx.fillStyle = '#8080a8'; ctx.font = '12px JetBrains Mono, monospace'; ctx.textAlign = 'center';
-  ctx.fillText('K  (sample size)', ml + pw / 2, H - 6);
+  ctx.fillText('N  (sample size)', ml + pw / 2, H - 6);
   ctx.save();
   ctx.translate(14, mt + ph / 2); ctx.rotate(-Math.PI / 2);
   ctx.fillText('z*  (optimal lying prob)', 0, 0);
