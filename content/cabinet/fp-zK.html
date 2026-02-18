@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frequentist Persuasion — Optimal z(K)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#08080f;--surface:#10101c;--panel:#141422;--border:#252540;--border2:#353558;
+  --text:#e4e4f0;--dim:#8080a8;--faint:#404068;
+  --amber:#f2a600;--blue:#4da6ff;--green:#4ecb8a;
+}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;display:flex;flex-direction:column;}
+header{padding:18px 36px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:16px;flex-shrink:0;}
+.header-title{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
+.header-sub{font-size:1rem;color:var(--dim);font-style:italic;}
+.layout{flex:1;display:flex;min-height:0;}
+.sidebar{width:260px;flex-shrink:0;border-right:1px solid var(--border);padding:24px 22px;display:flex;flex-direction:column;gap:24px;overflow-y:auto;}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;}
+.param{display:flex;flex-direction:column;gap:6px;}
+.param-header{display:flex;justify-content:space-between;align-items:baseline;}
+.param-name{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--dim);}
+.param-val{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--text);}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border2);border-radius:2px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--amber);cursor:pointer;}
+.param-desc{font-size:.8rem;color:var(--faint);font-style:italic;line-height:1.4;}
+.stat-row{display:flex;flex-direction:column;gap:3px;}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+.stat-value{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--text);}
+.stat-value.amber{color:var(--amber);}.stat-value.blue{color:var(--blue);}
+hr{border:none;border-top:1px solid var(--border);}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;padding:28px 36px 24px;gap:16px;}
+.chart-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);flex-shrink:0;}
+.canvas-wrap{flex:1;min-height:0;position:relative;}
+canvas#chart{display:block;width:100%;height:100%;}
+#loadingMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--faint);pointer-events:none;opacity:0;transition:opacity .15s;}
+#loadingMsg.visible{opacity:1;}
+</style>
+</head>
+<body>
+<header>
+  <span class="header-title">Frequentist Persuasion</span>
+  <span class="header-sub">Optimal lying probability z*(K)</span>
+</header>
+<div class="layout">
+  <div class="sidebar">
+    <div>
+      <div class="section-label">Prior</div>
+      <div class="param">
+        <div class="param-header">
+          <span class="param-name">μ₀ = Pr[guilty]</span>
+          <span class="param-val" id="mu0Val">0.30</span>
+        </div>
+        <input type="range" id="mu0Slider" min="0.05" max="0.95" step="0.01" value="0.30" oninput="onParam()">
+        <span class="param-desc">Prior probability defendant is guilty</span>
+      </div>
+    </div>
+    <hr>
+    <div>
+      <div class="section-label">Benchmarks</div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="stat-row">
+          <div class="stat-label">KG optimum z^KG</div>
+          <div class="stat-value amber" id="zKGVal">—</div>
+          <div class="param-desc" style="margin-top:2px">μ₀ / (1−μ₀), capped at 1</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label">Min z* over K shown</div>
+          <div class="stat-value blue" id="zMinVal">—</div>
+          <div class="param-desc" style="margin-top:2px" id="zMinDesc">achieved at K = —</div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div>
+      <div class="section-label">Display</div>
+      <div class="param">
+        <div class="param-header">
+          <span class="param-name">K max</span>
+          <span class="param-val" id="kmaxVal">120</span>
+        </div>
+        <input type="range" id="kmaxSlider" min="20" max="170" step="5" value="120" oninput="onParam()">
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="chart-title">z*(K) — prosecutor's optimal lying probability as a function of sample size</div>
+    <div class="canvas-wrap">
+      <canvas id="chart"></canvas>
+      <div id="loadingMsg">computing…</div>
+    </div>
+  </div>
+</div>
+<script>
+/* ════════════════════════════════════════════════════════════════
+   MATH — Prosecutor–Judge case (Sood & Best 2026, Section 4.1)
+   ════════════════════════════════════════════════════════════════
+
+   Setup (binary Kamenica-Gentzkow with empirical beliefs):
+   ─────────────────────────────────────────────────────────────
+   States:   θ ∈ {0 = innocent, 1 = guilty}
+   Prior:    μ₀ = Pr[θ = 1]
+   Messages: m ∈ {0 = acquit, 1 = guilty}
+
+   Prosecutor's signal (choice variable z ∈ [0,1]):
+     Pr[m=1 | θ=1] = 1          (always report guilty if guilty)
+     Pr[m=1 | θ=0] = z          (lie with probability z if innocent)
+     Pr[m=0 | θ=0] = 1 − z
+
+   Joint distribution of one (θ, m) draw:
+     Pr[θ=1, m=1] = μ₀              =: pX   (true guilty signal)
+     Pr[θ=0, m=1] = (1−μ₀)·z       =: pY   (false guilty signal)
+     Pr[θ=0, m=0] = (1−μ₀)·(1−z)   =: pZ   (true acquit signal)
+     Pr[θ=1, m=0] = 0               (impossible under this signal)
+
+   Marginal prob of m=1:
+     π(z) = pX + pY = μ₀ + (1−μ₀)·z
+
+   Sample of size K:
+     (X, Y, Z) ~ Multinomial(K; pX, pY, pZ)
+     X = # draws with (θ=1, m=1)   [true guilty signals]
+     Y = # draws with (θ=0, m=1)   [false guilty signals]
+     Z = # draws with (θ=0, m=0)   [true acquit signals]
+
+   Fictitious-play learning rule:
+     Empirical belief on seeing m=1:  ℓ(θ=1 | m=1, H_K) = X / (X+Y)
+     If X+Y = 0 (defective sample): default action = acquit (a=0)
+
+   Judge's threshold rule (μ = 1/2):
+     Convict iff ℓ ≥ 1/2
+          iff X / (X+Y) ≥ 1/2
+          iff X ≥ Y   (and X+Y > 0)
+
+   Credibility probability:
+     c_K(z) = Pr[X ≥ Y, X+Y > 0]
+            = Σ_{x,y : x≥y, x+y>0}  Multinomial(x, y, K−x−y; pX, pY, pZ)
+
+   Prosecutor's value:
+     V_K(z) = π(z) · c_K(z)
+     Tradeoff: ↑z → more m=1 messages (↑π) but also ↑Y/X ratio (↓c_K)
+
+   KG optimum (K → ∞ limit):
+     z^KG = μ₀ / (1−μ₀)   [sets posterior Pr[θ=1|m=1] = exactly 1/2]
+     (capped at 1; only relevant when μ₀ < 1/2 in prosecutor-judge)
+
+   Optimal frequentist signal:
+     z*(K) = argmax_{z ∈ [0,1]}  V_K(z)
+
+   Proposition 2 (Sood & Best 2026):
+     z*(K) is eventually increasing and converges to z^KG from below.
+     It achieves a minimum at some finite K* < ∞, which is also the
+     sample size that maximises receiver (judge) welfare.
+
+   ────────────────────────────────────────────────────────────────
+   NUMERICAL METHOD
+
+   1. FACT[n] = n! precomputed as a plain number table (n ≤ 170)
+   2. multinomialPMF(x, y, zz, K, pX, pY, pZ):
+        K! / (x! y! zz!) · pX^x · pY^y · pZ^zz
+      computed directly — no logs, no approximations.
+   3. computeCK: double loop over (x,y), summing PMF where x ≥ y, x+y > 0
+   4. VK(z, mu0, K) = [μ₀ + (1−μ₀)·z] · c_K(z)
+   5. maximizeVK(mu0, K): golden-section search on z ∈ (0,1)
+   6. draw(): calls maximizeVK for each K = 1…kmax, plots the curve
+
+   Note: K ≤ 170 (JS number precision limit for exact factorials).
+   For K > 170 accuracy degrades — the slider is capped accordingly.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Factorial table: FACT[n] = n! for n = 0..170 ── */
+const FACT = new Array(171);
+FACT[0] = 1;
+for (let i = 1; i <= 170; i++) FACT[i] = FACT[i - 1] * i;
+
+/* ── Multinomial PMF: K! / (x! y! zz!) · pX^x · pY^y · pZ^zz ── */
+function multinomialPMF(x, y, zz, K, pX, pY, pZ) {
+  return FACT[K] / (FACT[x] * FACT[y] * FACT[zz])
+       * Math.pow(pX, x) * Math.pow(pY, y) * Math.pow(pZ, zz);
+}
+
+/* ── c_K(z) = Pr[X ≥ Y, X+Y > 0] under Multinomial(K; pX, pY, pZ) ── */
+function computeCK(z, mu0, K) {
+  const pX =  mu0;
+  const pY = (1 - mu0) * z;
+  const pZ = (1 - mu0) * (1 - z);
+
+  let cK = 0;
+  for (let x = 0; x <= K; x++) {
+    for (let y = 0; y <= K - x; y++) {
+      if (x + y === 0) continue;   // defective sample: default acquit, skip
+      if (x < y)       continue;   // judge acquits: skip
+      const zz = K - x - y;
+      cK += multinomialPMF(x, y, zz, K, pX, pY, pZ);
+    }
+  }
+  return cK;
+}
+
+/* ── V_K(z) = π(z) · c_K(z) ── */
+function VK(z, mu0, K) {
+  if (z < 1e-9) return 0;
+  const piZ = mu0 + (1 - mu0) * z;   // π(z) = Pr[m = guilty]
+  return piZ * computeCK(z, mu0, K);
+}
+
+/* ── Golden-section search: argmax_{z ∈ (0,1)} V_K(z) ── */
+function maximizeVK(mu0, K) {
+  const gr = (Math.sqrt(5) - 1) / 2;
+  let a = 1e-6, b = 1 - 1e-6;
+  let c = b - gr * (b - a), d = a + gr * (b - a);
+  let fc = VK(c, mu0, K), fd = VK(d, mu0, K);
+  for (let i = 0; i < 60 && b - a > 1e-6; i++) {
+    if (fc < fd) { a = c; c = d; fc = fd; d = a + gr*(b-a); fd = VK(d, mu0, K); }
+    else         { b = d; d = c; fd = fc; c = b - gr*(b-a); fc = VK(c, mu0, K); }
+  }
+  const zStar = (a + b) / 2;
+  return { z: zStar, v: VK(zStar, mu0, K) };
+}
+
+/* ════════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════════ */
+let mu0  = 0.30;
+let kmax = 120;
+
+/* ════════════════════════════════════════════════════════════════
+   DRAW
+   ════════════════════════════════════════════════════════════════ */
+function draw() {
+  const canvas = document.getElementById('chart');
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  if (!W || !H) return;
+  canvas.width  = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  const ml = 64, mr = 90, mt = 28, mb = 52;
+  const pw = W - ml - mr, ph = H - mt - mb;
+
+  const zKG = Math.min(mu0 / (1 - mu0), 1);
+
+  /* ── Compute z*(K) for every K from 1 to kmax ── */
+  const pts = [];
+  let zMin = Infinity, kMin = 1;
+  for (let k = 1; k <= kmax; k++) {
+    const { z } = maximizeVK(mu0, k);
+    pts.push({ k, z });
+    if (z < zMin) { zMin = z; kMin = k; }
+  }
+
+  /* Update sidebar stats */
+  document.getElementById('zKGVal').textContent  = zKG.toFixed(4);
+  document.getElementById('zMinVal').textContent  = zMin.toFixed(4);
+  document.getElementById('zMinDesc').textContent = `achieved at K = ${kMin}`;
+
+  /* ── Coordinate helpers ── */
+  const xp = k => ml + (k - 1) / (kmax - 1) * pw;
+  const yp = z => mt + ph * (1 - z);   // y domain is [0, 1]
+
+  /* Background */
+  ctx.fillStyle = '#08080f';
+  ctx.fillRect(0, 0, W, H);
+
+  /* Grid lines + y-axis labels */
+  [0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(y => {
+    ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(ml, yp(y)); ctx.lineTo(ml + pw, yp(y)); ctx.stroke();
+    ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(y.toFixed(1), ml - 8, yp(y) + 4);
+  });
+
+  /* x-axis ticks */
+  const xStep = kmax <= 60 ? 5 : kmax <= 120 ? 10 : kmax <= 200 ? 20 : 50;
+  ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+  for (let k = xStep; k <= kmax; k += xStep) {
+    ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xp(k), mt + ph); ctx.lineTo(xp(k), mt + ph + 5); ctx.stroke();
+    ctx.fillText(k, xp(k), mt + ph + 18);
+  }
+
+  /* Axis labels */
+  ctx.fillStyle = '#8080a8'; ctx.font = '12px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('K  (sample size)', ml + pw / 2, H - 6);
+  ctx.save();
+  ctx.translate(14, mt + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('z*  (optimal lying prob)', 0, 0);
+  ctx.restore();
+
+  /* ── zKG dashed reference line ── */
+  ctx.save();
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = '#f2a600'; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5;
+  ctx.beginPath(); ctx.moveTo(ml, yp(zKG)); ctx.lineTo(ml + pw, yp(zKG)); ctx.stroke();
+  ctx.restore();
+  ctx.fillStyle = '#f2a600'; ctx.globalAlpha = 0.75;
+  ctx.font = 'italic 11px JetBrains Mono, monospace'; ctx.textAlign = 'left';
+  ctx.fillText(`z^KG = ${zKG.toFixed(3)}`, ml + pw + 6, yp(zKG) + 4);
+  ctx.globalAlpha = 1;
+
+  /* ── Fill under z*(K) curve ── */
+  ctx.beginPath();
+  ctx.moveTo(xp(pts[0].k), mt + ph);
+  pts.forEach(p => ctx.lineTo(xp(p.k), yp(p.z)));
+  ctx.lineTo(xp(pts[pts.length - 1].k), mt + ph);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(242,166,0,0.07)'; ctx.fill();
+
+  /* ── z*(K) curve ── */
+  ctx.beginPath();
+  pts.forEach((p, i) => i === 0 ? ctx.moveTo(xp(p.k), yp(p.z)) : ctx.lineTo(xp(p.k), yp(p.z)));
+  ctx.strokeStyle = '#f2a600'; ctx.lineWidth = 2.2; ctx.lineJoin = 'round'; ctx.stroke();
+
+  /* ── Minimum dot ── */
+  const minPt = pts[kMin - 1];
+  ctx.beginPath(); ctx.arc(xp(minPt.k), yp(minPt.z), 5, 0, Math.PI * 2);
+  ctx.fillStyle = '#4da6ff'; ctx.fill();
+  ctx.strokeStyle = '#08080f'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  const lx = xp(minPt.k) + 9;
+  ctx.fillStyle = '#4da6ff'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'left';
+  ctx.fillText(`min z* = ${minPt.z.toFixed(3)}`, lx, yp(minPt.z) - 4);
+  ctx.fillStyle = '#8080a8';
+  ctx.fillText(`K = ${minPt.k}`, lx, yp(minPt.z) + 10);
+
+  /* Axis border */
+  ctx.strokeStyle = '#404068'; ctx.lineWidth = 1;
+  ctx.strokeRect(ml, mt, pw, ph);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CONTROLS
+   ════════════════════════════════════════════════════════════════ */
+let debounceTimer = null;
+
+function onParam() {
+  mu0  = parseFloat(document.getElementById('mu0Slider').value);
+  kmax = parseInt(document.getElementById('kmaxSlider').value);
+  document.getElementById('mu0Val').textContent  = mu0.toFixed(2);
+  document.getElementById('kmaxVal').textContent = kmax;
+  document.getElementById('loadingMsg').classList.add('visible');
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    draw();
+    document.getElementById('loadingMsg').classList.remove('visible');
+  }, 60);
+}
+
+window.addEventListener('resize', draw);
+window.addEventListener('load', draw);
+
+</script>
+</body>
+</html>
