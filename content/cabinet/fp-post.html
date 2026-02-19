@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frequentist Persuasion — Posterior Distribution</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #08080f;
+  --surface: #10101c;
+  --panel:   #141422;
+  --border:  #252540;
+  --border2: #353558;
+  --text:    #e4e4f0;
+  --dim:     #8080a8;
+  --faint:   #404068;
+  --amber:   #f2a600;
+  --amber-d: rgba(242,166,0,0.10);
+  --blue:    #4da6ff;
+  --blue-d:  rgba(77,166,255,0.10);
+  --green:   #4ecb8a;
+  --red:     #ff6060;
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.header-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.header-sub {
+  font-size: 1rem;
+  color: var(--dim);
+  font-style: italic;
+}
+
+.layout { flex: 1; display: flex; min-height: 0; }
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  overflow-y: auto;
+}
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 10px;
+}
+.param { display: flex; flex-direction: column; gap: 6px; }
+.param-header { display: flex; justify-content: space-between; align-items: baseline; }
+.param-name { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--dim); }
+.param-val  { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--text); }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%; height: 3px;
+  background: var(--border2);
+  border-radius: 2px; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--amber);
+  cursor: pointer;
+}
+.param-desc { font-size: 0.8rem; color: var(--faint); font-style: italic; line-height: 1.4; }
+
+.stat-row { display: flex; flex-direction: column; gap: 3px; }
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--text); }
+.stat-value.amber { color: var(--amber); }
+.stat-value.blue  { color: var(--blue); }
+
+hr { border: none; border-top: 1px solid var(--border); }
+
+.main {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+  padding: 28px 36px 24px;
+  gap: 16px;
+}
+.chart-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  flex-shrink: 0;
+}
+.canvas-wrap { flex: 1; min-height: 0; position: relative; }
+canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-title">Frequentist Persuasion</span>
+  <span class="header-sub">Distribution of posteriors given m = guilty</span>
+</header>
+
+<div class="layout">
+  <div class="sidebar">
+
+    <div>
+      <div class="section-label">Parameters</div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <div class="param">
+          <div class="param-header">
+            <span class="param-name">μ₀ = Pr[guilty]</span>
+            <span class="param-val" id="mu0Val">0.30</span>
+          </div>
+          <input type="range" id="mu0Slider" min="0.05" max="0.95" step="0.01" value="0.30" oninput="onParam()">
+        </div>
+
+        <div class="param">
+          <div class="param-header">
+            <span class="param-name">z  (lying prob)</span>
+            <span class="param-val" id="zVal">0.25</span>
+          </div>
+          <input type="range" id="zSlider" min="0.00" max="1.00" step="0.01" value="0.25" oninput="onParam()">
+          <span class="param-desc">Pr[m = guilty | θ = innocent]</span>
+        </div>
+
+        <div class="param">
+          <div class="param-header">
+            <span class="param-name">N  (sample size)</span>
+            <span class="param-val" id="nVal">8</span>
+          </div>
+          <input type="range" id="nSlider" min="1" max="500" step="1" value="8" oninput="onParam()">
+        </div>
+
+      </div>
+    </div>
+
+    <hr>
+
+    <div>
+      <div class="section-label">Summary</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div class="stat-row">
+          <div class="stat-label">z^KG</div>
+          <div class="stat-value amber" id="zKGVal">—</div>
+          <div class="param-desc" style="margin-top:2px">μ₀ / (1−μ₀)</div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-label">Pr[convict]  =  c_N(z)</div>
+          <div class="stat-value" id="cNVal">—</div>
+          <div class="param-desc" style="margin-top:2px">weight of points with posterior ≥ ½</div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-label">π(z)  =  Pr[m = guilty]</div>
+          <div class="stat-value" id="piVal">—</div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-label">V_N(z)  =  π · c_N</div>
+          <div class="stat-value amber" id="vNVal">—</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <div class="main">
+    <div class="chart-title">
+      Each point = one (X,Y) pair with X+Y &gt; 0 · x-axis: posterior X/(X+Y) · y-axis: Pr[X=x, Y=y]
+    </div>
+    <div class="canvas-wrap" style="position:relative">
+      <canvas id="chartScatter"></canvas>
+      <div style="position:absolute;top:8px;right:8px;display:flex;gap:6px">
+        <button onclick="zoomIn()"
+          style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+                 letter-spacing:0.1em;text-transform:uppercase;
+                 background:#141422;color:#8080a8;border:1px solid #252540;
+                 padding:5px 10px;cursor:pointer;border-radius:2px">
+          zoom in
+        </button>
+        <button id="resetZoom" onclick="resetZoom()"
+          style="display:none;font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+                 letter-spacing:0.1em;text-transform:uppercase;
+                 background:#141422;color:#8080a8;border:1px solid #252540;
+                 padding:5px 10px;cursor:pointer;border-radius:2px">
+          reset zoom
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   MATH — Posterior distribution under m = guilty
+   ════════════════════════════════════════════════════════════════
+
+   Setup (binary prosecutor-judge, same as fp-zK.html):
+     pX = μ₀              Pr[θ=guilty,   m=guilty]
+     pY = (1−μ₀)·z        Pr[θ=innocent, m=guilty]
+     pZ = (1−μ₀)·(1−z)    Pr[θ=innocent, m=acquit]
+
+   Sample: (X, Y, Z) ~ Multinomial(N; pX, pY, pZ)
+     X = # true guilty signals,  Y = # false guilty signals,
+     Z = # true acquit signals
+
+   When m=guilty is sent, the fictitious-play posterior is:
+     ℓ(θ=guilty | m=guilty, H_N) = X / (X+Y)
+
+   Each (x,y) pair with x+y > 0 induces a distinct posterior x/(x+y)
+   with unconditional probability:
+
+     Pr[X=x, Y=y] = N! / (x! · y! · (N−x−y)!) · pX^x · pY^y · pZ^(N−x−y)
+
+   (This is the marginal over z = N−x−y, which is just the multinomial PMF
+   since z is fully determined by x and y.)
+
+   Judge convicts iff posterior ≥ 1/2, i.e. X ≥ Y.
+
+   Credibility probability:
+     c_N(z) = Σ_{x≥y, x+y>0} Pr[X=x, Y=y]
+
+   Prosecutor's value:
+     V_N(z) = π(z) · c_N(z)   where π(z) = μ₀ + (1−μ₀)·z
+
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Log-factorial table: LF[n] = log(n!) for n = 0..500 ── */
+const LF = new Array(501);
+LF[0] = 0;
+for (let i = 1; i <= 500; i++) LF[i] = LF[i - 1] + Math.log(i);
+
+/* ── Multinomial PMF in log-space to avoid underflow at large N ──
+   Direct computation (FACT[N] / ... * pX^x * ...) overflows/underflows
+   once N > ~40. Instead we sum logs and exponentiate once at the end. ── */
+function multinomialPMF(x, y, zz, N, pX, pY, pZ) {
+  const logP = LF[N] - LF[x] - LF[y] - LF[zz]
+             + x  * Math.log(pX + 1e-300)
+             + y  * Math.log(pY + 1e-300)
+             + zz * Math.log(pZ + 1e-300);
+  return Math.exp(logP);
+}
+
+/* ── Enumerate all (x,y) pairs with meaningful probability ──
+   We iterate the full O(N²) triangle but skip any point whose
+   log-PMF is below LOG_THRESH (prob < ~1e-10). This is the only
+   filter — no normal-approximation bounds are used.                 ── */
+const LOG_THRESH = -23;   // exp(-23) ≈ 1e-10
+
+function posteriorPoints(mu0, z, N) {
+  const pX = mu0;
+  const pY = (1 - mu0) * z;
+  const pZ = (1 - mu0) * (1 - z);
+
+  const logPX = Math.log(pX + 1e-300);
+  const logPY = Math.log(pY + 1e-300);
+  const logPZ = Math.log(pZ + 1e-300);
+
+  const pts = [];
+  for (let x = 0; x <= N; x++) {
+    for (let y = 0; y <= N - x; y++) {
+      const zz   = N - x - y;
+      const logP = LF[N] - LF[x] - LF[y] - LF[zz]
+                 + x * logPX + y * logPY + zz * logPZ;
+      if (logP < LOG_THRESH) continue;   // negligible probability: skip
+      const prob = Math.exp(logP);
+      if (x + y === 0) {
+        // Defective sample: judge sees no m=guilty, reverts to prior μ₀
+        // Plotted at x = μ₀ on the posterior axis
+        pts.push({ x, y, post: mu0, prob, convict: false, defective: true });
+        continue;
+      }
+      const post    = x / (x + y);
+      const convict = x >= y;
+      pts.push({ x, y, post, prob, convict, defective: false });
+    }
+  }
+  return pts;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════════ */
+let mu0 = 0.30;
+let z   = 0.25;
+let N   = 8;
+
+/* View window: [xLo, xHi] × [yLo, yHi] in data coords.
+   Default is the full [0,1] × [0,1] domain.               */
+let view = { xLo: 0, xHi: 1, yLo: 0, yHi: 1 };
+
+/* ════════════════════════════════════════════════════════════════
+   DRAW
+   ════════════════════════════════════════════════════════════════ */
+function drawScatter(pts, zKG) {
+  const canvas = document.getElementById('chartScatter');
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  if (!W || !H) return;
+  canvas.width  = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  const ml = 64, mr = 36, mt = 28, mb = 44;
+  const pw = W - ml - mr, ph = H - mt - mb;
+
+  // Coordinate helpers — map data coords through current view window
+  const { xLo, xHi, yLo, yHi } = view;
+  const xp = v => ml + (v - xLo) / (xHi - xLo) * pw;
+  const yp = v => mt + ph * (1 - (v - yLo) / (yHi - yLo));
+
+  ctx.fillStyle = '#08080f';
+  ctx.fillRect(0, 0, W, H);
+
+  // Clip all drawing to the plot area
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(ml, mt, pw, ph);
+  ctx.clip();
+
+  /* Shaded regions */
+  ctx.fillStyle = 'rgba(77,166,255,0.04)';
+  ctx.fillRect(xp(0), mt, xp(0.5) - xp(0), ph);
+  ctx.fillStyle = 'rgba(242,166,0,0.04)';
+  ctx.fillRect(xp(0.5), mt, xp(1) - xp(0.5), ph);
+
+  /* Threshold at 0.5 */
+  if (0.5 >= xLo && 0.5 <= xHi) {
+    const threshX = xp(0.5);
+    ctx.save();
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = '#e4e4f0'; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.25;
+    ctx.beginPath(); ctx.moveTo(threshX, mt); ctx.lineTo(threshX, mt + ph); ctx.stroke();
+    ctx.restore();
+  }
+
+  /* Prior vertical line at μ₀ */
+  if (mu0 >= xLo && mu0 <= xHi) {
+    const priorX = xp(mu0);
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = '#8080a8'; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.4;
+    ctx.beginPath(); ctx.moveTo(priorX, mt); ctx.lineTo(priorX, mt + ph); ctx.stroke();
+    ctx.restore();
+  }
+
+  /* Points */
+  const R = Math.max(2, Math.min(7, 80 / Math.sqrt(pts.length)));
+  pts.forEach(p => {
+    const dataX = p.defective ? mu0 : p.post;
+    const dataY = p.prob;
+    // Skip points outside the view window
+    if (dataX < xLo || dataX > xHi || dataY < yLo || dataY > yHi) return;
+    const cx = xp(dataX), cy = yp(dataY);
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    if (p.defective) {
+      ctx.globalAlpha = 0.7;
+      ctx.strokeStyle = '#8080a8'; ctx.lineWidth = 1.5; ctx.stroke();
+    } else {
+      ctx.fillStyle = p.convict ? '#f2a600' : '#4da6ff';
+      ctx.globalAlpha = 0.85; ctx.fill();
+      ctx.strokeStyle = '#08080f'; ctx.lineWidth = 1; ctx.globalAlpha = 0.6; ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  });
+
+  ctx.restore(); // end clip
+
+  /* Grid lines (drawn after clip restore so they extend to axis) */
+  const nYTicks = 5;
+  for (let i = 0; i <= nYTicks; i++) {
+    const v  = yLo + i / nYTicks * (yHi - yLo);
+    const yy = yp(v);
+    ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(ml + pw, yy); ctx.stroke();
+    ctx.fillStyle = '#404068';
+    ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'right';
+    ctx.fillText(v.toFixed(3), ml - 8, yy + 4);
+  }
+
+  const nXTicks = 5;
+  for (let i = 0; i <= nXTicks; i++) {
+    const v  = xLo + i / nXTicks * (xHi - xLo);
+    const xx = xp(v);
+    ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xx, mt + ph); ctx.lineTo(xx, mt + ph + 5); ctx.stroke();
+    ctx.fillStyle = '#404068';
+    ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillText(v.toFixed(2), xx, mt + ph + 16);
+  }
+
+  /* Reference line labels (outside clip, above plot) */
+  if (0.5 >= xLo && 0.5 <= xHi) {
+    ctx.fillStyle = '#e4e4f0'; ctx.globalAlpha = 0.4;
+    ctx.font = '10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillText('½', xp(0.5), mt - 6);
+    ctx.globalAlpha = 1;
+  }
+  if (mu0 >= xLo && mu0 <= xHi) {
+    ctx.fillStyle = '#8080a8'; ctx.globalAlpha = 0.6;
+    ctx.font = '10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillText('μ₀', xp(mu0), mt - 6);
+    ctx.globalAlpha = 1;
+  }
+
+  /* Region labels */
+  ctx.font = '10px JetBrains Mono, monospace';
+  const midAcquit  = (Math.max(xLo, 0) + Math.min(xHi, 0.5)) / 2;
+  const midConvict = (Math.max(xLo, 0.5) + Math.min(xHi, 1)) / 2;
+  if (midAcquit > xLo && midAcquit < xHi) {
+    ctx.fillStyle = '#4da6ff'; ctx.globalAlpha = 0.5; ctx.textAlign = 'center';
+    ctx.fillText('acquit', xp(midAcquit), mt + 16);
+  }
+  if (midConvict > xLo && midConvict < xHi) {
+    ctx.fillStyle = '#f2a600'; ctx.globalAlpha = 0.5; ctx.textAlign = 'center';
+    ctx.fillText('convict', xp(midConvict), mt + 16);
+  }
+  ctx.globalAlpha = 1;
+
+  /* Axis labels */
+  ctx.fillStyle = '#8080a8';
+  ctx.font = '12px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('posterior  X / (X+Y)', ml + pw / 2, H - 6);
+  ctx.save();
+  ctx.translate(14, mt + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Pr[X = x, Y = y]', 0, 0);
+  ctx.restore();
+
+  ctx.strokeStyle = '#404068'; ctx.lineWidth = 1;
+  ctx.strokeRect(ml, mt, pw, ph);
+
+
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DRAW — top-level
+   ════════════════════════════════════════════════════════════════ */
+function draw() {
+  const pts  = posteriorPoints(mu0, z, N);
+  const zKG  = Math.min(mu0 / (1 - mu0), 1);
+  const piZ  = mu0 + (1 - mu0) * z;
+  const cN   = pts.filter(p => p.convict).reduce((s, p) => s + p.prob, 0);
+  const vN   = piZ * cN;
+
+  document.getElementById('zKGVal').textContent = zKG.toFixed(4);
+  document.getElementById('cNVal').textContent  = cN.toFixed(4);
+  document.getElementById('piVal').textContent  = piZ.toFixed(4);
+  document.getElementById('vNVal').textContent  = vN.toFixed(4);
+
+  drawScatter(pts, zKG);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ZOOM — button-based
+   "zoom in"  : tighten view around the current point mass
+   "reset zoom": return to full [0,1] × [0,1] view
+   ════════════════════════════════════════════════════════════════ */
+function zoomIn() {
+  // Compute bounding box of visible points, with a small padding
+  const pts = posteriorPoints(mu0, z, N);
+  if (pts.length === 0) return;
+
+  const xs = pts.map(p => p.defective ? mu0 : p.post);
+  const ys = pts.map(p => p.prob);
+
+  const xMin = Math.min(...xs), xMax = Math.max(...xs);
+  const yMin = Math.min(...ys), yMax = Math.max(...ys);
+
+  // Add 10% padding on each side
+  const xPad = (xMax - xMin) * 0.10 || 0.05;
+  const yPad = (yMax - yMin) * 0.10 || 0.005;
+
+  view = {
+    xLo: Math.max(0, xMin - xPad),
+    xHi: Math.min(1, xMax + xPad),
+    yLo: Math.max(0, yMin - yPad),
+    yHi: Math.min(1, yMax + yPad),
+  };
+
+  document.getElementById('resetZoom').style.display = 'block';
+  draw();
+}
+
+function resetZoom() {
+  view = { xLo: 0, xHi: 1, yLo: 0, yHi: 1 };
+  document.getElementById('resetZoom').style.display = 'none';
+  draw();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CONTROLS
+   ════════════════════════════════════════════════════════════════ */
+let debounceTimer = null;
+
+function onParam() {
+  mu0 = parseFloat(document.getElementById('mu0Slider').value);
+  z   = parseFloat(document.getElementById('zSlider').value);
+  N   = parseInt(document.getElementById('nSlider').value);
+  document.getElementById('mu0Val').textContent = mu0.toFixed(2);
+  document.getElementById('zVal').textContent   = z.toFixed(2);
+  document.getElementById('nVal').textContent   = N;
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(draw, N > 100 ? 120 : 0);
+}
+
+window.addEventListener('resize', draw);
+window.addEventListener('load', draw);
+</script>
+</body>
+</html>
