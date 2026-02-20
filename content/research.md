@@ -11,7 +11,7 @@ title = "research and simulations"
 
 ["Frequentist Persuasion"](https://arxiv.org/abs/2510.25066) --- Joint with [James A. Best](https://sites.google.com/site/jamesalaricbest/)
 
-> Some simulations: [prosecutor-judge game](https://arnavsood.com/cabinet/fp-sim/index.html), [posterior distribution](https://arnavsood.com/cabinet/fp-post/index.html) and [optimal sample sizes](https://arnavsood.com/cabinet/fp-zk/index.html).
+> Some simulations: [prosecutor-judge game](https://arnavsood.com/cabinet/fp-sim/index.html) and [distributions over posteriors](https://arnavsood.com/cabinet/fp-post/index.html).
 
 ### Works in Progress
 
