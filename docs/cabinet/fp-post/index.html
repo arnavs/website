@@ -334,26 +334,37 @@ function posteriorPoints(mu0, z, N) {
   const logPY = Math.log(pY + 1e-300);
   const logPZ = Math.log(pZ + 1e-300);
 
-  const pts = [];
+  // Accumulate into a map keyed by posterior value so that all (x,y)
+  // pairs inducing the same posterior (e.g. (1,1),(2,2),(3,3) all give ½)
+  // are collapsed into a single point with summed probability.
+  const map = new Map();   // key: posterior string -> { post, prob, convict, defective }
+
+  const key = post => post.toFixed(15);  // enough precision to distinguish all rationals
+
   for (let x = 0; x <= N; x++) {
     for (let y = 0; y <= N - x; y++) {
       const zz   = N - x - y;
       const logP = LF[N] - LF[x] - LF[y] - LF[zz]
                  + x * logPX + y * logPY + zz * logPZ;
-      if (logP < LOG_THRESH) continue;   // negligible probability: skip
+      if (logP < LOG_THRESH) continue;
       const prob = Math.exp(logP);
+
       if (x + y === 0) {
-        // Defective sample: judge sees no m=guilty, reverts to prior μ₀
-        // Plotted at x = μ₀ on the posterior axis
-        pts.push({ x, y, post: mu0, prob, convict: false, defective: true });
+        // Defective: aggregate all defective samples into one point at μ₀
+        const k = 'defective';
+        if (map.has(k)) map.get(k).prob += prob;
+        else map.set(k, { post: mu0, prob, convict: false, defective: true });
         continue;
       }
+
       const post    = x / (x + y);
       const convict = x >= y;
-      pts.push({ x, y, post, prob, convict, defective: false });
+      const k = key(post);
+      if (map.has(k)) map.get(k).prob += prob;
+      else map.set(k, { post, prob, convict, defective: false });
     }
   }
-  return pts;
+  return Array.from(map.values());
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -534,24 +545,29 @@ function draw() {
    "reset zoom": return to full [0,1] × [0,1] view
    ════════════════════════════════════════════════════════════════ */
 function zoomIn() {
-  // Compute bounding box of visible points, with a small padding
   const pts = posteriorPoints(mu0, z, N);
   if (pts.length === 0) return;
 
-  const xs = pts.map(p => p.defective ? mu0 : p.post);
-  const ys = pts.map(p => p.prob);
+  // Exclude the single highest-probability point (typically the ½ mass point)
+  // so the y-axis scales to the histogram rather than the dominant spike.
+  const maxProb = Math.max(...pts.map(p => p.prob));
+  const rest = pts.filter(p => p.prob < maxProb);
+  const base = rest.length > 0 ? rest : pts;
+
+  const xs = base.map(p => p.defective ? mu0 : p.post);
+  const ys = base.map(p => p.prob);
 
   const xMin = Math.min(...xs), xMax = Math.max(...xs);
-  const yMin = Math.min(...ys), yMax = Math.max(...ys);
+  const yMin = 0;
+  const yMax = Math.max(...ys);
 
-  // Add 10% padding on each side
   const xPad = (xMax - xMin) * 0.10 || 0.05;
-  const yPad = (yMax - yMin) * 0.10 || 0.005;
+  const yPad = yMax * 0.15;
 
   view = {
     xLo: Math.max(0, xMin - xPad),
     xHi: Math.min(1, xMax + xPad),
-    yLo: Math.max(0, yMin - yPad),
+    yLo: 0,
     yHi: Math.min(1, yMax + yPad),
   };
 
