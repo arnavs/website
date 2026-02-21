@@ -338,6 +338,14 @@ let N   = 8;
    Default is the full [0,1] × [0,1] domain.               */
 let view = { xLo: 0, xHi: 1, yLo: 0, yHi: 1 };
 
+
+/* Broken y-axis state. When active, the plot is split into two zones:
+     lower zone: [0, yBreakLo]  — the main histogram
+     upper zone: [yBreakHi, yMax] — the spike
+   with a zigzag break marker between them.
+   breakAxis = null means no break (normal view).            */
+let breakAxis = null;  // null | { yBreakLo, yBreakHi, yMax, lowerFrac }
+
 /* ════════════════════════════════════════════════════════════════
    DRAW
    ════════════════════════════════════════════════════════════════ */
@@ -352,20 +360,35 @@ function drawScatter(pts, zKG) {
 
   const ml = 64, mr = 36, mt = 28, mb = 44;
   const pw = W - ml - mr, ph = H - mt - mb;
+  const BREAK_GAP = 10;
 
-  // Coordinate helpers — map data coords through current view window
   const { xLo, xHi, yLo, yHi } = view;
   const xp = v => ml + (v - xLo) / (xHi - xLo) * pw;
-  const yp = v => mt + ph * (1 - (v - yLo) / (yHi - yLo));
+
+  /* ── Y mapping: normal or broken ── */
+  let yp, inYRange;
+  if (!breakAxis) {
+    yp       = v => mt + ph * (1 - (v - yLo) / (yHi - yLo));
+    inYRange = v => v >= yLo && v <= yHi;
+  } else {
+    const { yBreakLo, yBreakHi, yMax, lowerFrac } = breakAxis;
+    const phLo   = (ph - BREAK_GAP) * lowerFrac;
+    const phHi   = (ph - BREAK_GAP) * (1 - lowerFrac);
+    const pyBreak = mt + phHi;
+    yp = v => {
+      if (v <= yBreakLo)
+        return (pyBreak + BREAK_GAP) + phLo * (1 - v / yBreakLo);
+      else
+        return mt + phHi * (1 - (v - yBreakHi) / (yMax - yBreakHi));
+    };
+    inYRange = v => v <= yBreakLo || (v >= yBreakHi && v <= yMax);
+  }
 
   ctx.fillStyle = '#08080f';
   ctx.fillRect(0, 0, W, H);
 
-  // Clip all drawing to the plot area
   ctx.save();
-  ctx.beginPath();
-  ctx.rect(ml, mt, pw, ph);
-  ctx.clip();
+  ctx.beginPath(); ctx.rect(ml, mt, pw, ph); ctx.clip();
 
   /* Shaded regions */
   ctx.fillStyle = 'rgba(77,166,255,0.04)';
@@ -375,21 +398,17 @@ function drawScatter(pts, zKG) {
 
   /* Threshold at 0.5 */
   if (0.5 >= xLo && 0.5 <= xHi) {
-    const threshX = xp(0.5);
-    ctx.save();
-    ctx.setLineDash([6, 4]);
+    ctx.save(); ctx.setLineDash([6, 4]);
     ctx.strokeStyle = '#e4e4f0'; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.25;
-    ctx.beginPath(); ctx.moveTo(threshX, mt); ctx.lineTo(threshX, mt + ph); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xp(0.5), mt); ctx.lineTo(xp(0.5), mt + ph); ctx.stroke();
     ctx.restore();
   }
 
   /* Prior vertical line at μ₀ */
   if (mu0 >= xLo && mu0 <= xHi) {
-    const priorX = xp(mu0);
-    ctx.save();
-    ctx.setLineDash([4, 4]);
+    ctx.save(); ctx.setLineDash([4, 4]);
     ctx.strokeStyle = '#8080a8'; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.4;
-    ctx.beginPath(); ctx.moveTo(priorX, mt); ctx.lineTo(priorX, mt + ph); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xp(mu0), mt); ctx.lineTo(xp(mu0), mt + ph); ctx.stroke();
     ctx.restore();
   }
 
@@ -398,8 +417,7 @@ function drawScatter(pts, zKG) {
   pts.forEach(p => {
     const dataX = p.defective ? mu0 : p.post;
     const dataY = p.prob;
-    // Skip points outside the view window
-    if (dataX < xLo || dataX > xHi || dataY < yLo || dataY > yHi) return;
+    if (dataX < xLo || dataX > xHi || !inYRange(dataY)) return;
     const cx = xp(dataX), cy = yp(dataY);
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
     if (p.defective) {
@@ -413,43 +431,78 @@ function drawScatter(pts, zKG) {
     ctx.globalAlpha = 1;
   });
 
-  ctx.restore(); // end clip
-
-  /* Grid lines (drawn after clip restore so they extend to axis) */
-  const nYTicks = 5;
-  for (let i = 0; i <= nYTicks; i++) {
-    const v  = yLo + i / nYTicks * (yHi - yLo);
-    const yy = yp(v);
-    ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(ml + pw, yy); ctx.stroke();
-    ctx.fillStyle = '#404068';
-    ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'right';
-    ctx.fillText(v.toFixed(3), ml - 8, yy + 4);
+  /* Break marker */
+  if (breakAxis) {
+    const { lowerFrac } = breakAxis;
+    const phHi    = (ph - BREAK_GAP) * (1 - lowerFrac);
+    const pyBreak = mt + phHi;
+    const zigW = 10, zigH = 3, nZig = Math.ceil(pw / zigW);
+    const zigzag = yBase => {
+      ctx.beginPath(); ctx.moveTo(ml, yBase);
+      for (let i = 0; i < nZig; i++) {
+        ctx.lineTo(ml + (i + 0.5) * zigW, yBase - zigH);
+        ctx.lineTo(ml + (i + 1)   * zigW, yBase);
+      }
+      ctx.strokeStyle = '#404068'; ctx.lineWidth = 1.5; ctx.stroke();
+    };
+    ctx.fillStyle = '#08080f';
+    ctx.fillRect(ml, pyBreak, pw, BREAK_GAP);
+    zigzag(pyBreak);
+    zigzag(pyBreak + BREAK_GAP);
   }
 
-  const nXTicks = 5;
-  for (let i = 0; i <= nXTicks; i++) {
-    const v  = xLo + i / nXTicks * (xHi - xLo);
+  ctx.restore();
+
+  /* Y-axis ticks */
+  if (!breakAxis) {
+    for (let i = 0; i <= 5; i++) {
+      const v = yLo + i / 5 * (yHi - yLo);
+      const yy = yp(v);
+      ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(ml + pw, yy); ctx.stroke();
+      ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(3), ml - 8, yy + 4);
+    }
+  } else {
+    const { yBreakLo, yBreakHi, yMax } = breakAxis;
+    for (let i = 0; i <= 4; i++) {
+      const v = i / 4 * yBreakLo;
+      const yy = yp(v);
+      ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(ml + pw, yy); ctx.stroke();
+      ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(3), ml - 8, yy + 4);
+    }
+    for (let i = 0; i <= 2; i++) {
+      const v = yBreakHi + i / 2 * (yMax - yBreakHi);
+      const yy = yp(v);
+      ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(ml + pw, yy); ctx.stroke();
+      ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(3), ml - 8, yy + 4);
+    }
+  }
+
+  /* X-axis ticks */
+  for (let i = 0; i <= 5; i++) {
+    const v  = xLo + i / 5 * (xHi - xLo);
     const xx = xp(v);
     ctx.strokeStyle = '#252540'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(xx, mt + ph); ctx.lineTo(xx, mt + ph + 5); ctx.stroke();
-    ctx.fillStyle = '#404068';
-    ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'center';
     ctx.fillText(v.toFixed(2), xx, mt + ph + 16);
   }
 
-  /* Reference line labels (outside clip, above plot) */
+  /* Reference labels above plot */
   if (0.5 >= xLo && 0.5 <= xHi) {
     ctx.fillStyle = '#e4e4f0'; ctx.globalAlpha = 0.4;
     ctx.font = '10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
-    ctx.fillText('½', xp(0.5), mt - 6);
-    ctx.globalAlpha = 1;
+    ctx.fillText('½', xp(0.5), mt - 6); ctx.globalAlpha = 1;
   }
   if (mu0 >= xLo && mu0 <= xHi) {
     ctx.fillStyle = '#8080a8'; ctx.globalAlpha = 0.6;
     ctx.font = '10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
-    ctx.fillText('μ₀', xp(mu0), mt - 6);
-    ctx.globalAlpha = 1;
+    ctx.fillText('μ₀', xp(mu0), mt - 6); ctx.globalAlpha = 1;
   }
 
   /* Region labels */
@@ -477,8 +530,6 @@ function drawScatter(pts, zKG) {
 
   ctx.strokeStyle = '#404068'; ctx.lineWidth = 1;
   ctx.strokeRect(ml, mt, pw, ph);
-
-
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -501,42 +552,54 @@ function draw() {
 
 /* ════════════════════════════════════════════════════════════════
    ZOOM — button-based
-   "zoom in"  : tighten view around the current point mass
-   "reset zoom": return to full [0,1] × [0,1] view
+   "zoom in"  : introduce a broken y-axis to show histogram + spike
+   "reset zoom": remove the break, restore full linear y-axis
    ════════════════════════════════════════════════════════════════ */
 function zoomIn() {
   const pts = posteriorPoints(mu0, z, N);
   if (pts.length === 0) return;
 
-  // Exclude the single highest-probability point (typically the ½ mass point)
-  // so the y-axis scales to the histogram rather than the dominant spike.
-  const maxProb = Math.max(...pts.map(p => p.prob));
-  const rest = pts.filter(p => p.prob < maxProb);
-  const base = rest.length > 0 ? rest : pts;
+  const probs = pts.map(p => p.prob).sort((a, b) => b - a);
+  const maxProb    = probs[0];
+  const secondProb = probs[1] ?? 0;
+  const tickSize   = secondProb / 4;
 
-  const xs = base.map(p => p.defective ? mu0 : p.post);
-  const ys = base.map(p => p.prob);
+  if (maxProb - secondProb <= tickSize) {
+    // No spike: plain zoom, no break needed
+    breakAxis = null;
+    const xs = pts.map(p => p.defective ? mu0 : p.post);
+    const xMin = Math.min(...xs), xMax = Math.max(...xs);
+    const xPad = (xMax - xMin) * 0.10 || 0.05;
+    view = { xLo: Math.max(0, xMin - xPad), xHi: Math.min(1, xMax + xPad),
+             yLo: 0, yHi: Math.min(1, maxProb * 1.15) };
+  } else {
+    // Spike detected: break the y-axis
+    const yBreakLo  = secondProb * 1.25;
+    const yBreakHi  = maxProb    * 0.80;
+    const yMax      = maxProb    * 1.12;
+    const lowerTick = yBreakLo   / 4;   // one y-axis tick in the lower zone
 
-  const xMin = Math.min(...xs), xMax = Math.max(...xs);
-  const yMin = 0;
-  const yMax = Math.max(...ys);
-
-  const xPad = (xMax - xMin) * 0.10 || 0.05;
-  const yPad = yMax * 0.15;
-
-  view = {
-    xLo: Math.max(0, xMin - xPad),
-    xHi: Math.min(1, xMax + xPad),
-    yLo: 0,
-    yHi: Math.min(1, yMax + yPad),
-  };
+    if (yBreakHi - yBreakLo < lowerTick) {
+      // Break gap smaller than one tick — not worth showing, plain zoom instead
+      breakAxis = null;
+      const xs = pts.map(p => p.defective ? mu0 : p.post);
+      const xMin = Math.min(...xs), xMax = Math.max(...xs);
+      const xPad = (xMax - xMin) * 0.10 || 0.05;
+      view = { xLo: Math.max(0, xMin - xPad), xHi: Math.min(1, xMax + xPad),
+               yLo: 0, yHi: Math.min(1, maxProb * 1.15) };
+    } else {
+      breakAxis = { yBreakLo, yBreakHi, yMax, lowerFrac: 0.75 };
+      view = { xLo: 0, xHi: 1, yLo: 0, yHi: 1 };
+    }
+  }
 
   document.getElementById('resetZoom').style.display = 'block';
   draw();
 }
 
 function resetZoom() {
-  view = { xLo: 0, xHi: 1, yLo: 0, yHi: 1 };
+  view     = { xLo: 0, xHi: 1, yLo: 0, yHi: 1 };
+  breakAxis = null;
   document.getElementById('resetZoom').style.display = 'none';
   draw();
 }
