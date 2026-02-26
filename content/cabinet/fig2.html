@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Clones — Figure 2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07070e; --surface:#0f0f1a; --panel:#13131f;
+  --border:#21213a; --border2:#2e2e50;
+  --text:#ddddf0; --dim:#7070a0; --faint:#252540;
+  --amber:#f2a600; --amber-d:rgba(242,166,0,0.10);
+  --blue:#5ab4ff;  --blue-d:rgba(90,180,255,0.10);
+  --rose:#e8607a;
+  --green:#4ecb8a;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;}
+.shell{display:flex;height:100%;flex-direction:column}
+
+header{height:52px;display:flex;align-items:center;padding:0 28px;border-bottom:1px solid var(--border);flex-shrink:0;gap:16px;background:var(--surface);}
+.title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:500}
+.title em{font-style:italic;color:var(--amber)}
+.subtitle{font-size:.85rem;color:var(--dim);font-style:italic}
+.tag{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+
+.body{display:flex;flex:1;overflow:hidden}
+
+.sidebar{width:260px;flex-shrink:0;border-right:1px solid var(--border);padding:20px 18px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;background:var(--surface);}
+.s-head{font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;}
+.s-desc{font-size:.87rem;line-height:1.55;color:var(--dim)}
+hr.div{border:none;border-top:1px solid var(--border)}
+
+.param{display:flex;flex-direction:column;gap:5px}
+.param-row{display:flex;justify-content:space-between;align-items:baseline}
+.pname{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.pval{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--amber)}
+.pval.blue{color:var(--blue)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:var(--border2);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--amber);cursor:pointer;}
+input[type=range].blue::-webkit-slider-thumb{background:var(--blue)}
+
+.btn-row{display:flex;gap:8px}
+.btn{flex:1;font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:9px 10px;border:1px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;transition:background .15s,border-color .15s,color .15s;border-radius:2px;}
+.btn:hover{background:var(--faint);border-color:var(--dim)}
+.btn.primary{border-color:var(--amber);color:var(--amber)}
+.btn.primary:hover{background:var(--amber-d)}
+
+.dim-toggle{display:flex;gap:0;border:1px solid var(--border2);border-radius:3px;overflow:hidden;}
+.dim-btn{flex:1;font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:8px;border:none;background:transparent;color:var(--dim);cursor:pointer;transition:background .15s,color .15s;}
+.dim-btn.active{background:var(--faint);color:var(--amber);}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.toggle-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.toggle{position:relative;width:32px;height:17px;cursor:pointer;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0}
+.track{position:absolute;inset:0;background:var(--faint);border-radius:9px;transition:background .2s;border:1px solid var(--border2);}
+.toggle input:checked + .track{background:rgba(242,166,0,.3);border-color:var(--amber)}
+.knob{position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:var(--dim);transition:transform .2s,background .2s;}
+.toggle input:checked ~ .knob{transform:translateX(15px);background:var(--amber)}
+
+.legend{display:flex;flex-direction:column;gap:7px}
+.leg{display:flex;align-items:center;gap:9px;font-size:.83rem;line-height:1.4}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.leg-dline{width:20px;height:0;border-top:2px dashed;flex-shrink:0}
+.leg-sline{width:20px;height:2px;flex-shrink:0}
+.leg-text{color:var(--dim)}
+
+.dist-box{background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:11px 13px;display:flex;flex-direction:column;gap:7px;}
+.dist-row{display:flex;justify-content:space-between;align-items:baseline}
+.dlabel{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.dval{font-family:'JetBrains Mono',monospace;font-size:.75rem}
+.winner{margin-top:2px;padding:5px 8px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;border:1px solid transparent;}
+.winner.good{background:var(--amber-d);color:var(--amber);border-color:var(--amber)}
+.winner.bad{background:var(--blue-d);color:var(--blue);border-color:var(--blue)}
+.winner.neutral{background:var(--faint);color:var(--dim);border-color:var(--border2)}
+
+.canvas-wrap{flex:1;position:relative;overflow:hidden;background:var(--bg)}
+canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="title"><em>AI Clones</em> — Figure 2</div>
+  <div class="subtitle">The platform observes representation distance, not true distance</div>
+  <div class="tag">Liang 2026</div>
+</header>
+<div class="body">
+
+<div class="sidebar">
+  <div>
+    <div class="s-head">Model</div>
+    <div class="s-desc">Target x₀ at origin. Candidates Xᵢ drawn from the unit ball. Each interaction generates noisy reps Yᵢ₀ and Y₀ᵢ. Platform selects argmin ‖Yᵢ₀ − Y₀ᵢ‖.</div>
+  </div>
+
+  <hr class="div">
+
+  <div>
+    <div class="s-head">Dimensions</div>
+    <div class="dim-toggle">
+      <button class="dim-btn active" id="btn-2d">2D</button>
+      <button class="dim-btn" id="btn-3d">3D</button>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div class="s-head">Parameters</div>
+    <div class="param">
+      <div class="param-row">
+        <span class="pname">AI Noise σ</span>
+        <span class="pval" id="v-sigma">0.15</span>
+      </div>
+      <input type="range" id="s-sigma" min="0.01" max="0.55" value="0.15" step="0.01">
+    </div>
+    <div class="param">
+      <div class="param-row">
+        <span class="pname">Candidates n</span>
+        <span class="pval blue" id="v-n">3</span>
+      </div>
+      <input type="range" class="blue" id="s-n" min="1" max="8" value="3" step="1">
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <button class="btn primary" id="btn-new" style="width:100%">↻ New Draw</button>
+
+  <hr class="div">
+
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div class="s-head">Show / Hide</div>
+    <div class="toggle-row">
+      <span class="toggle-label">True distances</span>
+      <label class="toggle"><input type="checkbox" id="tog-true" checked><div class="track"></div><div class="knob"></div></label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Rep. distances</span>
+      <label class="toggle"><input type="checkbox" id="tog-rep" checked><div class="track"></div><div class="knob"></div></label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Noise connectors</span>
+      <label class="toggle"><input type="checkbox" id="tog-noise"><div class="track"></div><div class="knob"></div></label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-label">Distance labels</span>
+      <label class="toggle"><input type="checkbox" id="tog-dlabels" checked><div class="track"></div><div class="knob"></div></label>
+    </div>
+  </div>
+
+  <hr class="div">
+
+  <div class="legend">
+    <div class="s-head">Legend</div>
+    <div class="leg"><div class="leg-dot" style="background:#fff;opacity:.9"></div><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem">x₀</span><span class="leg-text"> target</span></div>
+    <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem">Xᵢ</span><span class="leg-text"> true candidate</span></div>
+    <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem">Yᵢ₀</span><span class="leg-text"> candidate rep</span></div>
+    <div class="leg"><div class="leg-dot" style="background:var(--rose)"></div><span style="font-family:'JetBrains Mono',monospace;font-size:.65rem">Y₀ᵢ</span><span class="leg-text"> target rep</span></div>
+    <div class="leg"><div class="leg-dline" style="border-color:var(--amber)"></div><span class="leg-text">true dist ‖Xᵢ‖</span></div>
+    <div class="leg"><div class="leg-sline" style="background:var(--blue)"></div><span class="leg-text">rep dist ‖Yᵢ₀−Y₀ᵢ‖</span></div>
+    <div class="leg"><div class="leg-dot" style="background:var(--green)"></div><span class="leg-text">platform's pick</span></div>
+  </div>
+
+  <hr class="div">
+
+  <div class="dist-box">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
+      <div class="s-head" style="margin:0">Distances</div>
+      <span onclick="toggleAll()" style="font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);cursor:pointer;margin-left:auto;text-decoration:underline;text-underline-offset:2px;" id="tog-all-lbl">hide all</span>
+    </div>
+    <div id="dist-rows"></div>
+    <div class="winner neutral" id="winner-tag">—</div>
+  </div>
+</div>
+
+<div class="canvas-wrap" id="wrap">
+  <canvas id="c2d"></canvas>
+  <canvas id="c3d" style="display:none"></canvas>
+</div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────
+const randn = () => {
+  let u,v;
+  do{u=Math.random()}while(!u);
+  do{v=Math.random()}while(!v);
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+};
+const norm  = x => Math.sqrt(x.reduce((s,v)=>s+v*v,0));
+const noise = (x,s) => x.map(v=>v+s*randn());
+const clamp1 = x => { const r=norm(x); return r>0.99?x.map(v=>v/r*0.97):x; };
+const sub = n => String(n).split('').map(c=>'₀₁₂₃₄₅₆₇₈₉'[+c]).join('');
+
+function randDisk() {
+  const a=Math.random()*2*Math.PI, r=Math.sqrt(Math.random());
+  return [r*Math.cos(a), r*Math.sin(a)];
+}
+function randBall3() {
+  const x=[randn(),randn(),randn()], r=norm(x), u=Math.cbrt(Math.random());
+  return x.map(v=>v/r*u);
+}
+
+// ─────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────
+let mode = '2d';
+let state = { candidates:[], sigma:.15, bestIdx:0 };
+
+function generate() {
+  // Fresh draw: new Xi positions + new noise
+  const sigma = +document.getElementById('s-sigma').value;
+  const n     = +document.getElementById('s-n').value;
+  state.sigma = sigma;
+  const is3 = mode==='3d';
+  state.candidates = Array.from({length:n}, () => {
+    const Xi  = is3 ? randBall3() : randDisk();
+    const Yi0 = clamp1(noise(Xi, sigma));
+    const Y0i = clamp1(noise(is3?[0,0,0]:[0,0], sigma));
+    const trueD = norm(Xi);
+    const repD  = norm(Yi0.map((v,j)=>v-Y0i[j]));
+    return {Xi, Yi0, Y0i, trueD, repD, on:true};
+  });
+  recomputeBest();
+}
+
+function redrawNoise() {
+  // Keep Xi fixed, only resample noise
+  const sigma = +document.getElementById('s-sigma').value;
+  state.sigma = sigma;
+  const is3 = mode==='3d';
+  state.candidates = state.candidates.map(c => {
+    const Yi0  = clamp1(noise(c.Xi, sigma));
+    const Y0i  = clamp1(noise(is3?[0,0,0]:[0,0], sigma));
+    const repD = norm(Yi0.map((v,j)=>v-Y0i[j]));
+    return {...c, Yi0, Y0i, repD};
+  });
+  recomputeBest();
+}
+
+function recomputeBest() {
+  const active = state.candidates.map((c,i)=>({c,i})).filter(({c})=>c.on);
+  state.bestIdx = active.length
+    ? active.reduce((b,x)=>x.c.repD<b.c.repD?x:b).i
+    : -1;
+  updatePanel();
+  if(mode==='2d') draw2d(); else draw3d();
+}
+
+function toggleCandidate(i) {
+  state.candidates[i].on = !state.candidates[i].on;
+  const anyOn = state.candidates.some(c=>c.on);
+  document.getElementById('tog-all-lbl').textContent = anyOn ? 'hide all' : 'show all';
+  recomputeBest();
+}
+
+function toggleAll() {
+  const anyOn = state.candidates.some(c=>c.on);
+  state.candidates.forEach(c=>c.on=!anyOn);
+  document.getElementById('tog-all-lbl').textContent = anyOn ? 'show all' : 'hide all';
+  recomputeBest();
+}
+
+// ─────────────────────────────────────
+//  SIDEBAR PANEL
+// ─────────────────────────────────────
+function updatePanel() {
+  const {candidates,bestIdx} = state;
+  const rows = document.getElementById('dist-rows');
+  rows.innerHTML = '';
+  candidates.forEach((c,i) => {
+    const best = i===bestIdx && c.on;
+    const d = document.createElement('div');
+    d.className = 'dist-row'; d.style.marginBottom='6px'; d.style.gap='6px';
+    d.innerHTML = `
+      <button onclick="toggleCandidate(${i})" style="
+        font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;
+        text-transform:uppercase;padding:3px 7px;border-radius:2px;cursor:pointer;
+        border:1px solid ${c.on?(best?'var(--amber)':'var(--border2)'):'var(--faint)'};
+        background:${c.on?'transparent':'var(--faint)'};
+        color:${c.on?(best?'var(--amber)':'var(--dim)'):'var(--faint)'};
+        transition:all .15s;flex-shrink:0;">
+        ${best?'★ ':''}X${sub(i+1)}
+      </button>
+      <span style="display:flex;gap:8px;opacity:${c.on?1:.3};transition:opacity .2s">
+        <span class="dval" style="color:#f2a600;opacity:${best?1:.6}">‖X‖=${c.trueD.toFixed(3)}</span>
+        <span class="dval" style="color:#5ab4ff;opacity:${best?1:.6}">‖Y‖=${c.repD.toFixed(3)}</span>
+      </span>`;
+    rows.appendChild(d);
+  });
+  const active = candidates.filter(c=>c.on);
+  const tag = document.getElementById('winner-tag');
+  if(!active.length) {
+    tag.textContent = 'No active candidates'; tag.className='winner neutral'; return;
+  }
+  const best = bestIdx >= 0 ? candidates[bestIdx] : null;
+  if(!best) return;
+  const trueBest = Math.min(...active.map(c=>c.trueD));
+  if(best.trueD <= trueBest+1e-9) {
+    tag.textContent = 'Platform selected true-best match ✓';
+    tag.className = 'winner good';
+  } else {
+    tag.textContent = `Picked ${best.trueD.toFixed(3)} — true best was ${trueBest.toFixed(3)}`;
+    tag.className = 'winner bad';
+  }
+}
+
+// ─────────────────────────────────────
+//  2D RENDERER
+// ─────────────────────────────────────
+const c2 = document.getElementById('c2d');
+const x2 = c2.getContext('2d');
+const wrap = document.getElementById('wrap');
+
+function draw2d() {
+  const dpr = window.devicePixelRatio||1;
+  c2.width  = wrap.clientWidth  * dpr;
+  c2.height = wrap.clientHeight * dpr;
+  c2.style.width  = wrap.clientWidth+'px';
+  c2.style.height = wrap.clientHeight+'px';
+
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  x2.save(); x2.scale(dpr,dpr);
+  x2.clearRect(0,0,W,H);
+
+  const cx = W/2, cy = H/2;
+  const R  = Math.min(W,H) * 0.40;
+  const toS = ([px,py]) => [cx+px*R, cy-py*R];
+
+  // background
+  x2.fillStyle = '#07070e'; x2.fillRect(0,0,W,H);
+
+  // faint radial grid
+  [0.25,0.5,0.75].forEach(r => {
+    x2.beginPath(); x2.arc(cx,cy,R*r,0,Math.PI*2);
+    x2.strokeStyle='rgba(37,37,64,.5)'; x2.lineWidth=.5; x2.stroke();
+  });
+  x2.strokeStyle='rgba(37,37,64,.5)'; x2.lineWidth=.5;
+  x2.beginPath(); x2.moveTo(cx-R*1.08,cy); x2.lineTo(cx+R*1.08,cy); x2.stroke();
+  x2.beginPath(); x2.moveTo(cx,cy-R*1.08); x2.lineTo(cx,cy+R*1.08); x2.stroke();
+
+  // unit circle
+  x2.beginPath(); x2.arc(cx,cy,R,0,Math.PI*2);
+  x2.strokeStyle='rgba(53,53,88,.85)'; x2.lineWidth=1.3; x2.stroke();
+
+  const showTrue   = document.getElementById('tog-true').checked;
+  const showRep    = document.getElementById('tog-rep').checked;
+  const showNoise  = document.getElementById('tog-noise').checked;
+  const showLabels = document.getElementById('tog-dlabels').checked;
+  const {candidates, bestIdx} = state;
+
+  candidates.forEach((c,i) => {
+    const best  = i===bestIdx;
+    const fa    = best ? 1 : 0.35;   // full alpha / dim alpha
+
+    const [ox,oy]    = [cx,cy];
+    const [xx,xy]    = toS(c.Xi);
+    const [yx,yy]    = toS(c.Yi0);
+    const [y0x,y0y]  = toS(c.Y0i);
+
+    if(!c.on) {
+      // ghost: just dim dots, no lines, no labels
+      dot(x2, xx,xy,  4.5, 'rgba(242,166,0,0.12)');
+      dot(x2, yx,yy,  3.5, 'rgba(90,180,255,0.12)');
+      dot(x2, y0x,y0y,3.5, 'rgba(232,96,122,0.12)');
+      return;
+    }
+
+    // noise connectors (very faint dashed)
+    if(showNoise) {
+      line(x2, ox,oy, y0x,y0y, `rgba(232,96,122,${fa*0.4})`, 1, [4,4]);
+      line(x2, xx,xy, yx,yy,   `rgba(90,180,255,${fa*0.4})`, 1, [4,4]);
+    }
+
+    // true distance: origin → Xi  (amber dashed)
+    if(showTrue)
+      line(x2, ox,oy, xx,xy, `rgba(242,166,0,${fa*0.85})`, best?1.8:1.1, [7,5]);
+
+    // rep distance: Yi0 → Y0i  (blue solid)
+    if(showRep)
+      line(x2, yx,yy, y0x,y0y, `rgba(90,180,255,${fa*0.85})`, best?1.8:1.1, null);
+
+    // dots — drawn last so they sit on top of lines
+    dot(x2, y0x,y0y, 4.5, best?'#e8607a':`rgba(232,96,122,0.4)`);   // Y0i rose
+    dot(x2, yx,yy,   4.5, best?'#5ab4ff':`rgba(90,180,255,0.4)`);    // Yi0 blue
+    dot(x2, xx,xy,   best?6.5:5, best?'#f2a600':`rgba(242,166,0,0.4)`); // Xi amber
+
+    // green selection ring on best Xi
+    if(best) {
+      x2.beginPath(); x2.arc(xx,xy,11,0,Math.PI*2);
+      x2.strokeStyle='rgba(78,203,138,.75)'; x2.lineWidth=1.5; x2.stroke();
+    }
+
+    // point labels (nudged outward from origin)
+    const nX  = nudge2(c.Xi,  15, R);
+    const nY  = nudge2(c.Yi0, 13, R);
+    const nY0 = nudge2(c.Y0i, 13, R);
+    ptLabel(x2, xx,xy,   `X${sub(i+1)}`,  best?'#f2a600':`rgba(242,166,0,.55)`,  nX.ox,  nX.oy);
+    ptLabel(x2, yx,yy,   `Y${sub(i+1)}₀`, best?'#5ab4ff':`rgba(90,180,255,.55)`, nY.ox,  nY.oy);
+    ptLabel(x2, y0x,y0y, `Y₀${sub(i+1)}`, best?'#e8607a':`rgba(232,96,122,.55)`, nY0.ox, nY0.oy);
+
+    // midpoint distance labels
+    if(showLabels) {
+      if(showTrue) {
+        const [mx,my] = [(ox+xx)/2,(oy+xy)/2];
+        const p = perp2(ox,oy,xx,xy, best?16:11);
+        midLabel(x2, mx+p.x,my+p.y, `‖X${sub(i+1)}‖=${c.trueD.toFixed(2)}`,
+                 best?'#f2a600':'rgba(242,166,0,.5)');
+      }
+      if(showRep) {
+        const [mx,my] = [(yx+y0x)/2,(yy+y0y)/2];
+        const p = perp2(yx,yy,y0x,y0y, best?16:11);
+        midLabel(x2, mx+p.x,my+p.y, `‖Y${sub(i+1)}₀−Y₀${sub(i+1)}‖=${c.repD.toFixed(2)}`,
+                 best?'#5ab4ff':'rgba(90,180,255,.5)');
+      }
+    }
+  });
+
+  // origin dot — always on top
+  dot(x2, cx,cy, 6.5, 'rgba(255,255,255,.92)');
+  ptLabel(x2, cx,cy, 'x₀', 'rgba(255,255,255,.9)', 11, -16);
+
+  x2.restore();
+}
+
+// ── 2D drawing helpers ──────────────
+function line(ctx, x1,y1,x2,y2, color, width, dash) {
+  ctx.save();
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+  ctx.strokeStyle=color; ctx.lineWidth=width;
+  ctx.setLineDash(dash||[]); ctx.stroke(); ctx.setLineDash([]);
+  ctx.restore();
+}
+function dot(ctx, x,y, r, color) {
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+  ctx.fillStyle=color; ctx.fill();
+}
+function ptLabel(ctx, x,y, text, color, ox, oy) {
+  ctx.save();
+  ctx.font='500 11px "JetBrains Mono",monospace';
+  const tw = ctx.measureText(text).width;
+  ctx.fillStyle='rgba(7,7,14,.8)';
+  rrect(ctx, x+ox-3, y+oy-12, tw+6, 16, 3); ctx.fill();
+  ctx.fillStyle=color; ctx.textBaseline='alphabetic';
+  ctx.fillText(text, x+ox, y+oy);
+  ctx.restore();
+}
+function midLabel(ctx, x,y, text, color) {
+  ctx.save();
+  ctx.font='400 9.5px "JetBrains Mono",monospace';
+  const tw = ctx.measureText(text).width;
+  ctx.fillStyle='rgba(7,7,14,.82)';
+  rrect(ctx, x-tw/2-4, y-10, tw+8, 14, 3); ctx.fill();
+  ctx.fillStyle=color; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.fillText(text, x, y); ctx.textAlign='left';
+  ctx.restore();
+}
+function rrect(ctx, x,y,w,h,r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+// nudge label outward from origin, scaled to canvas coords
+function nudge2([px,py], dist) {
+  const r = Math.sqrt(px*px+py*py)||.001;
+  return { ox: (px/r)*dist, oy: -(py/r)*dist };
+}
+// perpendicular offset (to place midpoint label beside line, not on it)
+function perp2(x1,y1,x2,y2, dist) {
+  const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1;
+  return { x:-dy/len*dist, y:dx/len*dist };
+}
+
+// ─────────────────────────────────────
+//  3D RENDERER
+// ─────────────────────────────────────
+const c3 = document.getElementById('c3d');
+let R3, S3, CAM3;
+let theta3=0.8, phi3=0.6, rad3=3.2, drag3=false, lmx=0,lmy=0;
+let grp3=[], t3=0, raf3=null;
+
+// label overlay canvas (shared for 3d labels)
+const lcan = document.createElement('canvas');
+lcan.style.cssText='position:absolute;inset:0;pointer-events:none;width:100%;height:100%;display:none';
+wrap.appendChild(lcan);
+const lx = lcan.getContext('2d');
+
+function init3d() {
+  if(R3) return;
+  R3 = new THREE.WebGLRenderer({canvas:c3, antialias:true, alpha:true});
+  R3.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  R3.setClearColor(0x07070e,1);
+  S3 = new THREE.Scene();
+  CAM3 = new THREE.PerspectiveCamera(42,1,0.01,50);
+  camUpdate3();
+
+  // sphere shell
+  S3.add(new THREE.Mesh(new THREE.SphereGeometry(1,40,40),
+    new THREE.MeshPhongMaterial({color:0x10103a,transparent:true,opacity:.08,side:THREE.FrontSide})));
+  S3.add(new THREE.Mesh(new THREE.SphereGeometry(1,22,22),
+    new THREE.MeshBasicMaterial({color:0x252540,wireframe:true,transparent:true,opacity:.25})));
+  S3.add(Object.assign(new THREE.AmbientLight(0xffffff),{intensity:.3}));
+  const dl=new THREE.DirectionalLight(0x8899ff,.5); dl.position.set(2,3,2); S3.add(dl);
+
+  // origin
+  S3.add(new THREE.Mesh(new THREE.SphereGeometry(.028,16,16),new THREE.MeshBasicMaterial({color:0xffffff})));
+
+  // pre-alloc 12 groups
+  for(let i=0;i<12;i++){
+    const g={
+      xd:  new THREE.Mesh(new THREE.SphereGeometry(.042,14,14),new THREE.MeshBasicMaterial({color:0xf2a600,transparent:true})),
+      yd:  new THREE.Mesh(new THREE.SphereGeometry(.033,12,12),new THREE.MeshBasicMaterial({color:0x5ab4ff, transparent:true})),
+      y0d: new THREE.Mesh(new THREE.SphereGeometry(.033,12,12),new THREE.MeshBasicMaterial({color:0xe8607a, transparent:true})),
+      ring:new THREE.Mesh(new THREE.TorusGeometry(.065,.008,8,32),new THREE.MeshBasicMaterial({color:0x4ecb8a,transparent:true,opacity:.9})),
+      lines:[],visible:false
+    };
+    Object.values(g).forEach(o=>{if(o&&o.isObject3D){o.visible=false;S3.add(o);}});
+    grp3.push(g);
+  }
+
+  // orbit
+  c3.addEventListener('mousedown',e=>{drag3=true;lmx=e.clientX;lmy=e.clientY;});
+  window.addEventListener('mouseup',()=>drag3=false);
+  window.addEventListener('mousemove',e=>{
+    if(!drag3)return;
+    theta3-=(e.clientX-lmx)*.007; phi3=Math.max(.1,Math.min(Math.PI-.1,phi3-(e.clientY-lmy)*.007));
+    lmx=e.clientX;lmy=e.clientY;camUpdate3();
+  });
+  c3.addEventListener('wheel',e=>{rad3=Math.max(1.5,Math.min(8,rad3+e.deltaY*.004));camUpdate3();e.preventDefault();},{passive:false});
+
+  loop3d();
+}
+
+function camUpdate3(){
+  if(!CAM3)return;
+  CAM3.position.set(rad3*Math.sin(phi3)*Math.sin(theta3),rad3*Math.cos(phi3),rad3*Math.sin(phi3)*Math.cos(theta3));
+  CAM3.lookAt(0,0,0);
+}
+function resize3d(){
+  if(!R3)return;
+  const w=wrap.clientWidth,h=wrap.clientHeight;
+  R3.setSize(w,h); CAM3.aspect=w/h; CAM3.updateProjectionMatrix();
+}
+
+function mkLine3(p1,p2,col,op,dash){
+  const mat = new THREE.LineBasicMaterial({color:col, transparent:true, opacity:op, depthTest:false});
+  if(dash){
+    const pts=[];
+    for(let i=0;i<20;i++) if(i%2===0){
+      pts.push(new THREE.Vector3().lerpVectors(new THREE.Vector3(...p1),new THREE.Vector3(...p2),i/20));
+      pts.push(new THREE.Vector3().lerpVectors(new THREE.Vector3(...p1),new THREE.Vector3(...p2),(i+.65)/20));
+    }
+    return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), mat);
+  }
+  return new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...p1),new THREE.Vector3(...p2)]),
+    mat
+  );
+}
+
+function draw3d(){
+  if(!R3) init3d();
+  const showTrue  = document.getElementById('tog-true').checked;
+  const showRep   = document.getElementById('tog-rep').checked;
+  const showNoise = document.getElementById('tog-noise').checked;
+  const {candidates,bestIdx}=state;
+
+  grp3.forEach((g,i)=>{
+    g.lines.forEach(l=>S3.remove(l)); g.lines=[];
+    const c=candidates[i];
+    if(!c){[g.xd,g.yd,g.y0d,g.ring].forEach(o=>o.visible=false);g.visible=false;return;}
+    const best=i===bestIdx && c.on;
+
+    if(!c.on){
+      // ghost: faint dots, no lines
+      g.xd.position.set(...c.Xi);   g.xd.material.opacity=.08;  g.xd.scale.setScalar(1); g.xd.visible=true;
+      g.yd.position.set(...c.Yi0);  g.yd.material.opacity=.08;  g.yd.visible=true;
+      g.y0d.position.set(...c.Y0i); g.y0d.material.opacity=.08; g.y0d.visible=true;
+      g.ring.visible=false;
+      g.visible=true;
+      return;
+    }
+
+    const op=best?1:.55;
+    g.xd.position.set(...c.Xi);  g.xd.material.opacity=op;  g.xd.scale.setScalar(best?1.35:1); g.xd.visible=true;
+    g.yd.position.set(...c.Yi0); g.yd.material.opacity=op;  g.yd.visible=true;
+    g.y0d.position.set(...c.Y0i);g.y0d.material.opacity=op; g.y0d.visible=true;
+    g.ring.position.set(...c.Xi);g.ring.visible=best;
+
+    const addL=l=>{S3.add(l);g.lines.push(l);};
+    if(showTrue) addL(mkLine3([0,0,0],c.Xi, 0xf2a600, best?.9:.45, true));
+    if(showRep)  addL(mkLine3(c.Yi0,c.Y0i, 0x5ab4ff, best?.9:.45, false));
+    if(showNoise){
+      addL(mkLine3(c.Xi, c.Yi0,    0x5ab4ff, best?.35:.15, true));
+      addL(mkLine3([0,0,0], c.Y0i, 0xe8607a, best?.35:.15, true));
+    }
+    g.visible=true;
+  });
+  drawLabels3();
+}
+
+function proj3(wp){
+  const v=new THREE.Vector3(...wp).project(CAM3);
+  return {x:(v.x*.5+.5)*wrap.clientWidth, y:(-v.y*.5+.5)*wrap.clientHeight, behind:v.z>1};
+}
+function drawLabels3(){
+  const dpr=window.devicePixelRatio||1;
+  lcan.width=wrap.clientWidth*dpr; lcan.height=wrap.clientHeight*dpr;
+  lcan.style.width=wrap.clientWidth+'px'; lcan.style.height=wrap.clientHeight+'px';
+  lx.clearRect(0,0,lcan.width,lcan.height);
+  if(mode!=='3d')return;
+  lx.save(); lx.scale(dpr,dpr);
+
+  const showLabels=document.getElementById('tog-dlabels').checked;
+  const showTrue=document.getElementById('tog-true').checked;
+  const showRep=document.getElementById('tog-rep').checked;
+  const {candidates,bestIdx}=state;
+
+  // origin
+  const s0=proj3([0,0,0]);
+  if(!s0.behind) l3pt(lx,'x₀','rgba(255,255,255,.9)',s0.x+10,s0.y-10);
+
+  candidates.forEach((c,i)=>{
+    if(!c.on) return;
+    const best=i===bestIdx, a=best?'ff':'77';
+    const i1=sub(i+1);
+    const sx=proj3(c.Xi), sy=proj3(c.Yi0), sy0=proj3(c.Y0i);
+    if(!sx.behind){
+      const n=n3(c.Xi,16); l3pt(lx,`X${i1}`,'#f2a600'+a,sx.x+n.x,sx.y+n.y);
+      if(showLabels&&showTrue){const m=proj3(c.Xi.map(v=>v/2));if(!m.behind)l3mid(lx,`‖X${i1}‖=${c.trueD.toFixed(2)}`,'#f2a600'+a,m.x,m.y);}
+    }
+    if(!sy.behind){ const n=n3(c.Yi0,14); l3pt(lx,`Y${i1}₀`,'#5ab4ff'+a,sy.x+n.x,sy.y+n.y); }
+    if(!sy0.behind){
+      const n=n3(c.Y0i,14); l3pt(lx,`Y₀${i1}`,'#e8607a'+a,sy0.x+n.x,sy0.y+n.y);
+      if(showLabels&&showRep&&!sy.behind){
+        const mm=c.Yi0.map((v,j)=>(v+c.Y0i[j])/2);
+        const m=proj3(mm); if(!m.behind) l3mid(lx,`‖Y${i1}₀−Y₀${i1}‖=${c.repD.toFixed(2)}`,'#5ab4ff'+a,m.x,m.y);
+      }
+    }
+  });
+  lx.restore();
+}
+function l3pt(ctx,text,color,x,y){
+  ctx.font='500 11px "JetBrains Mono",monospace';
+  const tw=ctx.measureText(text).width;
+  ctx.fillStyle='rgba(7,7,14,.82)';
+  ctx.beginPath(); ctx.roundRect(x-3,y-12,tw+6,16,3); ctx.fill();
+  ctx.fillStyle=color; ctx.textBaseline='alphabetic'; ctx.fillText(text,x,y);
+}
+function l3mid(ctx,text,color,x,y){
+  ctx.font='400 9px "JetBrains Mono",monospace';
+  const tw=ctx.measureText(text).width;
+  ctx.fillStyle='rgba(7,7,14,.82)';
+  ctx.beginPath(); ctx.roundRect(x-tw/2-3,y-9,tw+6,13,3); ctx.fill();
+  ctx.fillStyle=color; ctx.textAlign='center'; ctx.textBaseline='alphabetic'; ctx.fillText(text,x,y); ctx.textAlign='left';
+}
+function n3([x,y,z],d){const r=Math.sqrt(x*x+y*y+z*z)||.001;return{x:(x/r)*d,y:-(y/r)*d};}
+
+function loop3d(){
+  raf3=requestAnimationFrame(loop3d);
+  if(mode!=='3d')return;
+  t3+=.012;
+  if(!drag3){theta3+=.0012;camUpdate3();}
+  grp3.forEach(g=>{
+    if(g.ring.visible){g.ring.rotation.z=t3*1.2;g.ring.rotation.x=t3*.7;}
+  });
+  R3.render(S3,CAM3);
+  drawLabels3();
+}
+
+// ─────────────────────────────────────
+//  MODE SWITCH
+// ─────────────────────────────────────
+function setMode(m) {
+  mode = m;
+  document.getElementById('btn-2d').className='dim-btn'+(m==='2d'?' active':'');
+  document.getElementById('btn-3d').className='dim-btn'+(m==='3d'?' active':'');
+  c2.style.display  = m==='2d'?'block':'none';
+  c3.style.display  = m==='3d'?'block':'none';
+  lcan.style.display= m==='3d'?'block':'none';
+  if(m==='3d'){
+    // must show canvas before init so WebGL gets real dimensions
+    requestAnimationFrame(()=>{ init3d(); resize3d(); generate(); });
+  } else {
+    generate();
+  }
+}
+
+document.getElementById('btn-2d').addEventListener('click',()=>setMode('2d'));
+document.getElementById('btn-3d').addEventListener('click',()=>setMode('3d'));
+
+// ─────────────────────────────────────
+//  CONTROLS
+// ─────────────────────────────────────
+document.getElementById('s-sigma').addEventListener('input',function(){
+  document.getElementById('v-sigma').textContent=(+this.value).toFixed(2);redrawNoise();
+});
+document.getElementById('s-n').addEventListener('input',function(){
+  document.getElementById('v-n').textContent=this.value;generate();
+});
+document.getElementById('btn-new').addEventListener('click',generate);
+['tog-true','tog-rep','tog-noise','tog-dlabels'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',()=>{
+    if(mode==='2d') draw2d(); else draw3d();
+  });
+});
+window.addEventListener('resize',()=>{
+  if(mode==='2d') draw2d(); else resize3d();
+});
+
+// ─────────────────────────────────────
+//  BOOT
+// ─────────────────────────────────────
+setMode('2d');
+</script>
+</body>
+</html>
