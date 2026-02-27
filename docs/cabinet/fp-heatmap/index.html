@@ -425,28 +425,30 @@ function renderHeatmap() {
   document.getElementById('zKGVal').textContent = (mu0/(1-mu0)).toFixed(4);
 
   /* ── Draw heatmap pixels via ImageData ── */
-  var imgData = ctx.createImageData(Math.ceil(pw), Math.ceil(ph));
+  var ipw = Math.floor(pw * devicePixelRatio), iph = Math.floor(ph * devicePixelRatio);
+  var imgData = ctx.createImageData(ipw, iph);
   var d = imgData.data;
-  var imgW = Math.ceil(pw);
   for (var iy = 0; iy < NY; iy++) {
     /* iy=0 is N=1 (bottom of grid), iy=NY-1 is N=NMAX (top) */
-    var yPx0 = Math.round(ph - (iy+1)/NY * ph);
-    var yPx1 = Math.round(ph - iy/NY     * ph);
+    var yPx0 = Math.round((1 - (iy+1)/NY) * iph);
+    var yPx1 = Math.round((1 - iy/NY)     * iph);
     for (var iz = 0; iz < NZ; iz++) {
       var val = grid[iy * NZ + iz];
       var t   = Math.max(0, Math.min(1, (val - lo) / (hi - lo)));
       var rgb = heatRGB(t);
-      var xPx0 = Math.round(iz/NZ     * pw);
-      var xPx1 = Math.round((iz+1)/NZ * pw);
+      var xPx0 = Math.round(iz/NZ     * ipw);
+      var xPx1 = Math.round((iz+1)/NZ * ipw);
       for (var py = yPx0; py < yPx1; py++) {
         for (var px = xPx0; px < xPx1; px++) {
-          var idx = (py * imgW + px) * 4;
-          d[idx]=rgb[0]; d[idx+1]=rgb[1]; d[idx+2]=rgb[2]; d[idx+3]=255;
+          var idx = (py * ipw + px) * 4;
+          if (idx + 3 < d.length) {
+            d[idx]=rgb[0]; d[idx+1]=rgb[1]; d[idx+2]=rgb[2]; d[idx+3]=255;
+          }
         }
       }
     }
   }
-  ctx.putImageData(imgData, ml, mt);
+  ctx.putImageData(imgData, Math.round(ml * devicePixelRatio), Math.round(mt * devicePixelRatio));
 
   /* ── Axis helpers ── */
   /* x-axis: z runs 1 (left) → 0 (right) */
