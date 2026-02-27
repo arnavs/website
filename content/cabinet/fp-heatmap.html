@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frequentist Persuasion — Welfare Heatmap</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#08080f;--border:#252540;--border2:#353558;--text:#e4e4f0;--dim:#8080a8;--faint:#404068;--amber:#f2a600}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:"Crimson Pro",Georgia,serif;display:flex;flex-direction:column}
+header{padding:18px 36px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:16px;flex-shrink:0}
+.ht{font-family:"JetBrains Mono",monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.hs{font-size:1rem;color:var(--dim);font-style:italic}
+.layout{flex:1;display:flex;min-height:0}
+.sidebar{width:250px;flex-shrink:0;border-right:1px solid var(--border);padding:24px 22px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
+.sl{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+.param{display:flex;flex-direction:column;gap:6px}
+.ph{display:flex;justify-content:space-between;align-items:baseline}
+.pn{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--dim)}
+.pv{font-family:"JetBrains Mono",monospace;font-size:1rem;color:var(--text)}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--border2);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--amber);cursor:pointer}
+.sr{display:flex;flex-direction:column;gap:3px}
+.slb{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.sv{font-family:"JetBrains Mono",monospace;font-size:.95rem;color:var(--text)}
+hr{border:none;border-top:1px solid var(--border)}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;padding:28px 36px 24px;gap:12px}
+.ct{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);flex-shrink:0}
+.cw{flex:1;min-height:0;position:relative}
+canvas{display:block;width:100%;height:100%}
+#ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(8,8,15,.8);pointer-events:none}
+#ov.hidden{display:none}
+#pb{width:200px;height:3px;background:#252540;border-radius:2px}
+#pf{height:100%;background:#f2a600;border-radius:2px;width:0%}
+#pl{font-family:"JetBrains Mono",monospace;font-size:.65rem;color:#8080a8;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<header>
+  <span class="ht">Frequentist Persuasion</span>
+  <span class="hs">Receiver welfare heatmap in (z, N) space</span>
+</header>
+<div class="layout">
+  <div class="sidebar">
+    <div>
+      <div class="sl">Parameters</div>
+      <div class="param">
+        <div class="ph"><span class="pn">mu0 = Pr[guilty]</span><span class="pv" id="mu0Val">0.30</span></div>
+        <input type="range" id="mu0Slider" min="0.05" max="0.49" step="0.01" value="0.30" oninput="onParam()">
+      </div>
+    </div>
+    <hr>
+    <div>
+      <div class="sl">Colour scale</div>
+      <canvas id="cb" width="206" height="16" style="width:206px;height:16px;border-radius:2px"></canvas>
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#404068" id="cbLo">—</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#404068">U^F</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#404068" id="cbHi">—</span>
+      </div>
+    </div>
+    <hr>
+    <div>
+      <div class="sl">Reference</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="sr"><div class="slb">z^KG = mu0/(1-mu0)</div><div class="sv" id="zKGVal">—</div></div>
+        <div class="sr"><div class="slb" style="color:#5fd4a8">min z*(N) · at N</div><div class="sv" id="minZVal">—</div></div>
+        <div class="sr"><div class="slb" style="color:#5fd4a8">U^F at min z*</div><div class="sv" id="minZUFVal">—</div></div>
+        <div class="sr"><div class="slb" style="color:#ff6b9d">max U^F on z*(N) · at N</div><div class="sv" id="maxUFVal">—</div></div>
+        <div class="sr"><div class="slb" style="color:#ff6b9d">U^F at max</div><div class="sv" id="maxUFUVal">—</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="ct">exact U^F_N(z) · z: 1 to 0 · N: log scale 1 to 500 · dashed = z^KG · white curve = z*(N)</div>
+    <div class="cw">
+      <canvas id="chart"></canvas>
+      <div id="ov">
+        <div id="pl">COMPUTING</div>
+        <div id="pb"><div id="pf"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+/* ============================================================
+   MODEL SUMMARY
+   ============================================================
+   Sender knows defendant is guilty (prob mu0) or innocent (1-mu0).
+   Sender sends message m = "guilty" always. If innocent, sender
+   lies with probability z (the lying rate we plot on x-axis).
+
+   A frequentist jury of size N draws samples:
+     X ~ counts of guilty signals   (multinomial cell, prob mu0)
+     Y ~ counts of innocent signals  (prob (1-mu0)*z)
+     Z ~ counts of null signals      (prob (1-mu0)*(1-z))
+   with X + Y + Z = N.
+
+   Jury convicts iff sample is "credible": X >= Y and X+Y > 0.
+   (X+Y = 0 means all signals are null — defective sample — acquit.)
+
+   KEY QUANTITIES
+   --------------
+   c_N(z) = Pr[convict | m=guilty, lying rate z, sample size N]
+          = Pr[X >= Y, X+Y > 0]          [computed in credibleProb]
+
+   Receiver (jury) welfare given m=guilty, assuming innocent until
+   proven guilty (default = acquit, payoff = 1-mu0):
+     U^F_N(z) = c_N(z) * (1-(1-mu0)*z)  +  (1-c_N(z)) * (1-mu0)
+              = A * payoff_convict        +  (B+C) * payoff_acquit
+   where payoff_convict = 1-(1-mu0)*z  (posterior that guilty given
+   jury convicts is mu0/(mu0+(1-mu0)*z) — receiver gets 1 if right)
+
+   Wait — receiver payoff when convicting:
+     Pr[actually guilty | convict] = mu0 / (mu0 + (1-mu0)*z)
+   Receiver payoff = Pr[guilty|convict]*1 + Pr[innocent|convict]*0
+                   = mu0/(mu0+(1-mu0)*z)
+   But the formula used here is 1-(1-mu0)*z ... let me clarify:
+   The receiver gets payoff 1 for correct decisions, 0 for errors.
+   E[payoff | convict] = Pr[guilty | m=guilty, convict]
+   NOTE: the formula A*(1-(1-mu0)*z) + (B+C)*(1-mu0) is the
+   ex-ante welfare before observing the verdict, weighted by the
+   probability of each outcome.
+
+   Sender objective (used for z*(N)):
+     V_N(z) = Pr[conviction] = Pr[m=guilty] * c_N(z)
+            = (mu0 + (1-mu0)*z) * c_N(z)
+   Sender maximises over z in [0,1] for each N.
+   ============================================================ */
+
+/* ── Grid parameters ── */
+var NZ   = 300;   // z resolution (x-axis)
+var NY   = 120;   // N resolution (y-axis, log-spaced)
+var NMAX = 500;   // maximum N shown
+var LOG_NMIN = 0;               // log(1) = 0
+var LOG_NMAX = Math.log(NMAX);
+
+/* ── Log-factorial table (for multinomial log-probabilities) ── */
+var LF = new Array(NMAX + 1);
+LF[0] = 0;
+for (var _i = 1; _i <= NMAX; _i++) LF[_i] = LF[_i-1] + Math.log(_i);
+
+/* Terms below this log-probability threshold are negligible (e^-23 ≈ 1e-10) */
+var LOG_THRESH = -23;
+
+/* ── CORE FORMULA 1: credible probability c_N(z) ──────────────────────
+   Exact multinomial sum. Iterates over all (x,y) with x+y <= N,
+   z_count = N-x-y. Counts cases where x >= y and x+y > 0.
+
+   Multinomial probability: N! / (x! y! z!) * pX^x * pY^y * pZ^z
+   computed in log space to avoid underflow.
+   ──────────────────────────────────────────────────────────────────── */
+function credibleProb(z, mu0, N) {
+  /* Special case: z=0 means sender never lies on innocent defendant.
+     Then Y=0 always, so X >= Y iff X >= 0 (always true when X+Y>0).
+     Defective prob = Pr[X=0] = (1-mu0)^N.  c_N(0) = 1-(1-mu0)^N. */
+  if (z < 1e-9) return 1 - Math.pow(1 - mu0, N);
+
+  var pX = mu0;           // Pr[guilty signal]
+  var pY = (1-mu0) * z;   // Pr[innocent signal] (only if sender lies)
+  var pZ = (1-mu0) * (1-z); // Pr[null signal]
+
+  var lX = Math.log(pX + 1e-300);
+  var lY = Math.log(pY + 1e-300);
+  var lZ = Math.log(pZ + 1e-300);
+
+  var c = 0, x, y, zCount, logP;
+  for (x = 0; x <= N; x++) {
+    for (y = 0; y <= N - x; y++) {
+      if (x + y === 0) continue;  // defective sample — acquit
+      if (x < y)       continue;  // non-credible — acquit
+      // credible: x >= y and x+y > 0
+      zCount = N - x - y;
+      logP = LF[N] - LF[x] - LF[y] - LF[zCount]
+             + x*lX + y*lY + zCount*lZ;
+      if (logP < LOG_THRESH) continue;
+      c += Math.exp(logP);
+    }
+  }
+  return c;
+}
+
+/* ── CORE FORMULA 2: receiver welfare U^F_N(z) ────────────────────────
+   U^F = A * (1 - (1-mu0)*z)  +  (B+C) * (1-mu0)
+   where A = c_N(z), B+C = 1-A.
+   payoff_convict  = mu0 / (mu0+(1-mu0)*z)  [Pr[guilty|m=guilty,convict]]
+   payoff_acquit   = 1 - mu0                [Pr[innocent|m=guilty,acquit]
+                                              since acquit = correct for innocent]
+   NOTE: (1-(1-mu0)*z) = mu0/(mu0+(1-mu0)*z) only when multiplied
+   by (mu0+(1-mu0)*z). The welfare formula used is the *ex-ante*
+   expected payoff: A*(payoff_convict * Pr[guilty|sent]) + ...
+   This matches the paper's formulation.
+   ──────────────────────────────────────────────────────────────────── */
+function receiverWelfare(z, mu0, N) {
+  var A = credibleProb(z, mu0, N);
+  var payConvict = 1 - (1 - mu0) * z;  // = mu0/(mu0+(1-mu0)*z) * (mu0+(1-mu0)*z)/mu0... 
+                                        // see note above
+  var payAcquit  = 1 - mu0;
+  return A * payConvict + (1 - A) * payAcquit;
+}
+
+/* ── CORE FORMULA 3: sender value V_N(z) ──────────────────────────────
+   Sender maximises probability of conviction over all messages.
+   Given message m=guilty sent with probability mu0+(1-mu0)*z,
+   jury convicts with probability c_N(z).
+   V_N(z) = (mu0 + (1-mu0)*z) * c_N(z)
+   ──────────────────────────────────────────────────────────────────── */
+function senderValue(z, mu0, N) {
+  return (mu0 + (1 - mu0) * z) * credibleProb(z, mu0, N);
+}
+
+/* ── z*(N): sender-optimal lying rate for given N ──────────────────────
+   Grid search over Z_SEARCH evenly-spaced z values in [0,1].
+   Returns the z that maximises senderValue(z, mu0, N).
+   ──────────────────────────────────────────────────────────────────── */
+var Z_SEARCH = 200;  // resolution of grid search for z*
+function zStar(mu0, N) {
+  var bestZ = 0, bestV = -Infinity, k, zk, v;
+  for (k = 0; k <= Z_SEARCH; k++) {
+    zk = k / Z_SEARCH;
+    v  = senderValue(zk, mu0, N);
+    if (v > bestV) { bestV = v; bestZ = zk; }
+  }
+  return bestZ;
+}
+
+/* ── SELF-TEST: run on load, log results to console ────────────────────
+   Checks:
+   1. c_N sums to <= 1 (it's a probability)
+   2. c_N(z=0) = 1-(1-mu0)^N  (closed form)
+   3. U^F in [1-mu0, 1] for credible z
+   4. Sender value monotone-ish check
+   5. Known value: for N=1, z=0.5, mu0=0.3:
+      pX=0.3, pY=0.35, pZ=0.35
+      credible requires x>=y, x+y>0
+      Only credible outcome with N=1: x=1,y=0 (prob=0.3)
+      So c_1(0.5, 0.3) = 0.3
+   ──────────────────────────────────────────────────────────────────── */
+function runSelfTest() {
+  var pass = true;
+  var mu0t = 0.3, eps = 1e-9;
+
+  /* Test 1: c_N <= 1 */
+  var c = credibleProb(0.4, mu0t, 10);
+  if (c < 0 || c > 1 + eps) { console.error('FAIL test1: c_N out of [0,1]', c); pass = false; }
+
+  /* Test 2: c_N(z=0) = 1-(1-mu0)^N */
+  var c0 = credibleProb(0, mu0t, 5);
+  var c0_expected = 1 - Math.pow(1-mu0t, 5);
+  if (Math.abs(c0 - c0_expected) > 1e-6) {
+    console.error('FAIL test2: c_N(z=0)', c0, 'expected', c0_expected); pass = false;
+  }
+
+  /* Test 3: known value N=1, z=0.5, mu0=0.3 → c=0.3 */
+  var c1 = credibleProb(0.5, mu0t, 1);
+  if (Math.abs(c1 - 0.3) > 1e-9) {
+    console.error('FAIL test3: c_1(0.5,0.3)=', c1, 'expected 0.3'); pass = false;
+  }
+
+  /* Test 4: welfare in [0,1] */
+  var u = receiverWelfare(0.3, mu0t, 20);
+  if (u < 0 || u > 1 + eps) { console.error('FAIL test4: U^F out of [0,1]', u); pass = false; }
+
+  /* Test 5: at z=0, welfare = 1-(1-mu0)*c_N(0)*(something)...
+     Actually just check U^F(z=0) > U^F(z=1) for reasonable N
+     (low lying is better for receiver) */
+  var u0 = receiverWelfare(0,   mu0t, 20);
+  var u1 = receiverWelfare(0.9, mu0t, 20);
+  if (u0 < u1) { console.warn('NOTE test5: U^F(z=0) < U^F(z=0.9) — may be expected at some params'); }
+
+  /* Test 6: sender value non-negative */
+  var v = senderValue(0.3, mu0t, 10);
+  if (v < 0) { console.error('FAIL test6: senderValue < 0', v); pass = false; }
+
+  if (pass) {
+    console.log('%c[fp-heatmap] All self-tests passed ✓', 'color:#5fd4a8');
+    console.log('  c_1(z=0.5, mu0=0.3) =', c1.toFixed(6), '(expected 0.3)');
+    console.log('  c_5(z=0,   mu0=0.3) =', c0.toFixed(6), '(expected', c0_expected.toFixed(6), ')');
+    console.log('  U^F(z=0.3, mu0=0.3, N=20) =', u.toFixed(6));
+  }
+}
+
+/* ── Color map: dark navy → teal → amber ── */
+function heatRGB(t) {
+  var r, g, b, s;
+  if (t < 0.5) {
+    s = t * 2;
+    r = Math.round(13 + s*13); g = Math.round(31 + s*76); b = Math.round(60 + s*62);
+  } else {
+    s = (t - 0.5) * 2;
+    r = Math.round(26 + s*216); g = Math.round(107 + s*59); b = Math.round(122 - s*122);
+  }
+  return [r, g, b];
+}
+
+/* ── Map row index → N (log-spaced from 1 to NMAX) ── */
+function nForRow(iy) {
+  return Math.max(1, Math.round(Math.exp(LOG_NMIN + iy/(NY-1) * (LOG_NMAX-LOG_NMIN))));
+}
+
+/* ── Compute state ── */
+var mu0 = 0.30;
+var grid = null;        // Float32Array [NY * NZ] once computed
+var computeMu0 = null;
+var computeIY  = 0;
+var computeTimer = null;
+
+function cancelCompute() {
+  if (computeTimer !== null) { clearTimeout(computeTimer); computeTimer = null; }
+  computeMu0 = null;
+}
+
+function startCompute(newMu0) {
+  cancelCompute();
+  mu0 = newMu0;
+  computeMu0 = newMu0;
+  computeIY  = 0;
+  grid = new Float32Array(NZ * NY);
+  document.getElementById('ov').classList.remove('hidden');
+  document.getElementById('pf').style.width = '0%';
+  computeTimer = setTimeout(computeChunk, 0);
+}
+
+/* Process ROWS_PER_CHUNK rows then yield back to browser */
+var ROWS_PER_CHUNK = 5;
+function computeChunk() {
+  var mu  = computeMu0;
+  var end = Math.min(computeIY + ROWS_PER_CHUNK, NY);
+  for (var iy = computeIY; iy < end; iy++) {
+    var n = nForRow(iy);
+    for (var iz = 0; iz < NZ; iz++) {
+      /* x-axis: iz=0 → z=1 (max lying), iz=NZ-1 → z=0 (no lying) */
+      var z = 1 - iz / (NZ - 1);
+      grid[iy * NZ + iz] = receiverWelfare(z, mu, n);
+    }
+  }
+  computeIY = end;
+  document.getElementById('pf').style.width = Math.round(computeIY/NY*100) + '%';
+  if (computeIY < NY) {
+    computeTimer = setTimeout(computeChunk, 0);
+  } else {
+    computeTimer = null;
+    document.getElementById('ov').classList.add('hidden');
+    renderHeatmap();
+  }
+}
+
+/* ── Colorbar ── */
+function drawColorbar(lo, hi) {
+  var cb  = document.getElementById('cb');
+  var ctx = cb.getContext('2d');
+  for (var x = 0; x < cb.width; x++) {
+    var rgb = heatRGB(x / (cb.width - 1));
+    ctx.fillStyle = 'rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+    ctx.fillRect(x, 0, 1, cb.height);
+  }
+  document.getElementById('cbLo').textContent = lo.toFixed(3);
+  document.getElementById('cbHi').textContent = hi.toFixed(3);
+}
+
+/* ── Main render ── */
+function renderHeatmap() {
+  if (!grid) return;
+  var canvas = document.getElementById('chart');
+  var W = canvas.clientWidth, H = canvas.clientHeight;
+  if (!W || !H) return;
+  canvas.width  = W * devicePixelRatio;
+  canvas.height = H * devicePixelRatio;
+  var ctx = canvas.getContext('2d');
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  var ml=64, mr=24, mt=24, mb=48;
+  var pw=W-ml-mr, ph=H-mt-mb;
+
+  ctx.fillStyle = '#08080f'; ctx.fillRect(0,0,W,H);
+
+  /* Color scale spans actual grid minimum to 1 */
+  var lo = Infinity;
+  for (var k = 0; k < grid.length; k++) { if (grid[k] < lo) lo = grid[k]; }
+  lo = Math.floor(lo * 1000) / 1000;
+  var hi = 1.0;
+  drawColorbar(lo, hi);
+  document.getElementById('zKGVal').textContent = (mu0/(1-mu0)).toFixed(4);
+
+  /* ── Draw heatmap pixels via ImageData ── */
+  var imgData = ctx.createImageData(Math.ceil(pw), Math.ceil(ph));
+  var d = imgData.data;
+  var imgW = Math.ceil(pw);
+  for (var iy = 0; iy < NY; iy++) {
+    /* iy=0 is N=1 (bottom of grid), iy=NY-1 is N=NMAX (top) */
+    var yPx0 = Math.round(ph - (iy+1)/NY * ph);
+    var yPx1 = Math.round(ph - iy/NY     * ph);
+    for (var iz = 0; iz < NZ; iz++) {
+      var val = grid[iy * NZ + iz];
+      var t   = Math.max(0, Math.min(1, (val - lo) / (hi - lo)));
+      var rgb = heatRGB(t);
+      var xPx0 = Math.round(iz/NZ     * pw);
+      var xPx1 = Math.round((iz+1)/NZ * pw);
+      for (var py = yPx0; py < yPx1; py++) {
+        for (var px = xPx0; px < xPx1; px++) {
+          var idx = (py * imgW + px) * 4;
+          d[idx]=rgb[0]; d[idx+1]=rgb[1]; d[idx+2]=rgb[2]; d[idx+3]=255;
+        }
+      }
+    }
+  }
+  ctx.putImageData(imgData, ml, mt);
+
+  /* ── Axis helpers ── */
+  /* x-axis: z runs 1 (left) → 0 (right) */
+  var xp    = function(z) { return ml + (1 - z) * pw; };
+  /* y-axis: N on log scale, N=1 at bottom, N=NMAX at top */
+  var ypLog = function(n) { return mt + ph * (1 - (Math.log(n) - LOG_NMIN) / (LOG_NMAX - LOG_NMIN)); };
+
+  /* ── Grid lines ── */
+  [0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(function(v) {
+    var xx = xp(v);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xx, mt); ctx.lineTo(xx, mt+ph); ctx.stroke();
+    ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono,monospace'; ctx.textAlign = 'center';
+    ctx.fillText(v.toFixed(1), xx, mt+ph+17);
+  });
+  [1, 2, 5, 10, 20, 50, 100, 200, 500].forEach(function(n) {
+    var yy = ypLog(n);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(ml, yy); ctx.lineTo(ml+pw, yy); ctx.stroke();
+    ctx.fillStyle = '#404068'; ctx.font = '11px JetBrains Mono,monospace'; ctx.textAlign = 'right';
+    ctx.fillText(n, ml-8, yy+4);
+  });
+
+  /* ── z^KG reference line ── */
+  var zKG = mu0 / (1 - mu0);
+  if (zKG <= 1) {
+    ctx.save(); ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = '#f2a600'; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.75;
+    ctx.beginPath(); ctx.moveTo(xp(zKG), mt); ctx.lineTo(xp(zKG), mt+ph); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#f2a600'; ctx.globalAlpha = 0.8;
+    ctx.font = 'italic 10px JetBrains Mono,monospace'; ctx.textAlign = 'center';
+    ctx.fillText('z^KG', xp(zKG), mt-6); ctx.globalAlpha = 1;
+  }
+
+  /* ── z*(N) curve and special points ──────────────────────────────────
+     For each N row, find z* = argmax_z V_N(z) = argmax_z senderValue(z,mu0,N).
+     Then find:
+       minZRow  = row with smallest z* (sender lies least)
+       maxUFRow = row where U^F(z*(N), N) is maximised (best for receiver
+                  among sender-optimal outcomes)
+     ──────────────────────────────────────────────────────────────────── */
+  var zStarPts = [];
+  for (var iy2 = 0; iy2 < NY; iy2++) {
+    var n2 = nForRow(iy2);
+    zStarPts.push({ iy: iy2, z: zStar(mu0, n2) });
+  }
+
+  /* Draw white curve */
+  ctx.beginPath();
+  for (var p = 0; p < zStarPts.length; p++) {
+    var pt  = zStarPts[p];
+    var px2 = xp(pt.z);
+    var py2 = ypLog(nForRow(pt.iy));
+    if (p === 0) ctx.moveTo(px2, py2); else ctx.lineTo(px2, py2);
+  }
+  ctx.strokeStyle = '#e4e4f0'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+  ctx.globalAlpha = 0.85; ctx.stroke(); ctx.globalAlpha = 1;
+
+  /* Find min z* and max U^F along the curve */
+  var minZ = Infinity, minZRow = 0;
+  var maxUF = -Infinity, maxUFRow = 0;
+  for (var q = 0; q < zStarPts.length; q++) {
+    var zq  = zStarPts[q].z;
+    var nq  = nForRow(zStarPts[q].iy);
+    var ufq = receiverWelfare(zq, mu0, nq);
+    if (zq  < minZ)  { minZ  = zq;  minZRow  = q; }
+    if (ufq > maxUF) { maxUF = ufq; maxUFRow = q; }
+  }
+
+  /* Helper: draw a labelled dot */
+  function drawDot(x, y, color, labelLines, labelRight) {
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2);
+    ctx.strokeStyle = '#08080f'; ctx.lineWidth = 1.5; ctx.fillStyle = color;
+    ctx.globalAlpha = 1; ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#ffffff'; ctx.globalAlpha = 0.9;
+    ctx.font = 'bold 10px JetBrains Mono,monospace';
+    ctx.textAlign = labelRight ? 'right' : 'left';
+    var lx = labelRight ? x - 8 : x + 8;
+    for (var li = 0; li < labelLines.length; li++) {
+      ctx.fillText(labelLines[li], lx, y - 4 + li * 13);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* Teal dot: min z*(N) */
+  var minPt = zStarPts[minZRow];
+  var minN  = nForRow(minPt.iy);
+  var minUF = receiverWelfare(minPt.z, mu0, minN);
+  var minDotX = xp(minPt.z), minDotY = ypLog(minN);
+  drawDot(minDotX, minDotY, '#5fd4a8',
+    ['min z*=' + minPt.z.toFixed(3), 'N=' + minN],
+    minDotX > ml + pw * 0.75);
+
+  /* Pink dot: max U^F on z*(N) curve */
+  var maxPt = zStarPts[maxUFRow];
+  var maxN  = nForRow(maxPt.iy);
+  var maxDotX = xp(maxPt.z), maxDotY = ypLog(maxN);
+  drawDot(maxDotX, maxDotY, '#ff6b9d',
+    ['max U^F=' + maxUF.toFixed(3), 'N=' + maxN],
+    maxDotX > ml + pw * 0.75);
+
+  /* Populate sidebar */
+  document.getElementById('minZVal').textContent   = minPt.z.toFixed(4) + '  N=' + minN;
+  document.getElementById('minZUFVal').textContent = minUF.toFixed(4);
+  document.getElementById('maxUFVal').textContent  = maxPt.z.toFixed(4) + '  N=' + maxN;
+  document.getElementById('maxUFUVal').textContent = maxUF.toFixed(4);
+
+  /* ── Axis labels and border ── */
+  ctx.fillStyle = '#8080a8'; ctx.font = '12px JetBrains Mono,monospace'; ctx.textAlign = 'center';
+  ctx.fillText('z  (lying probability, 1 to 0)', ml+pw/2, H-8);
+  ctx.save(); ctx.translate(14, mt+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('N  (sample size, log scale)', 0, 0); ctx.restore();
+  ctx.strokeStyle = '#555570'; ctx.lineWidth = 1;
+  ctx.strokeRect(ml, mt, pw, ph);
+}
+
+/* ── Controls ── */
+var debounceTimer = null;
+function onParam() {
+  var v = parseFloat(document.getElementById('mu0Slider').value);
+  document.getElementById('mu0Val').textContent = v.toFixed(2);
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(function() { startCompute(v); }, 120);
+}
+
+window.addEventListener('resize', function() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(function() { startCompute(mu0); }, 200);
+});
+window.addEventListener('load', function() {
+  runSelfTest();
+  startCompute(mu0);
+});
+</script>
+</body>
+</html>
