@@ -11,6 +11,8 @@ title = "research and simulations"
 
 ["Frequentist Persuasion"](https://arxiv.org/abs/2510.25066) --- Joint with [James A. Best](https://sites.google.com/site/jamesalaricbest/)
 
+> [Best Student Paper, AETW 2026](https://sites.google.com/view/2026-aetw/photos)
+
 > Some simulations: [prosecutor-judge game](https://arnavsood.com/cabinet/fp-sim/index.html) and [distributions over posteriors](https://arnavsood.com/cabinet/fp-post/index.html).
 
 ### Works in Progress
