@@ -1,0 +1,2846 @@
+
+
+
+
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+<title>  </title>
+<link href="https://fonts.googleapis.com/css?family=Neuton|Merriweather:300|Roboto+Mono" rel="stylesheet">
+<style>
+  .nav-button {
+    display: inline;
+    overflow-x: auto;
+    font-size: 95%;
+    font-family: 'Merriweather', serif;
+  }
+  p, .ul, .ol, .footnotes, li {
+    max-width: 35em;
+    font-size: 92%;
+    line-height: 145%;
+    font-family: 'Merriweather', serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    font-family: 'Neuton', serif;
+  }
+  code {
+    font-family: 'Roboto Mono';
+  }
+
+</style>
+
+</head>
+<body>
+
+
+<h2>  </h2>
+
+<hr>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Learning — Cascade Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #08080f;
+  --surface:  #0e0e1a;
+  --panel:    #11111e;
+  --panel2:   #141428;
+  --border:   #1f1f38;
+  --border2:  #2a2a4a;
+  --text:     #e4e4f0;
+  --dim:      #7070a0;
+  --faint:    #333360;
+  --amber:    #f2a600;
+  --amber-lo: rgba(242,166,0,0.10);
+  --amber-md: rgba(242,166,0,0.22);
+  --blue:     #5ab4ff;
+  --blue-lo:  rgba(90,180,255,0.10);
+  --blue-md:  rgba(90,180,255,0.20);
+  --green:    #4ecb8a;
+  --green-lo: rgba(78,203,138,0.10);
+  --red:      #ff6060;
+  --red-lo:   rgba(255,96,96,0.10);
+  --neutral:  #8080a8;
+}
+
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+header {
+  flex-shrink: 0;
+  padding: 14px 28px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+.hdr-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.hdr-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text);
+}
+.hdr-sub {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--dim);
+}
+
+/* ── MAIN LAYOUT ── */
+.main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 248px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.sb-section {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.sb-section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 14px;
+}
+
+/* Sliders */
+.param-row {
+  margin-bottom: 14px;
+}
+.param-row:last-child { margin-bottom: 0; }
+.param-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+.param-name {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+.param-name em { font-style: italic; }
+.param-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--amber);
+}
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 3px;
+  background: var(--faint);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  background: var(--amber);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+/* Distribution selector */
+.dist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.dist-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  background: var(--panel);
+}
+.dist-option:hover { background: var(--panel2); border-color: var(--dim); }
+.dist-option.active {
+  background: var(--amber-lo);
+  border-color: var(--amber);
+}
+.dist-radio {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--dim);
+  flex-shrink: 0;
+  transition: border-color 0.15s, background 0.15s;
+}
+.dist-option.active .dist-radio {
+  border-color: var(--amber);
+  background: var(--amber);
+}
+.dist-info { flex: 1; }
+.dist-name {
+  font-family: 'Crimson Pro', serif;
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.2;
+}
+.dist-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--dim);
+  margin-top: 1px;
+}
+
+/* Speed */
+.speed-row {
+  display: flex;
+  gap: 6px;
+}
+.speed-btn {
+  flex: 1;
+  padding: 5px 0;
+  border: 1px solid var(--border2);
+  background: var(--panel);
+  color: var(--dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.speed-btn:hover { border-color: var(--dim); color: var(--text); }
+.speed-btn.active { border-color: var(--amber); color: var(--amber); background: var(--amber-lo); }
+
+/* Control buttons */
+.ctrl-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.ctrl-btn {
+  flex: 1;
+  padding: 8px 6px;
+  border: 1px solid var(--border2);
+  background: var(--panel);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.ctrl-btn:hover { background: var(--panel2); border-color: var(--dim); }
+.ctrl-btn.primary { border-color: var(--amber); color: var(--amber); }
+.ctrl-btn.primary:hover { background: var(--amber-lo); }
+.ctrl-btn.danger { border-color: var(--red); color: var(--red); }
+.ctrl-btn.danger:hover { background: var(--red-lo); }
+
+/* Stats */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.stat-box {
+  padding: 8px 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+.stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--amber);
+}
+.stat-val.blue { color: var(--blue); }
+.stat-val.green { color: var(--green); }
+.stat-val.red { color: var(--red); }
+.stat-val.neutral { color: var(--neutral); }
+
+/* ── CONTENT AREA ── */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ── AGENT PANEL ── */
+.agent-panel {
+  flex: 0 0 auto;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 16px 24px;
+}
+.ap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.ap-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.ap-step-info {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dim);
+}
+.ap-step-info span { color: var(--amber); }
+
+.agent-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+}
+.agent-row {
+  display: flex;
+  gap: 10px;
+  min-width: max-content;
+  padding: 2px 0;
+}
+
+.agent-card {
+  width: 64px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.2;
+  transition: opacity 0.3s;
+}
+.agent-card.revealed { opacity: 1; }
+.agent-card.current { opacity: 1; }
+
+.agent-idx {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--dim);
+}
+.agent-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  position: relative;
+  transition: border-color 0.3s, background 0.3s;
+}
+.agent-card.current .agent-icon {
+  border-color: var(--amber);
+  box-shadow: 0 0 12px var(--amber-md);
+}
+.agent-card.cascade-up .agent-icon {
+  border-color: var(--blue);
+  background: var(--blue-lo);
+}
+.agent-card.cascade-down .agent-icon {
+  border-color: var(--red);
+  background: var(--red-lo);
+}
+.signal-badge {
+  position: absolute;
+  top: -7px; right: -5px;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  font-size: 0.55rem;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bg);
+  white-space: nowrap;
+  z-index: 2;
+}
+.signal-badge.H { background: var(--blue); color: #fff; }
+.signal-badge.L { background: var(--red); color: #fff; }
+
+.signal-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border2);
+  background: var(--panel);
+  color: var(--dim);
+  white-space: nowrap;
+}
+.signal-val.pos { border-color: var(--blue); color: var(--blue); background: var(--blue-lo); }
+.signal-val.neg { border-color: var(--red);  color: var(--red);  background: var(--red-lo);  }
+
+.posterior-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--dim);
+  transition: color 0.3s;
+}
+.agent-card.revealed .posterior-num.adopt { color: var(--blue); }
+.agent-card.revealed .posterior-num.reject { color: var(--red); }
+
+.cascade-sep {
+  width: 1.5px;
+  align-self: stretch;
+  background: linear-gradient(to bottom, transparent, var(--amber) 30%, var(--amber) 70%, transparent);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  margin: 0 2px;
+}
+.cascade-sep.visible { opacity: 0.5; }
+
+/* ── TAB BAR ── */
+.tab-bar {
+  flex-shrink: 0;
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0 24px;
+  gap: 0;
+}
+.tab-btn {
+  padding: 10px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+.tab-panel { display: none; flex: 1; min-height: 0; flex-direction: column; }
+.tab-panel.active { display: flex; }
+.step-bar {
+  flex-shrink: 0;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.step-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.step-btn:hover { background: var(--panel2); border-color: var(--dim); }
+.step-btn.run { border-color: var(--green); color: var(--green); }
+.step-btn.run:hover { background: var(--green-lo); }
+.step-btn.run.running { border-color: var(--amber); color: var(--amber); }
+.step-btn.run.running:hover { background: var(--amber-lo); }
+.step-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.progress-track {
+  flex: 1;
+  height: 3px;
+  background: var(--faint);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--amber);
+  border-radius: 2px;
+  transition: width 0.2s;
+}
+
+.state-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--border2);
+  color: var(--dim);
+  background: var(--panel);
+  min-width: 90px;
+  text-align: center;
+  transition: all 0.3s;
+}
+.state-pill.cascade-up { border-color: var(--blue); color: var(--blue); background: var(--blue-lo); }
+.state-pill.cascade-down { border-color: var(--red); color: var(--red); background: var(--red-lo); }
+.state-pill.learning { border-color: var(--amber); color: var(--amber); background: var(--amber-lo); }
+
+/* ── LLR PANEL ── */
+.llr-panel {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  background: var(--bg);
+  padding: 0;
+}
+canvas#llrCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Cascade annotation */
+.cascade-annot {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.cascade-annot.visible { opacity: 1; }
+.cascade-annot.up { color: var(--blue); }
+.cascade-annot.down { color: var(--red); }
+
+/* Tooltip */
+.llr-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  padding: 7px 11px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text);
+  display: none;
+  white-space: nowrap;
+}
+.llr-tooltip .tt-agent { color: var(--dim); margin-bottom: 4px; }
+.llr-tooltip .tt-llr { color: var(--amber); }
+.llr-tooltip .tt-belief { color: var(--blue); }
+.llr-tooltip .tt-signal { color: var(--dim); }
+.llr-tooltip .tt-action { color: var(--green); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="hdr-label">Model ·</span>
+  <span class="hdr-title">Informational Cascades</span>
+  <span class="hdr-sub">Bikhchandani, Hirshleifer & Welch (1992) · Smith & Sørensen (2000)</span>
+</header>
+
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sb-section">
+      <div class="sb-section-title">Parameters</div>
+
+      <div class="param-row">
+        <div class="param-label">
+          <span class="param-name">Prior &nbsp;<em>p</em><sub>0</sub></span>
+          <span class="param-val" id="val-p0">0.50</span>
+        </div>
+        <input type="range" id="sl-p0" min="0.05" max="0.95" step="0.01" value="0.50">
+      </div>
+
+      <div class="param-row">
+        <div class="param-label">
+          <span class="param-name">Agents &nbsp;<em>N</em></span>
+          <span class="param-val" id="val-N">40</span>
+        </div>
+        <input type="range" id="sl-N" min="10" max="80" step="1" value="40">
+      </div>
+
+      <div class="param-row">
+        <div class="param-label">
+          <span class="param-name">True state &nbsp;<em>θ</em></span>
+          <span class="param-val" id="val-theta">H</span>
+        </div>
+        <input type="range" id="sl-theta" min="0" max="1" step="1" value="1">
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Signal Distribution</div>
+      <div class="dist-list" id="dist-list">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title" id="sig-param-title">Signal Accuracy</div>
+      <div class="param-row">
+        <div class="param-label">
+          <span class="param-name" id="sig-param-name">Pr(s=H | θ=H)</span>
+          <span class="param-val" id="val-q">0.70</span>
+        </div>
+        <input type="range" id="sl-q" min="0.51" max="0.99" step="0.01" value="0.70">
+      </div>
+      <!-- Gaussian: show μ_L and μ_H explicitly -->
+      <div id="gaussian-means" style="display:none; margin-top:10px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--dim); margin-bottom:6px;">Signal means</div>
+        <div style="display:flex; gap:8px;">
+          <div style="flex:1; padding:6px 8px; background:var(--panel); border:1px solid var(--border2); border-radius:3px; text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.55rem; color:var(--red); margin-bottom:2px;">θ = L</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--text);">μ = 0</div>
+          </div>
+          <div style="flex:1; padding:6px 8px; background:var(--panel); border:1px solid var(--border2); border-radius:3px; text-align:center;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.55rem; color:var(--blue); margin-bottom:2px;">θ = H</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--text);">μ = 1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Playback Speed</div>
+      <div class="speed-row">
+        <button class="speed-btn" data-speed="800">slow</button>
+        <button class="speed-btn active" data-speed="350">med</button>
+        <button class="speed-btn" data-speed="120">fast</button>
+        <button class="speed-btn" data-speed="30">×∞</button>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-title">Controls</div>
+      <div class="ctrl-row">
+        <button class="ctrl-btn primary" id="btn-new">↺ New Run</button>
+      </div>
+    </div>
+
+    <div class="sb-section" style="flex:1">
+      <div class="sb-section-title">State</div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-label">Agent</div>
+          <div class="stat-val" id="stat-agent">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">LLR</div>
+          <div class="stat-val" id="stat-llr">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Belief p<sub>t</sub></div>
+          <div class="stat-val blue" id="stat-belief">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Cascade</div>
+          <div class="stat-val neutral" id="stat-cascade">none</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label"># Adopt</div>
+          <div class="stat-val blue" id="stat-adopt">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label"># Reject</div>
+          <div class="stat-val red" id="stat-reject">0</div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- AGENT PANEL (always visible) -->
+    <div class="agent-panel">
+      <div class="ap-header">
+        <span class="ap-title">Agent Sequence</span>
+        <span class="ap-step-info">step <span id="ap-step">0</span> / <span id="ap-total">40</span></span>
+      </div>
+      <div class="agent-scroll" id="agent-scroll">
+        <div class="agent-row" id="agent-row"></div>
+      </div>
+    </div>
+
+    <!-- STEP BAR (always visible) -->
+    <div class="step-bar">
+      <button class="step-btn" id="btn-back">← Back</button>
+      <button class="step-btn" id="btn-step">Step →</button>
+      <button class="step-btn run" id="btn-run">▶ Play</button>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="state-pill" id="state-pill">ready</div>
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="llr">LLR Path</button>
+      <button class="tab-btn" data-tab="dist">Signal Distributions</button>
+      <button class="tab-btn" data-tab="decision">Decision Problem</button>
+      <button class="tab-btn" data-tab="inference">Public Update</button>
+    </div>
+
+    <!-- TAB 1: LLR PATH -->
+    <div class="tab-panel active" id="tab-llr">
+      <div class="llr-panel">
+        <canvas id="llrCanvas"></canvas>
+        <div class="cascade-annot up" id="cascade-annot-up">▲ cascade · adopt</div>
+        <div class="cascade-annot down" id="cascade-annot-down">▼ cascade · reject</div>
+        <div class="llr-tooltip" id="llr-tooltip">
+          <div class="tt-agent" id="tt-agent"></div>
+          <div class="tt-signal" id="tt-signal"></div>
+          <div class="tt-llr" id="tt-llr"></div>
+          <div class="tt-belief" id="tt-belief"></div>
+          <div class="tt-action" id="tt-action"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: SIGNAL DISTRIBUTIONS -->
+    <div class="tab-panel" id="tab-dist">
+      <div style="display:flex;gap:6px;padding:6px 8px 0;flex-shrink:0;" id="dist-zoom-btns">
+        <button class="step-btn" id="btn-dist-zoom">Zoom In</button>
+        <button class="step-btn" id="btn-dist-reset">Reset</button>
+      </div>
+      <div class="llr-panel">
+        <canvas id="distCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- TAB 3: DECISION PROBLEM -->
+    <div class="tab-panel" id="tab-decision">
+      <div class="llr-panel">
+        <canvas id="decisionCanvas"></canvas>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-inference">
+      <div style="display:flex;gap:6px;padding:6px 8px 0;flex-shrink:0;" id="infer-zoom-btns">
+        <button class="step-btn" id="btn-infer-zoom">Zoom In</button>
+        <button class="step-btn" id="btn-infer-reset">Reset</button>
+      </div>
+      <div class="llr-panel">
+        <canvas id="inferenceCanvas"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODEL OVERVIEW (BHW / Observational Learning)
+
+   State of the world: θ ∈ {0, 1}, common prior p₀ = Pr(θ=1).
+   Agents arrive in sequence t = 1, 2, …, N.
+   Each observes: (1) all past actions a₁,…,aₜ₋₁ and (2) a private signal sₜ.
+
+   BELIEFS (log-odds form)
+     Prior log-odds:   Λ₀ = log(p₀ / (1−p₀))
+     Public LLR:       Λₜ = Σᵢ<ₜ Δᵢ   (cumulative public update from actions)
+     Public belief:    pₜ = σ(Λ₀ + Λₜ),  where σ(x) = 1/(1+e^{−x})
+     Private LLR:      λₜ = log f(sₜ|θ=1) − log f(sₜ|θ=0)
+     Agent posterior:  σ(Λ₀ + Λₜ + λₜ)
+
+   DECISION RULE
+     Agent t adopts iff  σ(Λ₀ + Λₜ + λₜ) ≥ ½
+       ⟺  Λ₀ + Λₜ + λₜ ≥ 0
+       ⟺  λₜ ≥ −(Λ₀ + Λₜ)            [= the "hurdle" on private evidence]
+
+     For a continuous distribution, this defines a cutoff s* via:
+       λ(s*) = −(Λ₀ + Λₜ)
+     so agent adopts iff sₜ > s* (assuming λ is increasing in s, as it is here).
+
+   CASCADE DETECTION
+     An adopt cascade occurs when even the worst possible signal clears the hurdle:
+       λ_min ≥ −(Λ₀ + Λₜ),  i.e. the agent adopts regardless of signal.
+     A reject cascade is symmetric. Inside a cascade, Δₜ = 0 (action is uninformative).
+
+   PUBLIC UPDATE (outside a cascade)
+     Binary:     action reveals signal exactly → Δ = λ(signal)
+     Continuous: action reveals only which side of s* the signal fell on.
+       adopt:  Δ = log Pr(s > s* | θ=1) − log Pr(s > s* | θ=0)
+       reject: Δ = log Pr(s < s* | θ=1) − log Pr(s < s* | θ=0)
+
+   NOTE ON PARAMETERISATION
+     For both distributions, the slider value is stored as `params.q`:
+       Binary:   q = Pr(s=H | θ=H) ∈ (0.5, 1)
+       Gaussian: q = σ (standard deviation of the signal noise)
+     The DISTRIBUTIONS object converts q to the relevant distribution parameter.
+═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   §1  SIGNAL DISTRIBUTIONS
+   Each entry must implement:
+     isContinuous         — boolean
+     isUnbounded          — boolean; true iff private LLR is unbounded (no cascade)
+     sampleSignal(θ, q)  → signal value
+     llrIncrement(s, q)  → log f(s|θ=1) − log f(s|θ=0)
+     minLLR(q), maxLLR(q) — extremes of llrIncrement (for cascade detection)
+═══════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   DISTRIBUTIONS
+   Each entry defines a signal distribution parameterised by q.
+   For Gaussian, q is σ directly.  For Binary, q = Pr(s=H | θ=H).
+
+   Required fields:
+     isContinuous      – true for density, false for point-mass signals
+     sampleSignal(θ,q) – draw one signal
+     llrIncrement(s,q) – log f_H(s) − log f_L(s)  (private LLR)
+     minLLR(q)         – inf of llrIncrement (for cascade detection)
+     maxLLR(q)         – sup of llrIncrement
+═══════════════════════════════════════════════════════════════ */
+
+const DISTRIBUTIONS = {
+
+  binary: {
+    name: 'Binary (BHW)',
+    desc: 'Pr(s=H | θ=H) = q',
+    isContinuous: false,
+    isUnbounded:  false,
+    sliderTitle: 'Signal Accuracy',
+    sliderName:  'Pr(s=H | θ=H)',
+    sliderMin: 0.51, sliderMax: 0.99, sliderStep: 0.01, sliderDefault: 0.70,
+    formatParam:  q => q.toFixed(2),
+    formatSignal: s => s,
+
+    sampleSignal(theta, q) {
+      // Signal matches state with prob q
+      return Math.random() < (theta === 1 ? q : 1 - q) ? 'H' : 'L';
+    },
+
+    // log Pr(s | H) − log Pr(s | L)
+    // s='H': log q − log(1−q);   s='L': log(1−q) − log q
+    llrIncrement(s, q) {
+      return s === 'H' ? Math.log(q / (1 - q)) : Math.log((1 - q) / q);
+    },
+
+    minLLR(q) { return Math.log((1 - q) / q); },   // signal = 'L'
+    maxLLR(q) { return Math.log(q / (1 - q)); },   // signal = 'H'
+  },
+
+  gaussian: {
+    name: 'Gaussian',
+    desc: 's | θ ~ N(θ, σ²),  θ ∈ {0, 1}',
+    isContinuous: true,
+    isUnbounded:  false,
+    sliderTitle: 'Signal Std Dev',
+    sliderName:  'σ (noise)',
+    sliderMin: 0.10, sliderMax: 2.0, sliderStep: 0.05, sliderDefault: 0.60,
+    formatParam:  q => q.toFixed(2),
+    formatSignal: s => s.toFixed(3),
+
+    // Convenience: q IS σ for Gaussian (named q for UI uniformity)
+    sigma(q) { return q; },
+
+    sampleSignal(theta, q) {
+      return (theta === 1 ? 1 : 0) + q * randn();
+    },
+
+    // log[N(s; 1, σ²) / N(s; 0, σ²)]
+    //   = −(s−1)²/(2σ²) + (s−0)²/(2σ²)
+    //   = (2s − 1) / (2σ²)
+    //   = (s − 0.5) / σ²
+    llrIncrement(s, q) { return (s - 0.5) / (q * q); },
+
+    // Practical extremes at μ_L − 3σ and μ_H + 3σ
+    minLLR(q) { return (-3*q - 0.5) / (q * q); },
+    maxLLR(q) { return ( 1 + 3*q - 0.5) / (q * q); },
+  },
+};
+
+
+/* ═══════════════════════════════════════════════════════════════
+   NUMERICS
+   Only what is actually used: Box-Muller sampler and normCDF.
+   (betaCDF / laplaceCDF removed — only Gaussian + Binary remain.)
+═══════════════════════════════════════════════════════════════ */
+
+// Box-Muller transform: standard normal sample
+function randn() {
+  return Math.sqrt(-2 * Math.log(1 - Math.random()))
+       * Math.cos(2 * Math.PI * Math.random());
+}
+
+// Standard normal CDF — Abramowitz & Stegun §26.2.17, max error 7.5e-8
+function normCDF(x) {
+  const t = 1 / (1 + 0.2316419 * Math.abs(x));
+  const d = 0.3989423 * Math.exp(-x * x / 2);
+  const p = d * t * (0.3193815 + t * (-0.3565638
+          + t * (1.7814779 + t * (-1.8212560 + t * 1.3302744))));
+  return x >= 0 ? 1 - p : p;
+}
+
+// Axis tick helper — display utility, lives here for lack of a better home
+function niceStep(roughStep) {
+  const exp  = Math.floor(Math.log10(roughStep));
+  const frac = roughStep / Math.pow(10, exp);
+  const nice = frac < 1.5 ? 1 : frac < 3.5 ? 2 : frac < 7.5 ? 5 : 10;
+  return nice * Math.pow(10, exp);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   EQUILIBRIUM INFERENCE
+   
+   Setup
+   ─────
+   θ ∈ {0,1}, common prior p₀.  Agent t observes:
+     • public LLR  Λ_t  (cumulative log-odds from all prior actions)
+     • private signal s_t ~ f_θ
+
+   Public log-odds before agent t acts:
+     ℓ_t = log(p₀/(1−p₀)) + Λ_t
+
+   Agent's decision (best response)
+   ──────────────────────────────────
+   Binary:   action reveals signal exactly → cascade iff even the
+             worst/best signal doesn't flip the posterior past 0.5.
+
+   Gaussian: adopt iff  llrIncrement(s) + ℓ_t > 0
+             ↔  (s − 0.5)/σ² > −ℓ_t
+             ↔  s > s*,  where:
+
+               s* = 0.5 − ℓ_t · σ²                          … (cutoff)
+
+             Cascade up:   s* ≤ μ_L − 3σ  (even worst signal → adopt)
+             Cascade down: s* ≥ μ_H + 3σ  (even best  signal → reject)
+
+   Public update (what observers infer from seeing adopt/reject)
+   ─────────────────────────────────────────────────────────────
+   Outside a cascade, the action is informative:
+
+   Δ_t = log Pr(action | θ=H) − log Pr(action | θ=L)
+
+   Binary:   action perfectly reveals signal, so
+             Δ_t = llrIncrement(revealed signal)
+
+   Gaussian: adopt  → Δ_t = log Pr(s>s* | θ=H) − log Pr(s>s* | θ=L)
+                           = log[1−Φ((s*−1)/σ)] − log[1−Φ(s* /σ)]
+             reject → Δ_t = log Pr(s<s* | θ=H) − log Pr(s<s* | θ=L)
+                           = log Φ((s*−1)/σ) − log Φ(s* /σ)
+
+   Inside a cascade: action is uninformative → Δ_t = 0.
+═══════════════════════════════════════════════════════════════ */
+
+// Posterior belief from log-odds representation
+// p(θ=H | history) = σ(log(p₀/(1−p₀)) + Λ)
+function beliefFromLLR(llrPub, p0) {
+  return 1 / (1 + Math.exp(-(Math.log(p0 / (1 - p0)) + llrPub)));
+}
+
+// Equilibrium signal cutoff s* for Gaussian
+// Defined by: llrIncrement(s*) + ℓ_t = 0
+//   (s* − 0.5)/σ² = −ℓ_t  →  s* = 0.5 − ℓ_t · σ²
+// publicLogOdds ℓ_t = log(p₀/(1−p₀)) + Λ_t
+function signalCutoff(sigma, publicLogOdds) {
+  return 0.5 - publicLogOdds * sigma * sigma;
+}
+
+// Is the public belief so bullish that even the weakest signal → adopt?
+function isCascadeUp(llrPub, p0, distKey, q) {
+  const dist = DISTRIBUTIONS[distKey];
+  if (dist.isUnbounded) return false;
+  const worstLLR = dist.minLLR(q);
+  return isFinite(worstLLR) && beliefFromLLR(llrPub + worstLLR, p0) > 0.5;
+}
+
+// Is the public belief so bearish that even the strongest signal → reject?
+function isCascadeDown(llrPub, p0, distKey, q) {
+  const dist = DISTRIBUTIONS[distKey];
+  if (dist.isUnbounded) return false;
+  const bestLLR = dist.maxLLR(q);
+  return isFinite(bestLLR) && beliefFromLLR(llrPub + bestLLR, p0) < 0.5;
+}
+
+// Public LLR increment Δ_t for a Gaussian signal
+// (Binary is handled inline in generateRun — see comment there)
+function gaussianPublicLLR(action, sigma, publicLogOdds) {
+  const sStar  = signalCutoff(sigma, publicLogOdds);
+  const safeLog = x => Math.log(Math.max(1e-10, x));
+
+  // Tail probabilities under each state
+  // Pr(s > s* | θ=H):  s|H ~ N(1, σ²)  →  P(z > (s*−1)/σ) = 1−Φ((s*−1)/σ)
+  // Pr(s > s* | θ=L):  s|L ~ N(0, σ²)  →  P(z > s*/σ)     = 1−Φ(s*/σ)
+  const pAboveH = 1 - normCDF((sStar - 1) / sigma);
+  const pAboveL = 1 - normCDF( sStar      / sigma);
+
+  if (action === 'adopt') {
+    return safeLog(pAboveH) - safeLog(pAboveL);
+  } else {
+    return safeLog(1 - pAboveH) - safeLog(1 - pAboveL);
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SIMULATION
+═══════════════════════════════════════════════════════════════ */
+
+function generateRun(N, p0, theta, distKey, q, predrawnSignals) {
+  const dist   = DISTRIBUTIONS[distKey];
+  const agents = [];
+  let llrPub   = 0;   // cumulative public log-odds relative to prior
+
+  for (let i = 0; i < N; i++) {
+    const cascadeUp   = isCascadeUp(llrPub, p0, distKey, q);
+    const cascadeDown = isCascadeDown(llrPub, p0, distKey, q);
+    const inCascade   = cascadeUp || cascadeDown;
+
+    // Draw private signal and compute its LLR
+    const signal     = predrawnSignals ? predrawnSignals[i] : dist.sampleSignal(theta, q);
+    const llrPrivate = dist.llrIncrement(signal, q);
+    const beliefBefore = beliefFromLLR(llrPub, p0);
+
+    // Best-response action
+    let action;
+    if      (cascadeUp)   action = 'adopt';
+    else if (cascadeDown) action = 'reject';
+    else action = beliefFromLLR(llrPub + llrPrivate, p0) >= 0.5 ? 'adopt' : 'reject';
+
+    // Public LLR update
+    // Binary:   action = signal direction, so Δ = llrIncrement of that signal.
+    // Gaussian: observers know s fell above/below s*, Δ = log tail-prob ratio.
+    // Cascade:  action uninformative → Δ = 0.
+    let llrIncr = 0;
+    if (!inCascade) {
+      if (dist.isContinuous) {
+        const ell = Math.log(p0 / (1 - p0)) + llrPub;   // ℓ_t
+        llrIncr = gaussianPublicLLR(action, dist.sigma(q), ell);
+      } else {
+        // Binary: adopt ↔ signal='H', reject ↔ signal='L'
+        llrIncr = dist.llrIncrement(action === 'adopt' ? 'H' : 'L', q);
+      }
+    }
+
+    agents.push({
+      idx: i + 1,
+      signal,
+      signalDisplay: dist.formatSignal(signal),
+      isContinuous:  dist.isContinuous,
+      action,
+      inCascade,
+      cascadeType:   cascadeUp ? 'up' : (cascadeDown ? 'down' : null),
+      llrPubBefore:  llrPub,
+      llrPrivate,
+      llrIncr,
+      beliefBefore,
+      beliefAfter:   beliefFromLLR(llrPub + llrIncr, p0),
+      agentPosterior: beliefFromLLR(llrPub + llrPrivate, p0),
+    });
+
+    llrPub += llrIncr;
+  }
+
+  return agents;
+}
+
+let params = {
+  p0: 0.50, N: 40, theta: 1,
+  distKey: 'binary', q: 0.70,
+  speed: 350,
+};
+let agents = [];
+let currentStep = 0;
+let runTimer = null;
+let storedSignals = [];   // reused when only p0 changes
+
+// Zoom/pan state for signal distribution and public update canvases
+// viewRange: [lo, hi] fraction of the base support to show
+let distZoom  = { lo: -1, hi: 2 };  // matches fixed Gaussian support
+let inferZoom = { lo: -1, hi: 2 };
+
+function resetZoom() {
+  distZoom  = { lo: -1, hi: 2 };
+  inferZoom = { lo: -1, hi: 2 };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUILD UI
+═══════════════════════════════════════════════════════════════ */
+// Populate distribution list
+const distListEl = document.getElementById('dist-list');
+Object.entries(DISTRIBUTIONS).forEach(([key, d]) => {
+  const el = document.createElement('div');
+  el.className = 'dist-option' + (key === 'binary' ? ' active' : '');
+  el.dataset.key = key;
+  el.innerHTML = `
+    <div class="dist-radio"></div>
+    <div class="dist-info">
+      <div class="dist-name">${d.name}</div>
+      <div class="dist-desc">${d.desc}</div>
+    </div>`;
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.dist-option').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+    params.distKey = key;
+    // Reset q to the distribution's default
+    const sl = document.getElementById('sl-q');
+    params.q = d.sliderDefault;
+    sl.min = d.sliderMin;
+    sl.max = d.sliderMax;
+    sl.step = d.sliderStep;
+    sl.value = params.q;
+    updateParamUI();
+    updateZoomButtons();
+    newRun();
+  });
+  distListEl.appendChild(el);
+});
+
+function updateParamUI() {
+  const d = DISTRIBUTIONS[params.distKey];
+  document.getElementById('sig-param-title').textContent = d.sliderTitle;
+  document.getElementById('sig-param-name').textContent  = d.sliderName;
+  document.getElementById('val-q').textContent = d.formatParam(params.q);
+  // Show mean labels only for Gaussian
+  document.getElementById('gaussian-means').style.display =
+    params.distKey === 'gaussian' ? '' : 'none';
+}
+
+// Sliders
+function bindSlider(id, valId, key, fmt) {
+  const sl = document.getElementById(id);
+  const vl = document.getElementById(valId);
+  sl.addEventListener('input', () => {
+    params[key] = parseFloat(sl.value);
+    vl.textContent = fmt(params[key]);
+    newRun();
+  });
+}
+// p0 reuses stored signals; other sliders redraw
+const sl_p0 = document.getElementById('sl-p0');
+sl_p0.addEventListener('input', () => {
+  params.p0 = parseFloat(sl_p0.value);
+  document.getElementById('val-p0').textContent = params.p0.toFixed(2);
+  recomputeRun();
+});
+bindSlider('sl-N',  'val-N',  'N',  v => v.toFixed(0));
+document.getElementById('sl-q').addEventListener('input', e => {
+  params.q = parseFloat(e.target.value);
+  const d = DISTRIBUTIONS[params.distKey];
+  document.getElementById('val-q').textContent = d.formatParam(params.q);
+  newRun();
+});
+document.getElementById('sl-theta').addEventListener('input', e => {
+  params.theta = parseInt(e.target.value);
+  document.getElementById('val-theta').textContent = params.theta === 1 ? 'H' : 'L';
+  newRun();
+});
+
+// Speed buttons
+document.querySelectorAll('.speed-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    params.speed = parseInt(btn.dataset.speed);
+    if (runTimer) { stopRun(); startRun(); }
+  });
+});
+
+// Controls
+document.getElementById('btn-new').addEventListener('click', newRun);
+document.getElementById('btn-step').addEventListener('click', stepForward);
+document.getElementById('btn-back').addEventListener('click', stepBack);
+document.getElementById('btn-run').addEventListener('click', toggleRun);
+
+/* ═══════════════════════════════════════════════════════════════
+   RUN MANAGEMENT
+═══════════════════════════════════════════════════════════════ */
+function newRun() {
+  stopRun();
+  resetZoom();
+  // Draw fresh signals and store them for p0 reuse
+  const dist = DISTRIBUTIONS[params.distKey];
+  storedSignals = Array.from({ length: params.N },
+    () => dist.sampleSignal(params.theta, params.q));
+  agents = generateRun(params.N, params.p0, params.theta, params.distKey, params.q, storedSignals);
+  currentStep = 0;
+  buildAgentCards();
+  document.getElementById('ap-total').textContent = agents.length;
+  updateDisplay();
+  document.getElementById('btn-run').textContent = '▶ Play';
+  document.getElementById('btn-run').classList.remove('running');
+}
+
+// Recompute equilibrium with same signals but updated p0
+function recomputeRun() {
+  stopRun();
+  agents = generateRun(params.N, params.p0, params.theta, params.distKey, params.q, storedSignals);
+  currentStep = Math.min(currentStep, agents.length);
+  buildAgentCards();
+  updateDisplay();
+}
+
+function stepForward() {
+  if (currentStep < agents.length) {
+    currentStep++;
+    updateDisplay();
+  }
+  if (currentStep >= agents.length) stopRun();
+}
+
+function stepBack() {
+  if (currentStep > 0) {
+    currentStep--;
+    updateDisplay();
+  }
+}
+
+function startRun() {
+  if (currentStep >= agents.length) currentStep = 0;
+  const btn = document.getElementById('btn-run');
+  btn.textContent = '⏸ Pause';
+  btn.classList.add('running');
+  runTimer = setInterval(() => {
+    stepForward();
+    if (currentStep >= agents.length) stopRun();
+  }, params.speed);
+}
+
+function stopRun() {
+  clearInterval(runTimer);
+  runTimer = null;
+  const btn = document.getElementById('btn-run');
+  btn.textContent = '▶ Play';
+  btn.classList.remove('running');
+}
+
+function toggleRun() {
+  if (runTimer) stopRun();
+  else startRun();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AGENT CARDS
+═══════════════════════════════════════════════════════════════ */
+function buildAgentCards() {
+  const row = document.getElementById('agent-row');
+  row.innerHTML = '';
+  agents.forEach((ag, i) => {
+    // Insert a cascade separator before the first cascading agent
+    const prevInCascade = i > 0 && agents[i-1].inCascade;
+    if (ag.inCascade && !prevInCascade) {
+      const sep = document.createElement('div');
+      sep.className = 'cascade-sep';
+      sep.id = `cascade-sep-${i}`;
+      row.appendChild(sep);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'agent-card';
+    card.id = `agent-card-${i}`;
+
+    const emoji = ag.action === 'adopt' ? '🟢' : '🔴';
+    const cascClass = ag.cascadeType === 'up' ? 'cascade-up' : ag.cascadeType === 'down' ? 'cascade-down' : '';
+
+    let signalHTML;
+    if (ag.isContinuous) {
+      const valClass = ag.llrPrivate >= 0 ? 'pos' : 'neg';
+      signalHTML = `<div class="signal-val ${valClass}">s=${ag.signalDisplay}</div>`;
+    } else {
+      signalHTML = `<span class="signal-badge ${ag.signal}">${ag.signal}</span>`;
+    }
+
+    const fillClass = ag.action === 'adopt' ? 'adopt' : 'reject';
+    const posteriorHTML = `<div class="posterior-num ${fillClass}">${ag.agentPosterior.toFixed(2)}</div>`;
+
+    card.innerHTML = `
+      <div class="agent-idx">${ag.idx}</div>
+      <div class="agent-icon ${cascClass}">
+        ${emoji}
+        ${ag.isContinuous ? '' : signalHTML}
+      </div>
+      ${ag.isContinuous ? signalHTML : ''}
+      ${posteriorHTML}
+    `;
+    row.appendChild(card);
+  });
+}
+
+function updateAgentCards() {
+  agents.forEach((ag, i) => {
+    const card = document.getElementById(`agent-card-${i}`);
+    if (!card) return;
+    card.classList.toggle('revealed', i < currentStep);
+    card.classList.toggle('current', i === currentStep - 1);
+
+    // Show cascade separator when the cascade-starting agent is revealed
+    if (ag.inCascade && i > 0 && !agents[i-1].inCascade) {
+      const sep = document.getElementById(`cascade-sep-${i}`);
+      if (sep) sep.classList.toggle('visible', i < currentStep);
+    }
+  });
+  // Scroll to current
+  if (currentStep > 0) {
+    const card = document.getElementById(`agent-card-${currentStep - 1}`);
+    const scroller = document.getElementById('agent-scroll');
+    if (card && scroller) {
+      const cardLeft = card.offsetLeft;
+      const cardRight = cardLeft + card.offsetWidth;
+      const scrollLeft = scroller.scrollLeft;
+      const viewRight = scrollLeft + scroller.clientWidth;
+      if (cardRight > viewRight - 20) {
+        scroller.scrollLeft = cardRight - scroller.clientWidth + 40;
+      } else if (cardLeft < scrollLeft + 20) {
+        scroller.scrollLeft = cardLeft - 20;
+      }
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATS + STATE PILL
+═══════════════════════════════════════════════════════════════ */
+function updateStats() {
+  const step = document.getElementById('ap-step');
+  const statAgent = document.getElementById('stat-agent');
+  const statLLR = document.getElementById('stat-llr');
+  const statBelief = document.getElementById('stat-belief');
+  const statCascade = document.getElementById('stat-cascade');
+  const statAdopt = document.getElementById('stat-adopt');
+  const statReject = document.getElementById('stat-reject');
+  const pill = document.getElementById('state-pill');
+
+  step.textContent = currentStep;
+
+  if (currentStep === 0) {
+    statAgent.textContent = '—';
+    statLLR.textContent = '—';
+    statBelief.textContent = params.p0.toFixed(3);
+    statCascade.textContent = 'none';
+    statAdopt.textContent = '0';
+    statReject.textContent = '0';
+    pill.className = 'state-pill';
+    pill.textContent = 'ready';
+    return;
+  }
+
+  const ag = agents[currentStep - 1];
+  statAgent.textContent = `#${ag.idx}`;
+  const llrNow = ag.llrPubBefore + ag.llrIncr;
+  statLLR.textContent = llrNow.toFixed(3);
+  statBelief.textContent = ag.beliefAfter.toFixed(3);
+
+  const revealed = agents.slice(0, currentStep);
+  const adopts = revealed.filter(a => a.action === 'adopt').length;
+  const rejects = revealed.filter(a => a.action === 'reject').length;
+  statAdopt.textContent = adopts;
+  statReject.textContent = rejects;
+
+  if (ag.cascadeType === 'up') {
+    statCascade.textContent = '↑ up';
+    statCascade.className = 'stat-val green';
+    pill.className = 'state-pill cascade-up';
+    pill.textContent = '▲ cascade · adopt';
+  } else if (ag.cascadeType === 'down') {
+    statCascade.textContent = '↓ down';
+    statCascade.className = 'stat-val red';
+    pill.className = 'state-pill cascade-down';
+    pill.textContent = '▼ cascade · reject';
+  } else {
+    statCascade.textContent = 'none';
+    statCascade.className = 'stat-val neutral';
+    pill.className = 'state-pill learning';
+    pill.textContent = 'learning';
+  }
+
+  // Cascade annotation on chart
+  const annotUp = document.getElementById('cascade-annot-up');
+  const annotDown = document.getElementById('cascade-annot-down');
+  if (ag.cascadeType === 'up') {
+    annotUp.classList.add('visible');
+    annotDown.classList.remove('visible');
+  } else if (ag.cascadeType === 'down') {
+    annotDown.classList.add('visible');
+    annotUp.classList.remove('visible');
+  } else {
+    annotUp.classList.remove('visible');
+    annotDown.classList.remove('visible');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CANVAS — LLR PLOT
+═══════════════════════════════════════════════════════════════ */
+const canvas = document.getElementById('llrCanvas');
+const ctx2 = canvas.getContext('2d');
+
+function updateDisplay() {
+  updateAgentCards();
+  updateStats();
+  drawLLR();
+  if (activeTab === 'dist')      resizeDistCanvas();
+  if (activeTab === 'decision')  resizeDecisionCanvas();
+  if (activeTab === 'inference') resizeInferenceCanvas();
+}
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * devicePixelRatio;
+  canvas.height = rect.height * devicePixelRatio;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx2.setTransform(1, 0, 0, 1, 0, 0);
+  ctx2.scale(devicePixelRatio, devicePixelRatio);
+  drawLLR();
+}
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  if (activeTab === 'dist')      resizeDistCanvas();
+  if (activeTab === 'decision')  resizeDecisionCanvas();
+  if (activeTab === 'inference') resizeInferenceCanvas();
+});
+
+function drawLLR() {
+  const W = canvas.width / devicePixelRatio;
+  const H = canvas.height / devicePixelRatio;
+  const pad = { top: 36, right: 90, bottom: 44, left: 62 };
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+
+  ctx2.clearRect(0, 0, W, H);
+  ctx2.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#08080f';
+  ctx2.fillRect(0, 0, W, H);
+
+  if (agents.length === 0) return;
+
+  const dist = DISTRIBUTIONS[params.distKey];
+  const showPrivate = dist.isContinuous; // only meaningful for continuous dists
+
+  // Compute public LLR series (step function: t=0..N)
+  const llrSeries = [{ t: 0, llr: 0, agent: null }];
+  let llrCum = 0;
+  agents.forEach((ag, i) => {
+    llrCum += ag.llrIncr;
+    llrSeries.push({ t: i + 1, llr: llrCum, agent: ag });
+  });
+
+  // Compute cumulative private LLR series (placed at agent positions t=1..N)
+  // Each point: cumulative sum of llrPrivate up to that agent
+  const privSeries = [];
+  if (showPrivate) {
+    let privCum = 0;
+    agents.forEach((ag, i) => {
+      privCum += ag.llrPrivate;
+      privSeries.push({ t: i + 1, llr: privCum, agent: ag });
+    });
+  }
+
+  const revealed = llrSeries.slice(0, currentStep + 1);
+  const revPriv  = showPrivate ? privSeries.slice(0, currentStep) : [];
+
+  if (llrSeries.length === 0) return;
+
+  // Y range: cover both public and private series
+  const allVals = llrSeries.map(d => d.llr);
+  if (showPrivate && privSeries.length > 0) allVals.push(...privSeries.map(d => d.llr));
+  let yMin = Math.min(...allVals);
+  let yMax = Math.max(...allVals);
+  const yPad = Math.max(0.5, (yMax - yMin) * 0.18);
+  yMin -= yPad; yMax += yPad;
+  if (yMax === yMin) { yMax += 1; yMin -= 1; }
+
+  // Cascade thresholds
+  const logOddsPrior = Math.log(params.p0 / (1 - params.p0));
+  const minLLR = dist.minLLR(params.q);
+  const maxLLR = dist.maxLLR(params.q);
+  const cascUpThresh   = isFinite(minLLR) ? -logOddsPrior - minLLR : null;
+  const cascDownThresh = isFinite(maxLLR) ? -logOddsPrior - maxLLR : null;
+
+  const xS = t => pad.left + (t / agents.length) * pw;
+  const yS = v => pad.top + ph - ((v - yMin) / (yMax - yMin)) * ph;
+
+  // Grid
+  ctx2.strokeStyle = 'rgba(60,60,100,0.4)';
+  ctx2.lineWidth = 1;
+  ctx2.setLineDash([3, 4]);
+  const nGridY = 5;
+  for (let i = 0; i <= nGridY; i++) {
+    const y = yMin + (i / nGridY) * (yMax - yMin);
+    ctx2.beginPath();
+    ctx2.moveTo(pad.left, yS(y));
+    ctx2.lineTo(W - pad.right, yS(y));
+    ctx2.stroke();
+  }
+  ctx2.setLineDash([]);
+
+  // Zero line
+  const y0 = yS(0);
+  ctx2.strokeStyle = 'rgba(128,128,180,0.5)';
+  ctx2.lineWidth = 1;
+  ctx2.beginPath();
+  ctx2.moveTo(pad.left, y0);
+  ctx2.lineTo(W - pad.right, y0);
+  ctx2.stroke();
+  ctx2.fillStyle = 'rgba(128,128,180,0.6)';
+  ctx2.font = '9px JetBrains Mono, monospace';
+  ctx2.textAlign = 'right';
+  ctx2.fillText('0', pad.left - 6, y0 + 3);
+
+  // Cascade threshold bands
+  if (cascUpThresh !== null) {
+    const yU = yS(cascUpThresh);
+    if (yU > pad.top && yU < H - pad.bottom) {
+      ctx2.fillStyle = 'rgba(90,180,255,0.05)';
+      ctx2.fillRect(pad.left, pad.top, pw, yU - pad.top);
+      ctx2.strokeStyle = 'rgba(90,180,255,0.4)';
+      ctx2.lineWidth = 1;
+      ctx2.setLineDash([5, 4]);
+      ctx2.beginPath();
+      ctx2.moveTo(pad.left, yU);
+      ctx2.lineTo(W - pad.right, yU);
+      ctx2.stroke();
+      ctx2.setLineDash([]);
+      ctx2.fillStyle = 'rgba(90,180,255,0.6)';
+      ctx2.textAlign = 'right';
+      ctx2.font = '8px JetBrains Mono, monospace';
+      ctx2.fillText('cascade ↑', pad.left - 4, yU - 3);
+    }
+  }
+  if (cascDownThresh !== null) {
+    const yD = yS(cascDownThresh);
+    if (yD < H - pad.bottom && yD > pad.top) {
+      ctx2.fillStyle = 'rgba(255,96,96,0.05)';
+      ctx2.fillRect(pad.left, yD, pw, H - pad.bottom - yD);
+      ctx2.strokeStyle = 'rgba(255,96,96,0.4)';
+      ctx2.lineWidth = 1;
+      ctx2.setLineDash([5, 4]);
+      ctx2.beginPath();
+      ctx2.moveTo(pad.left, yD);
+      ctx2.lineTo(W - pad.right, yD);
+      ctx2.stroke();
+      ctx2.setLineDash([]);
+      ctx2.fillStyle = 'rgba(255,96,96,0.6)';
+      ctx2.textAlign = 'right';
+      ctx2.font = '8px JetBrains Mono, monospace';
+      ctx2.fillText('cascade ↓', pad.left - 4, yD + 11);
+    }
+  }
+
+  // ── PRIVATE LLR SERIES (faint, revealed only) ──
+  if (showPrivate && revPriv.length > 0) {
+    // Dashed cumulative private LLR path
+    ctx2.beginPath();
+    ctx2.moveTo(xS(0), yS(0));
+    revPriv.forEach(d => ctx2.lineTo(xS(d.t), yS(d.llr)));
+    ctx2.strokeStyle = 'rgba(210,185,255,0.45)';
+    ctx2.lineWidth = 1.5;
+    ctx2.setLineDash([3, 4]);
+    ctx2.stroke();
+    ctx2.setLineDash([]);
+
+    // Vertical stems connecting public to private at each revealed agent
+    revPriv.forEach((dp, i) => {
+      const pub = revealed[i + 1];
+      if (!pub) return;
+      const x = xS(dp.t);
+      const yPub = yS(pub.llr);
+      const yPriv = yS(dp.llr);
+      if (Math.abs(yPub - yPriv) < 1) return; // skip if essentially equal
+      ctx2.beginPath();
+      ctx2.moveTo(x, yPub);
+      ctx2.lineTo(x, yPriv);
+      ctx2.strokeStyle = 'rgba(210,185,255,0.15)';
+      ctx2.lineWidth = 1;
+      ctx2.stroke();
+
+      // Small diamond at private point
+      ctx2.save();
+      ctx2.translate(x, yPriv);
+      ctx2.rotate(Math.PI / 4);
+      ctx2.beginPath();
+      ctx2.rect(-2.5, -2.5, 5, 5);
+      ctx2.fillStyle = 'rgba(210,185,255,0.55)';
+      ctx2.fill();
+      ctx2.restore();
+    });
+  }
+
+  // ── FULL PUBLIC PATH (faint ghost) ──
+  if (llrSeries.length > 1) {
+    ctx2.beginPath();
+    llrSeries.forEach((d, i) => {
+      if (i === 0) ctx2.moveTo(xS(d.t), yS(d.llr));
+      else ctx2.lineTo(xS(d.t), yS(d.llr));
+    });
+    ctx2.strokeStyle = 'rgba(128,128,180,0.10)';
+    ctx2.lineWidth = 1.5;
+    ctx2.stroke();
+  }
+
+  // ── REVEALED PUBLIC PATH (colored by cascade status) ──
+  if (revealed.length > 1) {
+    for (let i = 1; i < revealed.length; i++) {
+      const prev = revealed[i-1];
+      const curr = revealed[i];
+      const ag = curr.agent;
+      let color = '#f2a600';
+      if (ag && ag.cascadeType === 'up') color = '#5ab4ff';
+      else if (ag && ag.cascadeType === 'down') color = '#ff6060';
+      ctx2.beginPath();
+      ctx2.moveTo(xS(prev.t), yS(prev.llr));
+      ctx2.lineTo(xS(curr.t), yS(curr.llr));
+      ctx2.strokeStyle = color;
+      ctx2.lineWidth = 2.2;
+      ctx2.stroke();
+    }
+  }
+
+  // ── DOTS on public path ──
+  revealed.slice(1).forEach((d, i) => {
+    const ag = d.agent;
+    let color = '#f2a600';
+    if (ag && ag.cascadeType === 'up') color = '#5ab4ff';
+    else if (ag && ag.cascadeType === 'down') color = '#ff6060';
+    ctx2.beginPath();
+    ctx2.arc(xS(d.t), yS(d.llr), i === revealed.length - 2 ? 5 : 3, 0, Math.PI * 2);
+    ctx2.fillStyle = color;
+    ctx2.fill();
+    if (i === revealed.length - 2) {
+      ctx2.strokeStyle = '#08080f';
+      ctx2.lineWidth = 1.5;
+      ctx2.stroke();
+    }
+  });
+
+  // ── Y AXIS TICKS ──
+  ctx2.fillStyle = 'rgba(112,112,160,0.7)';
+  ctx2.font = '9px JetBrains Mono, monospace';
+  ctx2.textAlign = 'right';
+  for (let i = 0; i <= nGridY; i++) {
+    const v = yMin + (i / nGridY) * (yMax - yMin);
+    ctx2.fillText(v.toFixed(1), pad.left - 6, yS(v) + 3);
+  }
+
+  // ── X AXIS TICKS ──
+  ctx2.textAlign = 'center';
+  const nTicks = Math.min(10, agents.length);
+  for (let i = 0; i <= nTicks; i++) {
+    const t = Math.round(i / nTicks * agents.length);
+    ctx2.fillText(t, xS(t), H - pad.bottom + 14);
+  }
+
+  // ── AXIS LABELS ──
+  ctx2.fillStyle = 'rgba(112,112,160,0.5)';
+  ctx2.font = '9px JetBrains Mono, monospace';
+  ctx2.textAlign = 'center';
+  ctx2.fillText('agent t', W / 2, H - 4);
+  ctx2.save();
+  ctx2.translate(11, pad.top + ph / 2);
+  ctx2.rotate(-Math.PI / 2);
+  ctx2.fillText('log-likelihood ratio', 0, 0);
+  ctx2.restore();
+
+  // ── AXES BORDER ──
+  ctx2.strokeStyle = 'rgba(60,60,100,0.6)';
+  ctx2.lineWidth = 1;
+  ctx2.beginPath();
+  ctx2.moveTo(pad.left, pad.top);
+  ctx2.lineTo(pad.left, H - pad.bottom);
+  ctx2.lineTo(W - pad.right, H - pad.bottom);
+  ctx2.stroke();
+
+  // ── LEGEND (right margin) ──
+  const lx = W - pad.right + 10;
+  ctx2.font = '8px JetBrains Mono, monospace';
+  ctx2.textAlign = 'left';
+
+  // Public LLR
+  ctx2.strokeStyle = '#f2a600';
+  ctx2.lineWidth = 2.2;
+  ctx2.beginPath();
+  ctx2.moveTo(lx, pad.top + 10);
+  ctx2.lineTo(lx + 18, pad.top + 10);
+  ctx2.stroke();
+  ctx2.fillStyle = 'rgba(242,166,0,0.9)';
+  ctx2.fillText('public', lx, pad.top + 22);
+  ctx2.fillStyle = 'rgba(242,166,0,0.5)';
+  ctx2.fillText('LLR', lx, pad.top + 32);
+
+  if (showPrivate) {
+    ctx2.strokeStyle = 'rgba(210,185,255,0.6)';
+    ctx2.lineWidth = 1.5;
+    ctx2.setLineDash([3, 4]);
+    ctx2.beginPath();
+    ctx2.moveTo(lx, pad.top + 52);
+    ctx2.lineTo(lx + 18, pad.top + 52);
+    ctx2.stroke();
+    ctx2.setLineDash([]);
+    // diamond
+    ctx2.save();
+    ctx2.translate(lx + 9, pad.top + 52);
+    ctx2.rotate(Math.PI / 4);
+    ctx2.beginPath();
+    ctx2.rect(-2.5, -2.5, 5, 5);
+    ctx2.fillStyle = 'rgba(210,185,255,0.6)';
+    ctx2.fill();
+    ctx2.restore();
+    ctx2.fillStyle = 'rgba(210,185,255,0.8)';
+    ctx2.fillText('private', lx, pad.top + 64);
+    ctx2.fillStyle = 'rgba(210,185,255,0.5)';
+    ctx2.fillText('(social', lx, pad.top + 74);
+    ctx2.fillText('planner)', lx, pad.top + 84);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TAB SWITCHING
+═══════════════════════════════════════════════════════════════ */
+let activeTab = 'llr';
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeTab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${activeTab}`));
+    if (activeTab === 'dist')      { resizeDistCanvas(); }
+    if (activeTab === 'decision')  { resizeDecisionCanvas(); }
+    if (activeTab === 'inference') { resizeInferenceCanvas(); }
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   DISTRIBUTION CANVAS
+   Shows f_H(s) and f_L(s), current s* cutoff, realized signals
+═══════════════════════════════════════════════════════════════ */
+const distCanvas = document.getElementById('distCanvas');
+const dctx = distCanvas.getContext('2d');
+
+// Zoom buttons for dist and inference tabs (Gaussian only)
+function getGaussianZoomedRange() {
+  const sigma = DISTRIBUTIONS.gaussian.sigma(params.q);
+  const lo = 0.5 - 3 * sigma;
+  const hi = 0.5 + 3 * sigma;
+  return { lo, hi };
+}
+
+function updateZoomButtons() {
+  const isG = params.distKey === 'gaussian';
+  document.getElementById('dist-zoom-btns').style.visibility  = isG ? 'visible' : 'hidden';
+  document.getElementById('infer-zoom-btns').style.visibility = isG ? 'visible' : 'hidden';
+}
+
+document.getElementById('btn-dist-zoom').addEventListener('click', () => {
+  distZoom = getGaussianZoomedRange();
+  resizeDistCanvas();
+});
+document.getElementById('btn-dist-reset').addEventListener('click', () => {
+  distZoom = { lo: -1, hi: 2 };
+  resizeDistCanvas();
+});
+document.getElementById('btn-infer-zoom').addEventListener('click', () => {
+  inferZoom = getGaussianZoomedRange();
+  resizeInferenceCanvas();
+});
+document.getElementById('btn-infer-reset').addEventListener('click', () => {
+  inferZoom = { lo: -1, hi: 2 };
+  resizeInferenceCanvas();
+});
+
+function resizeDistCanvas() {
+  const rect = distCanvas.parentElement.getBoundingClientRect();
+  if (!rect.width) return;
+  distCanvas.width  = rect.width  * devicePixelRatio;
+  distCanvas.height = rect.height * devicePixelRatio;
+  distCanvas.style.width  = rect.width  + 'px';
+  distCanvas.style.height = rect.height + 'px';
+  dctx.setTransform(1, 0, 0, 1, 0, 0);
+  dctx.scale(devicePixelRatio, devicePixelRatio);
+  drawDist();
+}
+
+function getDensityFn(distKey, q, q2) {
+  // Returns { fH(s), fL(s), support: [lo, hi], isContinuous }
+  switch (distKey) {
+    case 'binary':
+    case 'mixture': {
+      // Discrete: two point masses at 'H' and 'L'
+      // We'll handle these specially in drawDist
+      return null;
+    }
+    case 'gaussian': {
+      const sigma = DISTRIBUTIONS.gaussian.sigma(q);
+      const norm = (x, mu) => Math.exp(-0.5*((x-mu)/sigma)**2) / (sigma * Math.sqrt(2*Math.PI));
+      return {
+        fH: s => norm(s, 1),
+        fL: s => norm(s, 0),
+        support: [-1, 2],
+        isContinuous: true,
+      };
+    }
+    case 'beta': {
+      const k = q2;
+      const aH = q*k, bH = (1-q)*k, aL = (1-q)*k, bL = q*k;
+      const betaPDF = (x, a, b) => {
+        if (x <= 0 || x >= 1) return 0;
+        return Math.exp((a-1)*Math.log(x) + (b-1)*Math.log(1-x) - (lgamma(a)+lgamma(b)-lgamma(a+b)));
+      };
+      return {
+        fH: s => betaPDF(s, aH, bH),
+        fL: s => betaPDF(s, aL, bL),
+        support: [0, 1],
+        isContinuous: true,
+      };
+    }
+    case 'laplace': {
+      const b = q2;
+      const lap = (x, mu) => Math.exp(-Math.abs(x-mu)/b) / (2*b);
+      return {
+        fH: s => lap(s, 1),
+        fL: s => lap(s, 0),
+        support: [Math.min(-2, -3*b), Math.max(3, 1+3*b)],
+        isContinuous: true,
+      };
+    }
+  }
+}
+
+function drawDist() {
+  const W = distCanvas.width  / devicePixelRatio;
+  const H = distCanvas.height / devicePixelRatio;
+  const pad = { top: 32, right: 52, bottom: 50, left: 62 };
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+
+  dctx.clearRect(0, 0, W, H);
+  dctx.fillStyle = '#08080f';
+  dctx.fillRect(0, 0, W, H);
+
+  const dist = DISTRIBUTIONS[params.distKey];
+  const density = getDensityFn(params.distKey, params.q);
+
+  // ── DISCRETE DISTRIBUTIONS ──
+  if (!density) {
+    // Draw two bars for Pr(H|θ) and Pr(L|θ)
+    const prHH = params.q;
+    const prLH = 1 - prHH;
+    const prHL = prLH;
+    const prLL = prHH;
+
+    const bw = 60, gap = 40;
+    const totalW = 2*bw + gap;
+    const cx = pad.left + pw/2;
+
+    const yS = v => pad.top + ph - v * ph;
+    const xH = cx - totalW/2;
+    const xL = cx + gap/2;
+
+    // Under H
+    dctx.fillStyle = 'rgba(90,180,255,0.5)';
+    dctx.fillRect(xH, yS(prHH), bw, prHH * ph);
+    dctx.fillStyle = 'rgba(255,96,96,0.35)';
+    dctx.fillRect(xH, yS(prHH + prLH), bw, prLH * ph);
+
+    // Under L
+    dctx.fillStyle = 'rgba(90,180,255,0.25)';
+    dctx.fillRect(xL, yS(prHL), bw, prHL * ph);
+    dctx.fillStyle = 'rgba(255,96,96,0.55)';
+    dctx.fillRect(xL, yS(prHL + prLL), bw, prLL * ph);
+
+    const labelStyle = (x, y, text, color) => {
+      dctx.fillStyle = color;
+      dctx.font = '9px JetBrains Mono, monospace';
+      dctx.textAlign = 'center';
+      dctx.fillText(text, x + bw/2, y);
+    };
+    labelStyle(xH, pad.top + ph + 16, 'θ = H', 'rgba(90,180,255,0.8)');
+    labelStyle(xL, pad.top + ph + 16, 'θ = L', 'rgba(255,96,96,0.8)');
+    dctx.fillStyle = 'rgba(228,228,240,0.5)';
+    dctx.font = '8px JetBrains Mono, monospace';
+    dctx.textAlign = 'right';
+    [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+      dctx.fillText(v.toFixed(2), pad.left - 6, yS(v) + 3);
+    });
+
+    // Legend
+    dctx.fillStyle = 'rgba(90,180,255,0.8)';
+    dctx.fillRect(pad.left, pad.top + 6, 12, 10);
+    dctx.fillStyle = 'rgba(228,228,240,0.6)';
+    dctx.font = '8px JetBrains Mono, monospace';
+    dctx.textAlign = 'left';
+    dctx.fillText('s = H', pad.left + 16, pad.top + 14);
+    dctx.fillStyle = 'rgba(255,96,96,0.8)';
+    dctx.fillRect(pad.left + 60, pad.top + 6, 12, 10);
+    dctx.fillStyle = 'rgba(228,228,240,0.6)';
+    dctx.fillText('s = L', pad.left + 76, pad.top + 14);
+    return;
+  }
+
+  // ── CONTINUOUS DISTRIBUTIONS ──
+  const [baseLo, baseHi] = density.support;
+  const isGaussian = params.distKey === 'gaussian';
+  const sLo = isGaussian ? distZoom.lo : baseLo;
+  const sHi = isGaussian ? distZoom.hi : baseHi;
+  const N_PTS = 300;
+  const ss = Array.from({length: N_PTS}, (_, i) => sLo + (i/(N_PTS-1))*(sHi - sLo));
+  const fHvals = ss.map(density.fH);
+  const fLvals = ss.map(density.fL);
+  const yMax = Math.max(...fHvals, ...fLvals) * 1.12;
+
+  const xS = s => pad.left + ((s - sLo) / (sHi - sLo)) * pw;
+  const yS = v => pad.top + ph - (v / yMax) * ph;
+
+  // ── LR CURVE (background, right-side axis) ──
+  // f_H(s) / f_L(s) — the likelihood ratio itself
+  const lrVals = ss.map((s, i) => {
+    const fH = fHvals[i], fL = fLvals[i];
+    if (fH <= 0 || fL <= 0) return null;
+    return fH / fL;
+  });
+  const finiteVals = lrVals.filter(v => v !== null && isFinite(v) && v > 0);
+  if (finiteVals.length > 0) {
+    const lrMin2 = Math.min(...finiteVals);
+    const lrMax2 = Math.max(...finiteVals);
+    const lrRange = lrMax2 - lrMin2 || 1;
+    const yLR = v => pad.top + ph - ((v - lrMin2) / lrRange) * ph;
+
+    // LR = 1 line (signal equally likely under H and L)
+    if (lrMin2 < 1 && lrMax2 > 1) {
+      dctx.beginPath();
+      dctx.moveTo(pad.left, yLR(1));
+      dctx.lineTo(pad.left + pw, yLR(1));
+      dctx.strokeStyle = 'rgba(242,166,0,0.12)';
+      dctx.lineWidth = 1;
+      dctx.setLineDash([3, 5]);
+      dctx.stroke();
+      dctx.setLineDash([]);
+    }
+
+    // LR curve
+    dctx.beginPath();
+    let started = false;
+    ss.forEach((s, i) => {
+      const v = lrVals[i];
+      if (v === null || !isFinite(v) || v <= 0) { started = false; return; }
+      const x = xS(s), y = yLR(v);
+      if (!started) { dctx.moveTo(x, y); started = true; }
+      else dctx.lineTo(x, y);
+    });
+    dctx.strokeStyle = 'rgba(242,166,0,0.28)';
+    dctx.lineWidth = 1.5;
+    dctx.stroke();
+
+    // Right-side axis ticks
+    const tickStep = niceStep(Math.max(lrRange / 4, 1e-6));
+    const tickStart = Math.ceil((lrMin2 - 1e-9) / tickStep) * tickStep;
+    const rX = pad.left + pw + 6;
+    dctx.fillStyle = 'rgba(242,166,0,0.4)';
+    dctx.font = '8px JetBrains Mono, monospace';
+    dctx.textAlign = 'left';
+    for (let v = tickStart; v <= lrMax2 + 1e-9 && tickStep > 0; v += tickStep) {
+      const y = yLR(v);
+      if (y < pad.top || y > pad.top + ph) continue;
+      dctx.beginPath();
+      dctx.moveTo(pad.left + pw, y);
+      dctx.lineTo(pad.left + pw + 4, y);
+      dctx.strokeStyle = 'rgba(242,166,0,0.3)';
+      dctx.lineWidth = 1;
+      dctx.stroke();
+      dctx.fillText(v.toFixed(1), rX, y + 3);
+    }
+
+    // Right axis label
+    dctx.save();
+    dctx.translate(pad.left + pw + 42, pad.top + ph/2);
+    dctx.rotate(Math.PI/2);
+    dctx.fillStyle = 'rgba(242,166,0,0.35)';
+    dctx.font = '8px JetBrains Mono, monospace';
+    dctx.textAlign = 'center';
+    dctx.fillText('LR = fH/fL', 0, 0);
+    dctx.restore();
+  }
+
+  // f_L curve
+  dctx.beginPath();
+  ss.forEach((s, i) => {
+    const x = xS(s), y = yS(fLvals[i]);
+    i === 0 ? dctx.moveTo(x, y) : dctx.lineTo(x, y);
+  });
+  dctx.strokeStyle = 'rgba(255,96,96,0.75)';
+  dctx.lineWidth = 2;
+  dctx.stroke();
+
+  // f_H curve
+  dctx.beginPath();
+  ss.forEach((s, i) => {
+    const x = xS(s), y = yS(fHvals[i]);
+    i === 0 ? dctx.moveTo(x, y) : dctx.lineTo(x, y);
+  });
+  dctx.strokeStyle = 'rgba(90,180,255,0.85)';
+  dctx.lineWidth = 2;
+  dctx.stroke();
+
+  // Mean dashed lines (Gaussian only: μ_L=0, μ_H=1)
+  if (isGaussian) {
+    [[0, 'rgba(255,96,96,0.5)', 'μ_L=0'], [1, 'rgba(90,180,255,0.5)', 'μ_H=1']].forEach(([mu, col, lbl]) => {
+      if (mu < sLo || mu > sHi) return;
+      const x = xS(mu);
+      const yPeak = yS(density.fH(mu) * (mu === 1 ? 1 : 0) + density.fL(mu) * (mu === 0 ? 1 : 0));
+      dctx.beginPath();
+      dctx.moveTo(x, yPeak);
+      dctx.lineTo(x, pad.top + ph);
+      dctx.strokeStyle = col;
+      dctx.lineWidth = 1;
+      dctx.setLineDash([4, 4]);
+      dctx.stroke();
+      dctx.setLineDash([]);
+      dctx.fillStyle = col.replace('0.5)', '0.8)');
+      dctx.font = '8px JetBrains Mono, monospace';
+      dctx.textAlign = 'center';
+      dctx.fillText(lbl, x, pad.top + ph + 14);
+    });
+  }
+
+
+  dctx.strokeStyle = 'rgba(60,60,100,0.3)';
+  dctx.lineWidth = 1;
+  dctx.setLineDash([3, 4]);
+  [0.25, 0.5, 0.75, 1].forEach(frac => {
+    const y = yS(yMax * frac);
+    dctx.beginPath();
+    dctx.moveTo(pad.left, y);
+    dctx.lineTo(pad.left + pw, y);
+    dctx.stroke();
+  });
+  dctx.setLineDash([]);
+
+  // Axes
+  dctx.strokeStyle = 'rgba(60,60,100,0.6)';
+  dctx.lineWidth = 1;
+  dctx.beginPath();
+  dctx.moveTo(pad.left, pad.top);
+  dctx.lineTo(pad.left, pad.top + ph);
+  dctx.lineTo(pad.left + pw, pad.top + ph);
+  dctx.stroke();
+
+  // Y ticks
+  dctx.fillStyle = 'rgba(112,112,160,0.7)';
+  dctx.font = '9px JetBrains Mono, monospace';
+  dctx.textAlign = 'right';
+  [0.25, 0.5, 0.75, 1].forEach(frac => {
+    dctx.fillText((yMax*frac).toFixed(2), pad.left - 6, yS(yMax*frac) + 3);
+  });
+
+  // X ticks
+  dctx.textAlign = 'center';
+  const nxt = 6;
+  for (let i = 0; i <= nxt; i++) {
+    const s = sLo + (i/nxt)*(sHi - sLo);
+    const label = (Math.abs(s) < 1e-9 ? 0 : s).toFixed(2);
+    dctx.fillStyle = 'rgba(112,112,160,0.7)';
+    dctx.fillText(label, xS(s), pad.top + ph + 14);
+  }
+
+  // Axis labels
+  dctx.fillStyle = 'rgba(112,112,160,0.5)';
+  dctx.font = '9px JetBrains Mono, monospace';
+  dctx.textAlign = 'center';
+  dctx.fillText('signal s', pad.left + pw/2, pad.top + ph + 34);
+  dctx.save();
+  dctx.translate(11, pad.top + ph/2);
+  dctx.rotate(-Math.PI/2);
+  dctx.fillText('density', 0, 0);
+  dctx.restore();
+
+  // Legend
+  const lx = pad.left + 8, ly = pad.top + 8;
+  dctx.strokeStyle = 'rgba(90,180,255,0.85)';
+  dctx.lineWidth = 2;
+  dctx.beginPath(); dctx.moveTo(lx, ly+5); dctx.lineTo(lx+18, ly+5); dctx.stroke();
+  dctx.fillStyle = 'rgba(90,180,255,0.8)';
+  dctx.font = '8px JetBrains Mono, monospace';
+  dctx.textAlign = 'left';
+  dctx.fillText('f(s | θ=H)', lx+22, ly+8);
+
+  dctx.strokeStyle = 'rgba(255,96,96,0.75)';
+  dctx.lineWidth = 2;
+  dctx.beginPath(); dctx.moveTo(lx, ly+20); dctx.lineTo(lx+18, ly+20); dctx.stroke();
+  dctx.fillStyle = 'rgba(255,96,96,0.8)';
+  dctx.fillText('f(s | θ=L)', lx+22, ly+23);
+
+  dctx.strokeStyle = 'rgba(242,166,0,0.4)';
+  dctx.lineWidth = 1.5;
+  dctx.beginPath(); dctx.moveTo(lx, ly+35); dctx.lineTo(lx+18, ly+35); dctx.stroke();
+  dctx.fillStyle = 'rgba(242,166,0,0.5)';
+  dctx.fillText('LR = fH/fL (right axis)', lx+22, ly+38);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DECISION CANVAS
+   For the current agent: posterior p(H|p_pub, s) as function of s,
+   with s* cutoff and realized signal marked.
+═══════════════════════════════════════════════════════════════ */
+const decisionCanvas = document.getElementById('decisionCanvas');
+const dectx = decisionCanvas.getContext('2d');
+
+function resizeDecisionCanvas() {
+  const rect = decisionCanvas.parentElement.getBoundingClientRect();
+  if (!rect.width) return;
+  decisionCanvas.width  = rect.width  * devicePixelRatio;
+  decisionCanvas.height = rect.height * devicePixelRatio;
+  decisionCanvas.style.width  = rect.width  + 'px';
+  decisionCanvas.style.height = rect.height + 'px';
+  dectx.setTransform(1, 0, 0, 1, 0, 0);
+  dectx.scale(devicePixelRatio, devicePixelRatio);
+  drawDecision();
+}
+
+function drawDecision() {
+  const W = decisionCanvas.width  / devicePixelRatio;
+  const H = decisionCanvas.height / devicePixelRatio;
+  const pad = { top: 48, right: 120, bottom: 48, left: 80 };
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+
+  dectx.clearRect(0, 0, W, H);
+  dectx.fillStyle = '#08080f';
+  dectx.fillRect(0, 0, W, H);
+
+  const dist  = DISTRIBUTIONS[params.distKey];
+  const ag    = currentStep > 0 ? agents[currentStep - 1] : null;
+  const llrPub        = ag ? ag.llrPubBefore : 0;
+  const publicLogOdds = Math.log(params.p0 / (1 - params.p0)) + llrPub;
+  const llrPriv       = ag ? ag.llrPrivate : null;
+  const llrTotal      = llrPriv !== null ? publicLogOdds + llrPriv : null;
+
+  // ── Determine axis range ──
+  // Cover: publicLogOdds, total (if present), and a comfortable margin
+  const vals = [publicLogOdds];
+  if (llrTotal !== null && isFinite(llrTotal)) vals.push(llrTotal);
+  // Also include 0 so the posterior threshold is always visible
+  vals.push(0);
+  const rawMin = Math.min(...vals);
+  const rawMax = Math.max(...vals);
+  const margin = Math.max(1.5, (rawMax - rawMin) * 0.5);
+  const axMin  = rawMin - margin;
+  const axMax  = rawMax + margin;
+  const axRange = axMax - axMin;
+
+  // Horizontal number-line layout
+  // The axis runs left-to-right across the middle of the canvas
+  const cy = pad.top + ph / 2;  // vertical centre
+  const xA = v => pad.left + ((v - axMin) / axRange) * pw;
+
+  // ── Grid / axis line ──
+  dectx.strokeStyle = 'rgba(60,60,100,0.5)';
+  dectx.lineWidth = 1;
+  dectx.beginPath();
+  dectx.moveTo(pad.left, cy);
+  dectx.lineTo(pad.left + pw, cy);
+  dectx.stroke();
+
+  // Tick marks
+  const tickStep = niceStep(Math.max(axRange / 5, 1e-6));
+  const tickStart = Math.ceil((axMin + 1e-9) / tickStep) * tickStep;
+  dectx.fillStyle = 'rgba(112,112,160,0.55)';
+  dectx.font = '8px JetBrains Mono, monospace';
+  dectx.textAlign = 'center';
+  for (let v = tickStart; v <= axMax && tickStep > 0; v += tickStep) {
+    const x = xA(v);
+    if (x < pad.left || x > pad.left + pw) continue;
+    dectx.beginPath();
+    dectx.moveTo(x, cy - 4);
+    dectx.lineTo(x, cy + 4);
+    dectx.strokeStyle = 'rgba(60,60,100,0.6)';
+    dectx.lineWidth = 1;
+    dectx.stroke();
+    dectx.fillText(v.toFixed(1), x, cy + 16);
+  }
+
+  // Axis label
+  dectx.fillStyle = 'rgba(112,112,160,0.4)';
+  dectx.font = '8px JetBrains Mono, monospace';
+  dectx.textAlign = 'center';
+  dectx.fillText('log-odds (LLR)', pad.left + pw / 2, pad.top + ph + 36);
+
+  // ── Decision threshold at 0 ──
+  const x0 = xA(0);
+  dectx.beginPath();
+  dectx.moveTo(x0, pad.top);
+  dectx.lineTo(x0, pad.top + ph);
+  dectx.strokeStyle = 'rgba(242,166,0,0.35)';
+  dectx.lineWidth = 1;
+  dectx.setLineDash([4,4]);
+  dectx.stroke();
+  dectx.setLineDash([]);
+  dectx.fillStyle = 'rgba(242,166,0,0.55)';
+  dectx.font = '8px JetBrains Mono, monospace';
+  dectx.textAlign = 'center';
+  dectx.fillText('adopt ▶', Math.min(pad.left + pw - 24, x0 + 28), pad.top + 14);
+  dectx.fillText('◀ reject', Math.max(pad.left + 24, x0 - 28), pad.top + 14);
+
+  // Posterior scale on right: map LLR → belief for a few reference values
+  const llrToStr = l => {
+    const p = 1 / (1 + Math.exp(-l));
+    return p.toFixed(2);
+  };
+  dectx.fillStyle = 'rgba(112,112,160,0.4)';
+  dectx.font = '7.5px JetBrains Mono, monospace';
+  dectx.textAlign = 'left';
+  dectx.fillText('posterior:', pad.left + pw + 6, cy - 28);
+  for (let v = tickStart; v <= axMax && tickStep > 0; v += tickStep) {
+    const x = xA(v);
+    if (x < pad.left || x > pad.left + pw) continue;
+    dectx.fillStyle = 'rgba(112,112,160,0.4)';
+    dectx.textAlign = 'center';
+    dectx.fillText(llrToStr(v), x, cy - 20);
+  }
+
+  // ── Public LLR marker ──
+  const xPub = xA(publicLogOdds);
+  // Vertical stem above axis
+  dectx.beginPath();
+  dectx.moveTo(xPub, cy);
+  dectx.lineTo(xPub, cy - 38);
+  dectx.strokeStyle = 'rgba(180,140,255,0.7)';
+  dectx.lineWidth = 2;
+  dectx.stroke();
+  // Diamond
+  dectx.save();
+  dectx.translate(xPub, cy - 38);
+  dectx.rotate(Math.PI / 4);
+  dectx.beginPath();
+  dectx.rect(-5, -5, 10, 10);
+  dectx.fillStyle = 'rgba(180,140,255,0.85)';
+  dectx.fill();
+  dectx.restore();
+  // Label
+  dectx.fillStyle = 'rgba(180,140,255,0.9)';
+  dectx.font = '8px JetBrains Mono, monospace';
+  dectx.textAlign = 'center';
+  dectx.fillText('public', xPub, cy - 58);
+  dectx.fillText(publicLogOdds.toFixed(2), xPub, cy - 48);
+
+  // ── Private signal arrow + total marker ──
+  if (ag && llrPriv !== null && isFinite(llrTotal)) {
+    const xTot = xA(llrTotal);
+    const arrowY = cy + 28;  // below the axis
+
+    // Arrow shaft from pub to total
+    dectx.beginPath();
+    dectx.moveTo(xPub, arrowY);
+    dectx.lineTo(xTot, arrowY);
+    dectx.strokeStyle = 'rgba(242,166,0,0.75)';
+    dectx.lineWidth = 2;
+    dectx.stroke();
+
+    // Vertical connectors from axis to arrow
+    dectx.beginPath();
+    dectx.moveTo(xPub, cy);
+    dectx.lineTo(xPub, arrowY);
+    dectx.strokeStyle = 'rgba(242,166,0,0.25)';
+    dectx.lineWidth = 1;
+    dectx.setLineDash([2,3]);
+    dectx.stroke();
+    dectx.setLineDash([]);
+
+    // Arrowhead pointing toward total
+    if (Math.abs(xTot - xPub) > 4) {
+      const dir = xTot > xPub ? 1 : -1;
+      dectx.beginPath();
+      dectx.moveTo(xTot, arrowY);
+      dectx.lineTo(xTot - dir * 8, arrowY - 5);
+      dectx.lineTo(xTot - dir * 8, arrowY + 5);
+      dectx.closePath();
+      dectx.fillStyle = 'rgba(242,166,0,0.85)';
+      dectx.fill();
+    }
+
+    // Private LLR label above arrow midpoint
+    const xMid = (xPub + xTot) / 2;
+    const sign = llrPriv >= 0 ? '+' : '';
+    dectx.fillStyle = 'rgba(242,166,0,0.9)';
+    dectx.font = '8px JetBrains Mono, monospace';
+    dectx.textAlign = 'center';
+    dectx.fillText(`${sign}${llrPriv.toFixed(2)}`, xMid, arrowY - 10);
+    dectx.fillStyle = 'rgba(242,166,0,0.55)';
+    dectx.fillText(`s = ${ag.signalDisplay}`, xMid, arrowY + 20);
+
+    // Total marker — dot on axis
+    dectx.beginPath();
+    dectx.arc(xTot, cy, 6, 0, Math.PI * 2);
+    dectx.fillStyle = ag.action === 'adopt' ? 'rgba(90,180,255,1)' : 'rgba(255,96,96,1)';
+    dectx.fill();
+    dectx.strokeStyle = '#08080f';
+    dectx.lineWidth = 1.5;
+    dectx.stroke();
+
+    // Total label below axis
+    dectx.fillStyle = ag.action === 'adopt' ? 'rgba(90,180,255,0.9)' : 'rgba(255,96,96,0.9)';
+    dectx.font = '8px JetBrains Mono, monospace';
+    dectx.textAlign = 'center';
+    dectx.fillText('total', xTot, cy + 58);
+    dectx.fillText(llrTotal.toFixed(2), xTot, cy + 48);
+    dectx.fillText(`p = ${ag.agentPosterior.toFixed(3)}`, xTot, cy + 68);
+
+    // Connector from axis to total label
+    dectx.beginPath();
+    dectx.moveTo(xTot, cy + 6);
+    dectx.lineTo(xTot, cy + 38);
+    dectx.strokeStyle = ag.action === 'adopt' ? 'rgba(90,180,255,0.35)' : 'rgba(255,96,96,0.35)';
+    dectx.lineWidth = 1;
+    dectx.setLineDash([2,3]);
+    dectx.stroke();
+    dectx.setLineDash([]);
+
+    // Cascade note
+    if (ag.inCascade) {
+      dectx.fillStyle = 'rgba(242,166,0,0.55)';
+      dectx.font = '7.5px JetBrains Mono, monospace';
+      dectx.textAlign = 'center';
+      dectx.fillText('(cascade — signal ignored)', xMid, arrowY + 32);
+    }
+  } else if (!ag) {
+    dectx.fillStyle = 'rgba(112,112,160,0.4)';
+    dectx.font = '8px JetBrains Mono, monospace';
+    dectx.textAlign = 'center';
+    dectx.fillText('step through to see an agent decision', pad.left + pw/2, cy + 50);
+  }
+
+  // Header
+  dectx.font = '8px JetBrains Mono, monospace';
+  dectx.textAlign = 'right';
+  if (!ag) {
+    dectx.fillStyle = 'rgba(112,112,160,0.5)';
+    dectx.fillText('prior only', W - pad.right, pad.top - 18);
+  } else {
+    dectx.fillStyle = 'rgba(242,166,0,0.6)';
+    dectx.fillText(`agent ${ag.idx}  ·  public belief ${ag.beliefBefore.toFixed(3)}`, W - pad.right, pad.top - 18);
+  }
+}
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const pad = { left: 62, right: 90, top: 36, bottom: 44 };
+  const W = rect.width, H = rect.height;
+  const pw = W - pad.left - pad.right;
+
+  const t = Math.round((mx - pad.left) / pw * agents.length);
+  if (!agents.length || t < 1 || t > currentStep || t > agents.length) {
+    document.getElementById('llr-tooltip').style.display = 'none';
+    return;
+  }
+  const ag = agents[t - 1];
+  if (!ag) { document.getElementById('llr-tooltip').style.display = 'none'; return; }
+  const llrPub = ag.llrPubBefore + ag.llrIncr;
+
+  const tooltip = document.getElementById('llr-tooltip');
+  document.getElementById('tt-agent').textContent = `agent ${ag.idx}`;
+  const sigLabel = ag.isContinuous ? `signal: ${ag.signalDisplay} (llr ${ag.llrPrivate.toFixed(3)})` : `signal: ${ag.signal}`;
+  document.getElementById('tt-signal').textContent = sigLabel + (ag.inCascade ? ' — cascade, ignored' : '');
+  document.getElementById('tt-llr').textContent = `public LLR: ${llrPub.toFixed(4)}`;
+  document.getElementById('tt-belief').textContent = `agent posterior: ${ag.agentPosterior.toFixed(4)}`;
+  document.getElementById('tt-action').textContent = `action: ${ag.action}${ag.cascadeType ? ` [${ag.cascadeType} cascade]` : ''}`;
+
+  tooltip.style.display = 'block';
+  tooltip.style.left = (e.clientX - rect.left + 14) + 'px';
+  tooltip.style.top  = (e.clientY - rect.top  - 30) + 'px';
+});
+canvas.addEventListener('mouseleave', () => {
+  document.getElementById('llr-tooltip').style.display = 'none';
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN UPDATE
+═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   INFERENCE CANVAS
+   Shows how the public LLR increment is computed from tail
+   probabilities: two density curves, shaded tails beyond s*,
+   one sub-panel for adopt (s > s*) and one for reject (s < s*).
+═══════════════════════════════════════════════════════════════ */
+const inferenceCanvas = document.getElementById('inferenceCanvas');
+const ictx = inferenceCanvas.getContext('2d');
+
+function resizeInferenceCanvas() {
+  const rect = inferenceCanvas.parentElement.getBoundingClientRect();
+  if (!rect.width) return;
+  inferenceCanvas.width  = rect.width  * devicePixelRatio;
+  inferenceCanvas.height = rect.height * devicePixelRatio;
+  inferenceCanvas.style.width  = rect.width  + 'px';
+  inferenceCanvas.style.height = rect.height + 'px';
+  ictx.setTransform(1, 0, 0, 1, 0, 0);
+  ictx.scale(devicePixelRatio, devicePixelRatio);
+  drawInference();
+}
+
+function drawInference() {
+  const W = inferenceCanvas.width  / devicePixelRatio;
+  const H = inferenceCanvas.height / devicePixelRatio;
+  const pad = { top: 52, right: 32, bottom: 64, left: 56 };
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+
+  ictx.clearRect(0, 0, W, H);
+  ictx.fillStyle = '#08080f';
+  ictx.fillRect(0, 0, W, H);
+
+  const density = getDensityFn(params.distKey, params.q);
+  const isCont  = density && density.isContinuous;
+  const ag      = currentStep > 0 ? agents[currentStep - 1] : null;
+  const llrPub  = ag ? ag.llrPubBefore : 0;
+  const publicLogOdds = Math.log(params.p0 / (1 - params.p0)) + llrPub;
+  const sigma   = isCont ? DISTRIBUTIONS.gaussian.sigma(params.q) : null;
+  const sStar   = isCont ? signalCutoff(sigma, publicLogOdds) : null;
+  const hasCutoff = sStar !== null && isFinite(sStar);
+
+  // ── SHARED: mini comparison bar annotation ──
+  // Draws two bars (blue=H, red=L) + ratio + Δpub centered at cx
+  function drawTailAnnotation(cx, prH, prL, delta) {
+    const bw = 10, gap = 4;
+    const barMaxH = ph * 0.28;
+    const maxP = Math.max(prH, prL, 0.001);
+    const hH = (prH / maxP) * barMaxH;
+    const hL = (prL / maxP) * barMaxH;
+    const barsW = bw * 2 + gap;
+    const totalW = barsW + 54;
+    const bx = cx - totalW/2;
+    const tx = bx + barsW + 6;
+    const by = pad.top + ph * 0.62;
+
+    ictx.fillStyle = 'rgba(90,180,255,0.65)';
+    ictx.fillRect(bx, by - hH, bw, hH);
+    ictx.fillStyle = 'rgba(255,96,96,0.55)';
+    ictx.fillRect(bx + bw + gap, by - hL, bw, hL);
+
+    ictx.beginPath();
+    ictx.moveTo(bx - 2, by); ictx.lineTo(bx + barsW + 2, by);
+    ictx.strokeStyle = 'rgba(60,60,100,0.5)'; ictx.lineWidth = 1; ictx.stroke();
+
+    ictx.font = '6.5px JetBrains Mono, monospace'; ictx.textAlign = 'center';
+    ictx.fillStyle = 'rgba(90,180,255,0.7)';
+    ictx.fillText('H', bx + bw/2, by + 9);
+    ictx.fillStyle = 'rgba(255,96,96,0.65)';
+    ictx.fillText('L', bx + bw + gap + bw/2, by + 9);
+
+    ictx.font = '7px JetBrains Mono, monospace'; ictx.textAlign = 'left';
+    ictx.fillStyle = 'rgba(90,180,255,0.75)';
+    ictx.fillText(prH.toFixed(3), tx, by - Math.max(hH, barMaxH*0.55) - 2);
+    ictx.fillStyle = 'rgba(255,96,96,0.7)';
+    ictx.fillText(prL.toFixed(3), tx, by - Math.max(hL, barMaxH*0.2) - 2);
+
+    const lineY = by + 16;
+    ictx.beginPath();
+    ictx.moveTo(bx, lineY); ictx.lineTo(bx + totalW, lineY);
+    ictx.strokeStyle = 'rgba(242,166,0,0.3)'; ictx.lineWidth = 1; ictx.stroke();
+
+    if (delta !== null) {
+      const ratio = prH / prL;
+      const sign  = delta >= 0 ? '+' : '';
+      ictx.font = '7px JetBrains Mono, monospace'; ictx.textAlign = 'left';
+      ictx.fillStyle = 'rgba(242,166,0,0.7)';
+      ictx.fillText(`÷  = ${ratio.toFixed(3)}`, bx, lineY + 11);
+      ictx.fillStyle = 'rgba(242,166,0,0.95)';
+      ictx.font = 'bold 7.5px JetBrains Mono, monospace';
+      ictx.fillText(`Δ = ${sign}${delta.toFixed(3)}`, bx, lineY + 23);
+    }
+  }
+
+  // ── BINARY ──
+  if (!isCont) {
+    const q = params.q;
+    const cases = [
+      { label: 'adopt',  prH: q,     prL: 1-q,  cx: pad.left + pw * 0.27 },
+      { label: 'reject', prH: 1-q,   prL: q,    cx: pad.left + pw * 0.73 },
+    ];
+
+    // Vertical divider
+    ictx.beginPath();
+    ictx.moveTo(pad.left + pw/2, pad.top);
+    ictx.lineTo(pad.left + pw/2, pad.top + ph);
+    ictx.strokeStyle = 'rgba(60,60,100,0.4)'; ictx.lineWidth = 1; ictx.stroke();
+
+    // Axes
+    ictx.strokeStyle = 'rgba(60,60,100,0.6)'; ictx.lineWidth = 1;
+    ictx.beginPath();
+    ictx.moveTo(pad.left, pad.top); ictx.lineTo(pad.left, pad.top + ph);
+    ictx.lineTo(pad.left + pw, pad.top + ph); ictx.stroke();
+
+    // Current agent's action (to highlight active panel)
+    const agAction = ag ? ag.action : null;
+
+    cases.forEach(({ label, prH, prL, cx }) => {
+      const isAdopt = label === 'adopt';
+      const delta = Math.log(prH / prL);
+      const isActive = agAction === label;
+
+      // Highlight active panel with subtle background
+      if (isActive) {
+        const panelX = isAdopt ? pad.left : pad.left + pw/2;
+        ictx.fillStyle = 'rgba(242,166,0,0.04)';
+        ictx.fillRect(panelX, pad.top, pw/2, ph);
+      }
+
+      // Section label — brighter if active
+      ictx.fillStyle = isAdopt
+        ? (isActive ? 'rgba(90,180,255,0.95)' : 'rgba(90,180,255,0.5)')
+        : (isActive ? 'rgba(255,96,96,0.9)'   : 'rgba(255,96,96,0.45)');
+      ictx.font = `${isActive ? 'bold ' : ''}8px JetBrains Mono, monospace`;
+      ictx.textAlign = 'center';
+      ictx.fillText(label.toUpperCase() + (isActive ? ' ◀ agent ' + ag.idx : ''), cx, pad.top + 20);
+
+      drawTailAnnotation(cx, prH, prL, delta);
+    });
+
+    // Public belief number line at bottom
+    const nlY = pad.top + ph - 14;
+    const nlX0 = pad.left + 20, nlX1 = pad.left + pw - 20;
+    const nlW = nlX1 - nlX0;
+    ictx.beginPath();
+    ictx.moveTo(nlX0, nlY); ictx.lineTo(nlX1, nlY);
+    ictx.strokeStyle = 'rgba(60,60,100,0.5)'; ictx.lineWidth = 1; ictx.stroke();
+    // Tick at 0 and 1
+    [0, 0.5, 1].forEach(v => {
+      const x = nlX0 + v * nlW;
+      ictx.beginPath(); ictx.moveTo(x, nlY-3); ictx.lineTo(x, nlY+3);
+      ictx.strokeStyle = 'rgba(60,60,100,0.5)'; ictx.stroke();
+      ictx.fillStyle = 'rgba(112,112,160,0.5)';
+      ictx.font = '7px JetBrains Mono, monospace'; ictx.textAlign = 'center';
+      ictx.fillText(v.toFixed(1), x, nlY + 12);
+    });
+    // Current public belief dot
+    const pubBelief = ag ? ag.beliefBefore : params.p0;
+    const bx = nlX0 + pubBelief * nlW;
+    ictx.beginPath(); ictx.arc(bx, nlY, 4, 0, Math.PI*2);
+    ictx.fillStyle = 'rgba(180,140,255,0.9)'; ictx.fill();
+    ictx.fillStyle = 'rgba(180,140,255,0.85)';
+    ictx.font = '7px JetBrains Mono, monospace'; ictx.textAlign = 'center';
+    ictx.fillText(`pub = ${pubBelief.toFixed(3)}`, bx, nlY - 8);
+    ictx.fillStyle = 'rgba(112,112,160,0.4)';
+    ictx.fillText('public belief', nlX0 + nlW/2, nlY + 22);
+
+    drawInferenceHeader(ag, sStar);
+    return;
+  }
+
+  // ── CONTINUOUS: single plot with both tails ──
+  const [baseLo2, baseHi2] = density.support;
+  const isGauss = params.distKey === 'gaussian';
+  const sLo = isGauss ? inferZoom.lo : baseLo2;
+  const sHi = isGauss ? inferZoom.hi : baseHi2;
+  const N = 300;
+  const ss  = Array.from({length: N}, (_, i) => sLo + (i/(N-1))*(sHi - sLo));
+  const fHv = ss.map(density.fH);
+  const fLv = ss.map(density.fL);
+  const yMax = Math.max(...fHv, ...fLv) * 1.12;
+
+  const xS  = s  => pad.left + ((s  - sLo) / (sHi - sLo)) * pw;
+  const yDn = v  => pad.top  + ph  - (v / yMax) * ph;
+
+  // Numerical integration
+  function integrate(vals, from, to) {
+    const step = (sHi - sLo) / (N - 1);
+    let sum = 0;
+    for (let i = 0; i < N - 1; i++) {
+      const sA = sLo + i*step, sB = sLo + (i+1)*step;
+      if (sB <= from || sA >= to) continue;
+      const lo = Math.max(sA, from), hi = Math.min(sB, to);
+      const t0 = (lo - sA) / step, t1 = (hi - sA) / step;
+      const f0 = vals[i] + (vals[i+1] - vals[i]) * t0;
+      const f1 = vals[i] + (vals[i+1] - vals[i]) * t1;
+      sum += (f0 + f1) * (hi - lo) / 2;
+    }
+    return sum;
+  }
+
+  const sC = hasCutoff ? Math.max(sLo, Math.min(sHi, sStar)) : null;
+
+  // Shade reject tail (s < s*) — fH blue, fL red, both below s*
+  if (hasCutoff) {
+    // fH reject tail
+    ictx.beginPath();
+    ictx.moveTo(xS(sLo), yDn(0));
+    const i0 = Math.round((sC - sLo) / (sHi - sLo) * (N-1));
+    for (let i = 0; i <= i0; i++) ictx.lineTo(xS(ss[i]), yDn(fHv[i]));
+    ictx.lineTo(xS(sC), yDn(0));
+    ictx.closePath();
+    ictx.fillStyle = 'rgba(90,180,255,0.12)';
+    ictx.fill();
+
+    // fL reject tail
+    ictx.beginPath();
+    ictx.moveTo(xS(sLo), yDn(0));
+    for (let i = 0; i <= i0; i++) ictx.lineTo(xS(ss[i]), yDn(fLv[i]));
+    ictx.lineTo(xS(sC), yDn(0));
+    ictx.closePath();
+    ictx.fillStyle = 'rgba(255,96,96,0.12)';
+    ictx.fill();
+
+    // fH adopt tail
+    ictx.beginPath();
+    ictx.moveTo(xS(sC), yDn(0));
+    for (let i = i0; i < N; i++) ictx.lineTo(xS(ss[i]), yDn(fHv[i]));
+    ictx.lineTo(xS(sHi), yDn(0));
+    ictx.closePath();
+    ictx.fillStyle = 'rgba(90,180,255,0.22)';
+    ictx.fill();
+
+    // fL adopt tail
+    ictx.beginPath();
+    ictx.moveTo(xS(sC), yDn(0));
+    for (let i = i0; i < N; i++) ictx.lineTo(xS(ss[i]), yDn(fLv[i]));
+    ictx.lineTo(xS(sHi), yDn(0));
+    ictx.closePath();
+    ictx.fillStyle = 'rgba(255,96,96,0.18)';
+    ictx.fill();
+  }
+
+  // Density curves on top
+  ['H', 'L'].forEach(theta => {
+    const vals = theta === 'H' ? fHv : fLv;
+    ictx.beginPath();
+    ss.forEach((s, i) => { i === 0 ? ictx.moveTo(xS(s), yDn(vals[i])) : ictx.lineTo(xS(s), yDn(vals[i])); });
+    ictx.strokeStyle = theta === 'H' ? 'rgba(90,180,255,0.85)' : 'rgba(255,96,96,0.75)';
+    ictx.lineWidth = 1.8;
+    ictx.stroke();
+  });
+
+  // Mean dashed lines (Gaussian only: μ_L=0, μ_H=1)
+  if (isGauss) {
+    [[0, 'rgba(255,96,96,0.5)', 'μ_L=0'], [1, 'rgba(90,180,255,0.5)', 'μ_H=1']].forEach(([mu, col, lbl]) => {
+      if (mu < sLo || mu > sHi) return;
+      const x = xS(mu);
+      ictx.beginPath();
+      ictx.moveTo(x, pad.top);
+      ictx.lineTo(x, pad.top + ph);
+      ictx.strokeStyle = col;
+      ictx.lineWidth = 1;
+      ictx.setLineDash([4, 4]);
+      ictx.stroke();
+      ictx.setLineDash([]);
+      ictx.fillStyle = col.replace('0.5)', '0.8)');
+      ictx.font = '8px JetBrains Mono, monospace';
+      ictx.textAlign = 'center';
+      ictx.fillText(lbl, x, pad.top + ph + 14);
+    });
+  }
+
+  // s* line
+  if (hasCutoff) {
+    const xCut = xS(sC);
+    ictx.beginPath(); ictx.moveTo(xCut, pad.top); ictx.lineTo(xCut, pad.top + ph);
+    ictx.strokeStyle = 'rgba(242,166,0,0.6)';
+    ictx.lineWidth = 1.5; ictx.setLineDash([4,4]); ictx.stroke(); ictx.setLineDash([]);
+    ictx.fillStyle = 'rgba(242,166,0,0.8)';
+    ictx.font = '8px JetBrains Mono, monospace'; ictx.textAlign = 'center';
+    ictx.fillText('s*', xCut, pad.top - 6);
+
+    // Reject / adopt region labels
+    ictx.font = '8px JetBrains Mono, monospace';
+    if (xCut > pad.left + 40) {
+      ictx.fillStyle = 'rgba(255,96,96,0.5)'; ictx.textAlign = 'center';
+      ictx.fillText('reject', pad.left + (xCut - pad.left)/2, pad.top + 14);
+    }
+    if (xCut < pad.left + pw - 40) {
+      ictx.fillStyle = 'rgba(90,180,255,0.5)'; ictx.textAlign = 'center';
+      ictx.fillText('adopt', xCut + (pad.left + pw - xCut)/2, pad.top + 14);
+    }
+
+    // Compute tail probabilities and Δpub for each action
+    const pRH = integrate(fHv, sLo, sStar);
+    const pRL = integrate(fLv, sLo, sStar);
+    const pAH = integrate(fHv, sStar, sHi);
+    const pAL = integrate(fLv, sStar, sHi);
+    const deltaAdopt  = (pAH > 1e-9 && pAL > 1e-9) ? Math.log(pAH / pAL) : null;
+    const deltaReject = (pRH > 1e-9 && pRL > 1e-9) ? Math.log(pRH / pRL) : null;
+
+    const annotW = 90;
+    const margin = annotW / 2 + 4;
+
+    const xRejectMid = Math.max(pad.left + margin,
+                         Math.min(xCut - margin,
+                           pad.left + (xCut - pad.left) / 2));
+    const xAdoptMid  = Math.max(xCut + margin,
+                         Math.min(pad.left + pw - margin,
+                           xCut + (pad.left + pw - xCut) / 2));
+
+    // Only suppress if the tail is too narrow to be meaningful (< 30px)
+    if (xCut > pad.left + 30) {
+      drawTailAnnotation(xRejectMid, pRH, pRL, deltaReject);
+    }
+    if (xCut < pad.left + pw - 30) {
+      drawTailAnnotation(xAdoptMid, pAH, pAL, deltaAdopt);
+    }
+  }
+
+  // Axes
+  ictx.strokeStyle = 'rgba(60,60,100,0.6)'; ictx.lineWidth = 1;
+  ictx.beginPath();
+  ictx.moveTo(pad.left, pad.top); ictx.lineTo(pad.left, pad.top + ph);
+  ictx.lineTo(pad.left + pw, pad.top + ph); ictx.stroke();
+
+  // Y ticks
+  ictx.fillStyle = 'rgba(112,112,160,0.55)';
+  ictx.font = '7.5px JetBrains Mono, monospace'; ictx.textAlign = 'right';
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    ictx.fillText((yMax * f).toFixed(2), pad.left - 4, yDn(yMax * f) + 3);
+  });
+
+  // X ticks
+  ictx.textAlign = 'center'; ictx.fillStyle = 'rgba(112,112,160,0.6)';
+  for (let i = 0; i <= 6; i++) {
+    const sv = sLo + (i/6) * (sHi - sLo);
+    const label = (Math.abs(sv) < 1e-9 ? 0 : sv).toFixed(2);
+    ictx.fillText(label, xS(sv), pad.top + ph + 14);
+  }
+  ictx.fillStyle = 'rgba(112,112,160,0.4)';
+  ictx.fillText('signal s', pad.left + pw/2, pad.top + ph + 30);
+
+  // Y axis label
+  ictx.save();
+  ictx.translate(12, pad.top + ph/2);
+  ictx.rotate(-Math.PI/2);
+  ictx.fillStyle = 'rgba(112,112,160,0.4)';
+  ictx.font = '8px JetBrains Mono, monospace'; ictx.textAlign = 'center';
+  ictx.fillText('density', 0, 0);
+  ictx.restore();
+
+  // Legend
+  const lx = pad.left + 6, ly = pad.top + 8;
+  ictx.strokeStyle = 'rgba(90,180,255,0.85)'; ictx.lineWidth = 1.8;
+  ictx.beginPath(); ictx.moveTo(lx, ly+4); ictx.lineTo(lx+16, ly+4); ictx.stroke();
+  ictx.fillStyle = 'rgba(90,180,255,0.85)';
+  ictx.font = '7.5px JetBrains Mono, monospace'; ictx.textAlign = 'left';
+  ictx.fillText('f(s|θ=H)', lx+20, ly+7);
+  ictx.strokeStyle = 'rgba(255,96,96,0.75)';
+  ictx.beginPath(); ictx.moveTo(lx, ly+18); ictx.lineTo(lx+16, ly+18); ictx.stroke();
+  ictx.fillStyle = 'rgba(255,96,96,0.8)';
+  ictx.fillText('f(s|θ=L)', lx+20, ly+21);
+
+  drawInferenceHeader(ag, sStar);
+}
+
+function drawInferenceHeader(ag, sStar) {
+  const W = inferenceCanvas.width / devicePixelRatio;
+  const pad = { right: 32, top: 52 };
+  const pub = ag ? ag.beliefBefore.toFixed(3) : params.p0.toFixed(3);
+  const sStarStr = sStar !== null && isFinite(sStar) ? sStar.toFixed(3) : 'n/a';
+  ictx.fillStyle = 'rgba(242,166,0,0.55)';
+  ictx.font = '8px JetBrains Mono, monospace'; ictx.textAlign = 'right';
+  ictx.fillText(`public belief = ${pub}  ·  s* = ${sStarStr}`, W - pad.right, pad.top - 14);
+}
+
+updateParamUI();
+updateZoomButtons();
+newRun();
+setTimeout(() => {
+  resizeCanvas();
+  resizeDistCanvas();
+  resizeDecisionCanvas();
+  resizeInferenceCanvas();
+}, 50);
+</script>
+</body>
+</html>
+
+
+
+
+<hr>
+<footer>
+  <div class="nav-button">
+    <a href="/">Home</a>
+  </div>
+  
+  <div class="nav-button">
+    <a href="https://github.com/arnavs">GitHub</a>
+  </div>
+  <div class="nav-button">
+    <a href="/research">Research and Simulations</a>
+  </div>
+  <div class="nav-button">
+    <a href="/teaching">Teaching</a>
+  </div>
+  <div class="nav-button">
+    <a href="https://arnavs.github.io/resume/sood-cv_full.pdf" target="_blank">CV</a>
+  </div>
+  <div class="nav-button">
+    <a href="/writing">Writing</a>
+  </div>
+  <div class="nav-button">
+    <a href="/links">Links</a>
+  </div>
+  <div class="nav-button">
+    <a href="/hikes">Hikes</a>
+  </div>
+  <div class="nav-button">
+    <a href="https://jianingzhao.com">Wife</a>
+  </div>
+</footer>
+</body>
+
+</html>
