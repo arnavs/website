@@ -7,4 +7,4 @@ title = "teaching"
 
 Some simulations and teaching materials. These are WIP; any corrections or suggestions are welcome. 
 
-* [Social Learning]()
+* [Social Learning](https://arnavsood.com/cabinet/cascade-sim/index.html)
