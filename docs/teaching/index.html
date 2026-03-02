@@ -79,7 +79,7 @@
   
   (function() {
     var saved = localStorage.getItem('theme');
-    if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    if (saved !== 'light') document.documentElement.setAttribute('data-theme', 'dark');
   })();
 </script>
 
@@ -109,7 +109,6 @@
     });
   })();
 </script>
-
 
 <h2> teaching </h2>
 
