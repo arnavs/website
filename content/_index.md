@@ -4,7 +4,7 @@ date = "2017-06-18T13:29:51-04:00"
 
 I'm a fifth-year PhD student in economics at Carnegie Mellon. This summer, I will be joining [Revelio Labs](https://www.reveliolabs.com) as a data science intern.
 
-I try to integrate statistical learning and decision-making with traditional economic settings, like markets and games. I especially want to understand how these settings behave with mixed populations of statistical and economic agents. I'm also interested in learning (Bayesian or otherwise) and empirical processes.
+I try to integrate statistical learning and decision-making with traditional economic settings, like markets and games. I especially want to understand how these settings behave with mixed populations of statistical and economic agents. 
 
 Previously, I was a volunteer developer for [QuantEcon](https://quantecon.org), where I created software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl) I also teach classes at [FractalU](https://fractaluniversity.substack.com).
 
