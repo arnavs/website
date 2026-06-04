@@ -6,7 +6,7 @@ I'm a fifth-year PhD student in economics at Carnegie Mellon. This summer, I wil
 
 I try to integrate statistical learning and decision-making with traditional economic settings, like markets and games. I especially want to understand how these settings behave with mixed populations of statistical and economic agents. I'm also interested in learning (Bayesian or otherwise) and empirical processes.
 
-Previously, I was a volunteer developer for [QuantEcon](https://quantecon.org), where I created software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl) This semester, I'm also teaching a class on agent-based behavioral modeling at [FractalU](https://fractaluniversity.substack.com).
+Previously, I was a volunteer developer for [QuantEcon](https://quantecon.org), where I created software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl) I also teach classes at [FractalU](https://fractaluniversity.substack.com).
 
 <!-- I'm an OCD survivor --- if you or someone you know wants someone to talk to, send me an email. -->
 
