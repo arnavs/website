@@ -2,7 +2,7 @@
 date = "2017-06-18T13:29:51-04:00"
 +++
 
-I'm a sixth-year PhD student in economics at Carnegie Mellon. This summer, I am at [Revelio Labs](https://www.reveliolabs.com) as a data scientist. Here are some of my research interests:
+I'm a sixth-year PhD student in economics at Carnegie Mellon. I am also at [Revelio Labs](https://www.reveliolabs.com) as a data scientist. Here are some of my research interests:
 
 * Integrating statistical learning and decision-making with traditional economic settings, like markets and games. I especially want to understand how these settings behave with mixed populations of statistical and economic agents. 
 
