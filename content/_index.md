@@ -2,11 +2,15 @@
 date = "2017-06-18T13:29:51-04:00"
 +++
 
-I'm a sixth-year PhD student in economics at Carnegie Mellon. This summer, I am at [Revelio Labs](https://www.reveliolabs.com) as a data science intern.
+I'm a sixth-year PhD student in economics at Carnegie Mellon. This summer, I am at [Revelio Labs](https://www.reveliolabs.com) as a data scientist. Here are some of my research interests:
 
-I try to integrate statistical learning and decision-making with traditional economic settings, like markets and games. I especially want to understand how these settings behave with mixed populations of statistical and economic agents. 
+* Integrating statistical learning and decision-making with traditional economic settings, like markets and games. I especially want to understand how these settings behave with mixed populations of statistical and economic agents. 
 
-Previously, I was a volunteer developer for [QuantEcon](https://quantecon.org), where I created software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl). I also teach classes at [FractalU](https://fractaluniversity.substack.com).
+* Using task-, worker-, firm-, and industry-level data to understand the impact of AI on (a) how individual workers do their jobs, and (b) what those jobs are. 
+
+* Understanding the feedback and strategic considerations involved with the deployment, design, and evaluation of AI systems.
+
+Before CMU, I was a volunteer developer for [QuantEcon](https://quantecon.org), where I created software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl). I also taught at [FractalU](https://fractaluniversity.substack.com).
 
 <!-- I'm an OCD survivor --- if you or someone you know wants someone to talk to, send me an email. -->
 
