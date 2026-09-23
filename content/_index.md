@@ -10,7 +10,7 @@ I'm a sixth-year PhD student in economics at Carnegie Mellon. I am also at [Reve
 
 * Understanding the feedback and strategic considerations involved with the deployment, design, and evaluation of AI systems.
 
-Before CMU, I was a volunteer developer for [QuantEcon](https://quantecon.org), where I created software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl). 
+Before CMU, I was a lead dev at [QuantEcon](https://quantecon.org), where I created software packages like [Expectations.jl](https://github.com/QuantEcon/Expectations.jl) and [InstantiateFromURL.jl](https://github.com/QuantEcon/InstantiateFromURL.jl). 
 
 <!-- I'm an OCD survivor --- if you or someone you know wants someone to talk to, send me an email. -->
 
