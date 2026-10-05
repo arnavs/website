@@ -1,0 +1,2 @@
+{{- $text := .Inner | default (.Get 0) | default "New" -}}
+<span class="new">{{ $text | .Page.RenderString }}</span>

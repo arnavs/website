@@ -14,4 +14,5 @@ Previously, I was a volunteer developer for [QuantEcon](https://quantecon.org), 
 
 * Office: Tepper 4218B
 
+* Spotify{{< new >}}(new){{< /new >}}: [here](https://open.spotify.com/user/t402ygqyqb6tvhah91568t8aa?si=0c1bd2e6e25d4856).
 
