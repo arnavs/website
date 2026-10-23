@@ -19,3 +19,4 @@ For anything writing-related, please email [``writing@arnavsood.com``](mailto:wr
 
 "Bounded Rationality" --- [Blanket Sea](http://blanketsea.com/2019/09/18/bounded-rationality-by-arnav-sood/). Pushcart Prize nominee. 
 
+"Anatomy Lessons" --- Open Minds Quarterly. Available Upon Request. 

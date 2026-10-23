@@ -7,6 +7,8 @@ Some things I think are worth sharing.
 
 + [Daily Science Fiction](https://ifchanceyoucallit.wordpress.com/in-the-timeline-where-the-moscow-metro-opened-in-1934/): In the Timeline Where the Moscow Metro Opened in 1934
 
++ [Daily Science Fiction](https://web.archive.org/web/20240111035201/https://dailysciencefiction.com/hither-and-yon/alternate-history/philip-apps/the-two-elizabeths): 
+
 ----
 
 + [Scientific American](https://www.scientificamerican.com/article/silent-skies-billions-of-north-american-birds-have-vanished/): North American bird populations have declined 29% since 1970.
