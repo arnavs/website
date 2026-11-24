@@ -1,4 +1,5 @@
 baseURL = "http://arnavsood.com"
-languageCode = "en-us"
 title = "Arnav Sood"
+[security]
+	allowContent = ['.*']
 publishDir = "docs"

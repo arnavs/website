@@ -1,0 +1,205 @@
+
+
+
+
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+<title>  </title>
+<link href="https://fonts.googleapis.com/css?family=Neuton|Merriweather:300|Roboto+Mono" rel="stylesheet">
+<style>
+ 
+:root {
+    --bg:      #ffffff;
+    --text:    #111111;
+    --link:    #00007a;
+    --border:  #cccccc;
+    --surface: #f5f5f5;
+    --new:     #b64400;    
+  }
+
+   
+  html[data-theme="dark"] {
+    --bg:      #08080f;
+    --text:    #e4e4f0;
+    --link:    #4da6ff;
+    --border:  #252540;
+    --surface: #10101c;
+    --new:     #f56300;    
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  a { color: var(--link); }
+
+  .nav-button {
+    display: inline;
+    overflow-x: auto;
+    font-size: 95%;
+    font-family: 'Merriweather', serif;
+  }
+  p, .ul, .ol, .footnotes, li {
+    max-width: 35em;
+    font-size: 92%;
+    line-height: 145%;
+    font-family: 'Merriweather', serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0px;
+    font-family: 'Neuton', serif;
+  }
+  code {
+    font-family: 'Roboto Mono';
+  }
+
+   
+  .new {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--new);
+    font-size: 92%;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    margin-left: 0.4em;
+    white-space: nowrap;
+  }
+
+   
+  #dark-toggle {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 4px 9px;
+    cursor: pointer;
+    border-radius: 3px;
+    opacity: 0.6;
+    transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+    z-index: 9999;
+  }
+  #dark-toggle:hover { opacity: 1; }
+</style>
+
+<script>
+
+  (function() {
+    var saved = localStorage.getItem('theme');
+    if (saved !== 'light') document.documentElement.setAttribute('data-theme', 'dark');
+  })();
+</script>
+
+</head>
+<body>
+
+<button id="dark-toggle" aria-label="Toggle dark mode">dark</button>
+
+<script>
+  (function() {
+    var btn = document.getElementById('dark-toggle');
+    function update() {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      btn.textContent = isDark ? 'light' : 'dark';
+    }
+    update();
+    btn.addEventListener('click', function() {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }
+      update();
+    });
+  })();
+</script>
+
+<h2> links </h2>
+
+<hr>
+
+<p>Some things I think are worth sharing.</p>
+<ul>
+<li>
+<p><a href="https://ifchanceyoucallit.wordpress.com/in-the-timeline-where-the-moscow-metro-opened-in-1934/">Daily Science Fiction</a>: In the Timeline Where the Moscow Metro Opened in 1934</p>
+</li>
+<li>
+<p><a href="https://web.archive.org/web/20240111035201/https://dailysciencefiction.com/hither-and-yon/alternate-history/philip-apps/the-two-elizabeths">Daily Science Fiction</a>:</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><a href="https://www.scientificamerican.com/article/silent-skies-billions-of-north-american-birds-have-vanished/">Scientific American</a>: North American bird populations have declined 29% since 1970.</li>
+<li><a href="https://www.npr.org/sections/krulwich/2014/02/05/257046530/big-fish-stories-getting-littler">NPR</a>: As recently as 1960, fish used to be huge.</li>
+<li><a href="https://greenyourlab.org">Green Your Lab</a>: Good people working on sustainable science.</li>
+</ul>
+<hr>
+<ul>
+<li><a href="http://prod.sandia.gov/techlib/access-control.cgi/1992/921382.pdf">WIPP</a>: How to warn people 10000 years from now about radioactive waste.</li>
+<li><a href="http://arnavsood.com/cabinet/Jacobson-1972.pdf">Sylvia Jacobson</a>: Was confined to a skyjacked plane for a week, and wrote a paper about it.</li>
+<li><a href="https://kenliu.name/stories/state-change/">Ken Liu</a>: State Change (short story).</li>
+<li><a href="https://www.thisamericanlife.org/513/129-cars">129 Cars</a>: This American Life (WBEZ Chicago) spends a month at a car dealership.</li>
+</ul>
+<hr>
+<ul>
+<li><a href="https://theglassroom.org">The Glass Room</a>: A digital art exhibit by Mozilla, focused on examining issues of data and privacy.</li>
+<li><a href="https://panopticlick.eff.org">Panopticlick</a>: An EFF tool that lets you see how &ldquo;unique&rdquo; your browser&rsquo;s fingerprint is.</li>
+<li><a href="https://www.torproject.org">Tor</a>: An easy-to-use version of Firefox that effectively anonymizes your internet traffic.</li>
+<li><a href="https://writing.kemitchell.com/2016/09/21/MIT-License-Line-by-Line.html">The MIT License, Line by Line</a>: <a href="https://writing.kemitchell.com"><code>/dev/lawyer</code></a> does a close-reading of the common MIT License.</li>
+</ul>
+<hr>
+<ul>
+<li><a href="https://www.inquiringmind.com/article/1901_7_lasn_1-cleaning-up-the-mental-environment-culture-jamming-with-kalle-lasn/">Kalle Lasn</a>: &ldquo;Cleaning Up the Mental Environment.&rdquo; Lasn is the founder/publisher of Vancouver-based <em>Adbusters.</em></li>
+<li><a href="https://giorgiocalderolla.com/wipr.html">Wipr</a>: Highly effective macOS adblocker. I use this.</li>
+<li><a href="https://gather.town">Gather.Town</a>: 8bit online spaces. I invested in this.</li>
+</ul>
+<hr>
+<ul>
+<li><a href="https://web.math.princeton.edu/~naor/homepage%20files/Concentration%20of%20Measure.pdf">Concentration of Measure</a>. People use this word and we should know what it means. It&rsquo;s more than Hoeffding or DKW or something. Bobkov&rsquo;s inequality looks profound but above my level.</li>
+<li><a href="http://arnavsood.com/cabinet/1styear.pdf">Surviving First Year</a>. Good advice.</li>
+<li><a href="http://arnavsood.com/cabinet/lec8.pdf">Multivariate Delta Method + Glivenko-Cantelli Classes</a>. I worked with GC classes for a year but it never sunk in until I saw section 8.4.</li>
+</ul>
+
+
+
+
+<hr>
+<footer>
+  <div class="nav-button">
+    <a href="/">Home</a>
+  </div>
+  
+  <div class="nav-button">
+    <a href="https://github.com/arnavs">GitHub</a>
+  </div>
+  <div class="nav-button">
+    <a href="/research">Research and Simulations</a>
+  </div>
+  <div class="nav-button">
+    <a href="/teaching">Teaching</a>
+  </div>
+  <div class="nav-button">
+    <a href="https://arnavs.github.io/resume/sood-cv.pdf" target="_blank">CV</a>
+  </div>
+  <div class="nav-button">
+    <a href="/writing">Writing</a>
+  </div>
+  <div class="nav-button">
+    <a href="/links">Links</a>
+  </div>
+  <div class="nav-button">
+    <a href="/hikes">Hikes</a>
+  </div>
+</footer>
+</body>
+
+</html>
