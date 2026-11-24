@@ -3,8 +3,6 @@ date = 2018-05-02T21:25:42-04:00
 title = "writing"
 +++
 
-For anything writing-related, please email [``writing@arnavsood.com``](mailto:writing@arnavsood.com)
-
 ### Fiction 
 
 "Customer Feedback (Secondhand Alchemical Goods)" --- [Daily Science Fiction](https://web.archive.org/web/20230109144725/https://dailysciencefiction.com/fantasy/fantasy/arnav-sood/customer-feedback-secondhand-alchemical-goods).
