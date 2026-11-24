@@ -1,5 +1,5 @@
 baseURL = "http://arnavsood.com"
 title = "Arnav Sood"
+publishDir = "docs"
 [security]
 	allowContent = ['.*']
-publishDir = "docs"
