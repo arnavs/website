@@ -5,6 +5,10 @@ title = "links"
 
 Some things I think are worth sharing.
 
++ [The Short Age of Dragon Riders](https://atilloy.com/2026/11/16/the-short-age-of-dragon-riders/)
+
+-----
+
 + [Daily Science Fiction](https://ifchanceyoucallit.wordpress.com/in-the-timeline-where-the-moscow-metro-opened-in-1934/): In the Timeline Where the Moscow Metro Opened in 1934
 
 + [Daily Science Fiction](https://web.archive.org/web/20240111035201/https://dailysciencefiction.com/hither-and-yon/alternate-history/philip-apps/the-two-elizabeths): 
