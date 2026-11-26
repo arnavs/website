@@ -28,6 +28,16 @@
     --new:     #f56300;    
   }
 
+   
+  html[data-theme="purple"] {
+    --bg:      rgb(56, 41, 73);
+    --text:    #eee6f7;
+    --link:    #a9d4ff;
+    --border:  #5c4878;
+    --surface: #45335a;
+    --new:     #ff9a5c;    
+  }
+
   html, body {
     background: var(--bg);
     color: var(--text);
@@ -68,10 +78,15 @@
   }
 
    
-  #dark-toggle {
+  #theme-switcher {
     position: fixed;
     top: 12px;
     right: 16px;
+    display: flex;
+    gap: 6px;
+    z-index: 9999;
+  }
+  #theme-switcher button {
     background: none;
     border: 1px solid var(--border);
     color: var(--text);
@@ -83,42 +98,57 @@
     border-radius: 3px;
     opacity: 0.6;
     transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
-    z-index: 9999;
   }
-  #dark-toggle:hover { opacity: 1; }
+  #theme-switcher button:hover { opacity: 1; }
+  #theme-switcher button[aria-pressed="true"] {
+    opacity: 1;
+    background: var(--surface);
+    border-color: var(--text);
+    cursor: default;
+  }
 </style>
 
 <script>
 
   (function() {
-    var saved = localStorage.getItem('theme');
-    if (saved !== 'light') document.documentElement.setAttribute('data-theme', 'dark');
+    var saved = null;
+    try { saved = localStorage.getItem('theme'); } catch (e) {}
+    if (saved === 'light') return;
+    document.documentElement.setAttribute('data-theme', saved === 'purple' ? 'purple' : 'dark');
   })();
 </script>
 
 </head>
 <body>
 
-<button id="dark-toggle" aria-label="Toggle dark mode">dark</button>
+<div id="theme-switcher" role="group" aria-label="Color theme">
+  <button type="button" data-theme-choice="light">light</button>
+  <button type="button" data-theme-choice="dark">dark</button>
+  <button type="button" data-theme-choice="purple">purple</button>
+</div>
 
 <script>
   (function() {
-    var btn = document.getElementById('dark-toggle');
+    var root = document.documentElement;
+    var buttons = document.querySelectorAll('#theme-switcher button');
+    function current() {
+      return root.getAttribute('data-theme') || 'light';
+    }
     function update() {
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      btn.textContent = isDark ? 'light' : 'dark';
+      var active = current();
+      buttons.forEach(function(b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-theme-choice') === active ? 'true' : 'false');
+      });
     }
     update();
-    btn.addEventListener('click', function() {
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-      }
-      update();
+    buttons.forEach(function(b) {
+      b.addEventListener('click', function() {
+        var choice = b.getAttribute('data-theme-choice');
+        if (choice === 'light') root.removeAttribute('data-theme');
+        else root.setAttribute('data-theme', choice);
+        try { localStorage.setItem('theme', choice); } catch (e) {}
+        update();
+      });
     });
   })();
 </script>
