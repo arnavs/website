@@ -40,6 +40,18 @@
       /* NEW */
     }
 
+    /* ── Brown mode ── */
+    html[data-theme="brown"] {
+      --bg: rgb(66, 34, 34);
+      --text: #eee6f7;
+      --link: #4da6ff;
+      --border: #5c4878;
+      --surface: #45335a;
+      --new: #ff9a5c;
+      /* NEW */
+    }
+
+
     html,
     body {
       background: var(--bg);
@@ -136,7 +148,7 @@
       var saved = null;
       try { saved = localStorage.getItem('theme'); } catch (e) { }
       if (saved === 'light') return;
-      document.documentElement.setAttribute('data-theme', saved === 'purple' ? 'purple' : 'dark');
+      document.documentElement.setAttribute('data-theme', saved === 'purple' || saved === 'brown' ? saved : 'dark');
     })();
   </script>
 
@@ -148,6 +160,7 @@
     <button type="button" data-theme-choice="light">light</button>
     <button type="button" data-theme-choice="dark">dark</button>
     <button type="button" data-theme-choice="purple">purple</button>
+    <button type="button" data-theme-choice="brown">brown</button>
   </div>
 
   <script>
