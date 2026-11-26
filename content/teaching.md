@@ -7,4 +7,9 @@ title = "teaching"
 
 Some simulations and teaching materials. These are WIP; any corrections or suggestions are welcome. 
 
-* [Social Learning](https://arnavsood.com/cabinet/cascade-sim/index.html)
+* [MIT Splash 2026](https://github.com/arnavs/splash-26)
+  - The Theory and Practice of Nuclear Weapons
+  - LoTR as Elegy: A Brief History of Arda Marred
+  - Archaeogaming: A Site Visit to Skyrim
+* [FractalU](https://fractalnyc.com/education)
+  - [Computational and Behavioral Economics](https://github.com/arnavs/FractalU-Winter2027)
