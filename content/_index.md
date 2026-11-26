@@ -20,7 +20,7 @@ A physicist named Antoine Tilloy [writes](https://atilloy.com/2026/11/16/the-sho
 
 > It is not yet clear how to balance the time spent in front of the screen, actively prompting, with the time spent pondering the output during a walk in the park, to catch up with what the dragon found
 
-My guess at this balance is to only use LLMs on Mondays and Tuesdays. And to try to interact with LLM-generated prose as little as possible on other days. Sadly this means most of the internet is now off-limits.
+My guess at this balance is to (generally) only use LLMs on Mondays and Tuesdays. And to try to interact with LLM-generated prose as little as possible on other days. Sadly this means most of the internet is now off-limits.
 
 --- 
 
