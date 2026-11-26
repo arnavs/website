@@ -16,7 +16,7 @@ Before CMU, I was a lead dev at [QuantEcon](https://quantecon.org), where I crea
 
 I'm pretty concerned about AI-generated prose seeping into our mental environments and homogenizing how we talk, write, and think. It doesn't use commas nearly enough, for example, as it has no use for breath.
 
-A physicist named Antoine Tilloy writes: 
+A physicist named Antoine Tilloy [writes](https://atilloy.com/2026/11/16/the-short-age-of-dragon-riders/): 
 
 > It is not yet clear how to balance the time spent in front of the screen, actively prompting, with the time spent pondering the output during a walk in the park, to catch up with what the dragon found
 
