@@ -4,155 +4,180 @@
 
 <!DOCTYPE HTML>
 <html lang="en-US">
+
 <head>
-<title>  </title>
-<link href="https://fonts.googleapis.com/css?family=Neuton|Merriweather:300|Roboto+Mono" rel="stylesheet">
-<style>
- 
-:root {
-    --bg:      #ffffff;
-    --text:    #111111;
-    --link:    #00007a;
-    --border:  #cccccc;
-    --surface: #f5f5f5;
-    --new:     #b64400;    
-  }
+  <title>  </title>
+  <link href="https://fonts.googleapis.com/css?family=Neuton|Merriweather:300|Roboto+Mono" rel="stylesheet">
+  <style>
+     
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --link: #00007a;
+      --border: #cccccc;
+      --surface: #f5f5f5;
+      --new: #b64400;
+       
+    }
 
-   
-  html[data-theme="dark"] {
-    --bg:      #08080f;
-    --text:    #e4e4f0;
-    --link:    #4da6ff;
-    --border:  #252540;
-    --surface: #10101c;
-    --new:     #f56300;    
-  }
+     
+    html[data-theme="dark"] {
+      --bg: #08080f;
+      --text: #e4e4f0;
+      --link: #4da6ff;
+      --border: #252540;
+      --surface: #10101c;
+      --new: #f56300;
+       
+    }
 
-   
-  html[data-theme="purple"] {
-    --bg:      rgb(56, 41, 73);
-    --text:    #eee6f7;
-    --link:    #a9d4ff;
-    --border:  #5c4878;
-    --surface: #45335a;
-    --new:     #ff9a5c;    
-  }
+     
+    html[data-theme="purple"] {
+      --bg: rgb(56, 41, 73);
+      --text: #eee6f7;
+      --link: #4da6ff;
+      --border: #5c4878;
+      --surface: #45335a;
+      --new: #ff9a5c;
+       
+    }
 
-  html, body {
-    background: var(--bg);
-    color: var(--text);
-    transition: background 0.2s, color 0.2s;
-  }
+    html,
+    body {
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.2s, color 0.2s;
+    }
 
-  a { color: var(--link); }
+    a {
+      color: var(--link);
+    }
 
-  .nav-button {
-    display: inline;
-    overflow-x: auto;
-    font-size: 95%;
-    font-family: 'Merriweather', serif;
-  }
-  p, .ul, .ol, .footnotes, li {
-    max-width: 35em;
-    font-size: 92%;
-    line-height: 145%;
-    font-family: 'Merriweather', serif;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    margin: 0px;
-    font-family: 'Neuton', serif;
-  }
-  code {
-    font-family: 'Roboto Mono';
-  }
+    .nav-button {
+      display: inline;
+      overflow-x: auto;
+      font-size: 95%;
+      font-family: 'Merriweather', serif;
+    }
 
-   
-  .new {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: var(--new);
-    font-size: 92%;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    margin-left: 0.4em;
-    white-space: nowrap;
-  }
+    p,
+    .ul,
+    .ol,
+    .footnotes,
+    li {
+      max-width: 35em;
+      font-size: 92%;
+      line-height: 145%;
+      font-family: 'Merriweather', serif;
+    }
 
-   
-  #theme-switcher {
-    position: fixed;
-    top: 12px;
-    right: 16px;
-    display: flex;
-    gap: 6px;
-    z-index: 9999;
-  }
-  #theme-switcher button {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    padding: 4px 9px;
-    cursor: pointer;
-    border-radius: 3px;
-    opacity: 0.6;
-    transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
-  }
-  #theme-switcher button:hover { opacity: 1; }
-  #theme-switcher button[aria-pressed="true"] {
-    opacity: 1;
-    background: var(--surface);
-    border-color: var(--text);
-    cursor: default;
-  }
-</style>
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 0px;
+      font-family: 'Neuton', serif;
+    }
 
-<script>
+    code {
+      font-family: 'Roboto Mono';
+    }
 
-  (function() {
-    var saved = null;
-    try { saved = localStorage.getItem('theme'); } catch (e) {}
-    if (saved === 'light') return;
-    document.documentElement.setAttribute('data-theme', saved === 'purple' ? 'purple' : 'dark');
-  })();
-</script>
+     
+    .new {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--new);
+      font-size: 92%;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      margin-left: 0.4em;
+      white-space: nowrap;
+    }
+
+     
+    #theme-switcher {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      display: flex;
+      gap: 6px;
+      z-index: 9999;
+    }
+
+    #theme-switcher button {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      padding: 4px 9px;
+      cursor: pointer;
+      border-radius: 3px;
+      opacity: 0.6;
+      transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    #theme-switcher button:hover {
+      opacity: 1;
+    }
+
+    #theme-switcher button[aria-pressed="true"] {
+      opacity: 1;
+      background: var(--surface);
+      border-color: var(--text);
+      cursor: default;
+    }
+  </style>
+
+  <script>
+    
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) { }
+      if (saved === 'light') return;
+      document.documentElement.setAttribute('data-theme', saved === 'purple' ? 'purple' : 'dark');
+    })();
+  </script>
 
 	<meta name="generator" content="Hugo 0.170.1">
 </head>
+
 <body>
 
-<div id="theme-switcher" role="group" aria-label="Color theme">
-  <button type="button" data-theme-choice="light">light</button>
-  <button type="button" data-theme-choice="dark">dark</button>
-  <button type="button" data-theme-choice="purple">purple</button>
-</div>
+  <div id="theme-switcher" role="group" aria-label="Color theme">
+    <button type="button" data-theme-choice="light">light</button>
+    <button type="button" data-theme-choice="dark">dark</button>
+    <button type="button" data-theme-choice="purple">purple</button>
+  </div>
 
-<script>
-  (function() {
-    var root = document.documentElement;
-    var buttons = document.querySelectorAll('#theme-switcher button');
-    function current() {
-      return root.getAttribute('data-theme') || 'light';
-    }
-    function update() {
-      var active = current();
-      buttons.forEach(function(b) {
-        b.setAttribute('aria-pressed', b.getAttribute('data-theme-choice') === active ? 'true' : 'false');
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var buttons = document.querySelectorAll('#theme-switcher button');
+      function current() {
+        return root.getAttribute('data-theme') || 'light';
+      }
+      function update() {
+        var active = current();
+        buttons.forEach(function (b) {
+          b.setAttribute('aria-pressed', b.getAttribute('data-theme-choice') === active ? 'true' : 'false');
+        });
+      }
+      update();
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var choice = b.getAttribute('data-theme-choice');
+          if (choice === 'light') root.removeAttribute('data-theme');
+          else root.setAttribute('data-theme', choice);
+          try { localStorage.setItem('theme', choice); } catch (e) { }
+          update();
+        });
       });
-    }
-    update();
-    buttons.forEach(function(b) {
-      b.addEventListener('click', function() {
-        var choice = b.getAttribute('data-theme-choice');
-        if (choice === 'light') root.removeAttribute('data-theme');
-        else root.setAttribute('data-theme', choice);
-        try { localStorage.setItem('theme', choice); } catch (e) {}
-        update();
-      });
-    });
-  })();
-</script>
+    })();
+  </script>
 
 <div class="homepage-content">
     
