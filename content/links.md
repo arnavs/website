@@ -5,6 +5,7 @@ title = "links"
 
 Some things I think are worth sharing.
 
++ [Blood Brother](https://publish.obsidian.md/tasmin-chu/Attachments/blood-brother_proof.pdf): Tasmin Chu
 + [The Short Age of Dragon Riders](https://atilloy.com/2026/11/16/the-short-age-of-dragon-riders/)
 
 -----
