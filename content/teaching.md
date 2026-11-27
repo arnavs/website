@@ -7,9 +7,9 @@ title = "teaching"
 
 Some simulations and teaching materials. These are WIP; any corrections or suggestions are welcome. 
 
-* [MIT Splash 2026](https://github.com/arnavs/splash-26)
-  - The Theory and Practice of Nuclear Weapons
-  - LoTR as Elegy: A Brief History of Arda Marred
-  - Archaeogaming: A Site Visit to Skyrim
+* [MIT Splash](https://esp.mit.edu/learn/Splash/index.html)
+  - [The Theory and Practice of Nuclear Weapons](https://github.com/arnavs/Splash-26/tree/main/nuclear)
+  - [LoTR as Elegy: A Brief History of Arda Marred](https://github.com/arnavs/Splash-26/tree/main/lotr)
+  - [Archaeogaming: A Site Visit to Skyrim](https://github.com/arnavs/Splash-26/tree/main/skyrim)
 * [FractalU](https://fractalnyc.com/education)
   - [Computational and Behavioral Economics](https://github.com/arnavs/FractalU-Winter2027)
