@@ -22,6 +22,8 @@ A physicist named Antoine Tilloy [writes](https://atilloy.com/2026/11/16/the-sho
 
 My guess at this balance is to (generally) only use LLMs on Mondays and Tuesdays. And to try to interact with LLM-generated prose as little as possible on other days. Sadly this means most of the internet is now off-limits.
 
+[There's no point at which turning your brain off will work](https://danluu.com/brain-off/#fn:L).
+
 --- 
 
 <!-- I'm an OCD survivor --- if you or someone you know wants someone to talk to, send me an email. -->
