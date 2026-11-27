@@ -143,13 +143,14 @@
   </style>
 
   <script>
-    // Apply saved theme before paint to avoid flash (default: dark)
+    // Apply saved theme before paint to avoid flash (default: brown)
     (function () {
       var saved = null;
       try { saved = localStorage.getItem('theme'); } catch (e) { }
       if (saved === 'light') return;
-      // TODO: clean up this ternary operator 
-      document.documentElement.setAttribute('data-theme', saved === 'purple' || saved === 'brown' ? saved : 'dark');
+      var themes = ['dark', 'purple', 'brown'];
+      var theme = themes.indexOf(saved) !== -1 ? saved : 'brown';
+      document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
 
